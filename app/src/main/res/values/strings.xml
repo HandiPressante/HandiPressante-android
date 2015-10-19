@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">HandiPressante</string>
 
+    <string name="tab_list_title">Liste</string>
+    <string name="tab_map_title">Carte</string>
+
     <string name="demo_list">List</string>
     <string name="demo_map">Map</string>
-
-    <string name="demo_external_activity">Demo External Activity</string>
-    <string name="demo_collection">Demo Collection</string>
 
     <string name="action_settings">Settings</string>
 </resources>
