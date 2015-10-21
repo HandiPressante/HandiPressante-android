@@ -63,7 +63,7 @@ public class MapFragment extends Fragment {
         IMapController mapController = mMapView.getController();
         //Choisir le niveau de zoom
         mapController.setZoom(ZOOM);
-        //choisir le point centré du départ
+        //choisir le point centre du depart
         GeoPoint startPoint = new GeoPoint(48.1199094, -1.6345865, 2944);
         mapController.setCenter(startPoint);
 
