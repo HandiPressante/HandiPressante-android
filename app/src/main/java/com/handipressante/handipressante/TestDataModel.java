@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Nico on 19/10/2015.
  */
 public class TestDataModel implements IDataModel {
-    public List<Toilet> getToilets(GPSCoordinates ref, double latitudeRange, double longitudeRange) {
+    public List<Toilet> getToilets(GPSCoordinates ref, double xRange, double yRange) {
         ArrayList<Toilet> res = new ArrayList<>();
 
         res.add(new Toilet(1, false, "Départ info, étage, couloir TP", new GPSCoordinates()));
