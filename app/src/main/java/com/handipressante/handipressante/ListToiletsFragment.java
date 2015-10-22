@@ -28,6 +28,8 @@ import android.widget.SimpleAdapter;
 
 public class ListToiletsFragment extends ListFragment {
 
+
+
     // Array of strings storing country names
     String[] countries = new String[] {
             "India",
@@ -60,7 +62,7 @@ public class ListToiletsFragment extends ListFragment {
     String[] currency = new String[]{
             "Indian Rupee",
             "Pakistani Rupee",
-            "Sri Lankan Rupee",
+            "Sri Lankan Euros et le dollars ça dépend des jours",
             "Renminbi",
             "Bangladeshi Taka",
             "Nepalese Rupee",
@@ -80,15 +82,16 @@ public class ListToiletsFragment extends ListFragment {
             HashMap<String, String> hm = new HashMap<String,String>();
             hm.put("txt", "Country : " + countries[i]);
             hm.put("cur","Currency : " + currency[i]);
-            hm.put("flag", Integer.toString(flags[i]) );
+            hm.put("icon_pmr", Integer.toString(flags[i]) );
+            hm.put("dist", "10Km");
             aList.add(hm);
         }
 
         // Keys used in Hashmap
-        String[] from = { "flag","txt","cur" };
+        String[] from = { "icon_pmr","txt","cur", "dist" };
 
         // Ids of views in listview_layout
-        int[] to = { R.id.flag,R.id.txt,R.id.cur};
+        int[] to = { R.id.flag,R.id.txt,R.id.cur, R.id.dist};
 
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
