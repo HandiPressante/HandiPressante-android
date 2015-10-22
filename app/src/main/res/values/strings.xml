@@ -7,5 +7,14 @@
     <string name="demo_list">List</string>
     <string name="demo_map">Map</string>
 
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+
     <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
