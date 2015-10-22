@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return new ListFragment();
+                    return new ListToiletsFragment();
 
                 case 1:
                     return new MapFragment();
