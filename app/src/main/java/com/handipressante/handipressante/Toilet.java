@@ -42,22 +42,26 @@ public class Toilet implements IMarker {
         }
     }
 
-    static public String rankToEmoji(int _rank) {
+    public int getRankIcon(){
+
         switch (_rank) {
             case 1:
-                return "\u2B50";
+                return R.drawable.one;
             case 2:
-                return "\u2B50\u2B50";
+                return R.drawable.two;
             case 3:
-                return "\u2B50\u2B50\u2B50";
+                return R.drawable.three;
             case 4:
-                return "\u2B50\u2B50\u2B50\u2B50";
+                return R.drawable.four;
             case 5:
-                return "\u2B50\u2B50\u2B50\u2B50\u2B50";
+                return R.drawable.five;
             default:
-                return "Pas de note";
+                return R.drawable.zero;
+
         }
+
     }
+
 
     public  Double getDistance(GPSCoordinates ref) {
         // TODO : compute dist between _coord and ref

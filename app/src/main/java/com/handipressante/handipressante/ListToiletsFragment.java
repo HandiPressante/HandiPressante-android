@@ -64,17 +64,17 @@ public class ListToiletsFragment extends ListFragment {
         for(int i=0;i<listOfToilets.length;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
             hm.put("txt", listOfToilets[i].getAddress());
-            hm.put("cur",Toilet.rankToEmoji(listOfToilets[i].getRank()));
+            hm.put("rank",Integer.toString(listOfToilets[i].getRankIcon()));
             hm.put("icon_pmr", Integer.toString(listOfToilets[i].getIcon()));
             hm.put("dist", "10Km");
             aList.add(hm);
         }
 
         // Keys used in Hashmap
-        String[] from = { "icon_pmr","txt","cur", "dist" };
+        String[] from = { "icon_pmr","txt", "dist" ,"rank"};
 
         // Ids of views in listview_layout
-        int[] to = { R.id.flag,R.id.txt,R.id.cur, R.id.dist};
+        int[] to = { R.id.flag,R.id.txt,R.id.dist,R.id.rank};
 
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
