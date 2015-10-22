@@ -22,17 +22,14 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main,container, false);
-
-
-        mTabHost = (FragmentTabHost)rootView.findViewById(android.R.id.tabhost);
+        mTabHost = new FragmentTabHost(getActivity());
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec("list").setIndicator("Liste"),
+        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Liste"),
                 ListFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("map").setIndicator("Carte"),
+        mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Carte"),
                 MapFragment.class, null);
 
-        return rootView;
+        return mTabHost;
     }
 }
