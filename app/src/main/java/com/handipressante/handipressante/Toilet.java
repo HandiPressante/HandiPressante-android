@@ -8,12 +8,14 @@ public class Toilet implements IMarker {
     private Boolean _adapted;
     private String _address;
     private GPSCoordinates _coord;
+    private Integer _rank; // from 1 to 5
 
-    Toilet(Integer id, Boolean adapted, String address, GPSCoordinates coord) {
+    Toilet(Integer id, Boolean adapted, String address, GPSCoordinates coord, Integer rank) {
         _id = id;
         _adapted = adapted;
         _address = address;
         _coord = coord;
+        _rank = rank;
     }
 
     public Integer getId() {
@@ -29,7 +31,32 @@ public class Toilet implements IMarker {
     }
 
     public Integer getRank() {
-        return 4;
+        return _rank;
+    }
+
+    public int getIcon(){
+        if(_adapted){
+            return R.drawable.handicap_icon;
+        }else{
+            return R.drawable.not_handicap_icon;
+        }
+    }
+
+    static public String rankToEmoji(int _rank) {
+        switch (_rank) {
+            case 1:
+                return "\u2B50";
+            case 2:
+                return "\u2B50\u2B50";
+            case 3:
+                return "\u2B50\u2B50\u2B50";
+            case 4:
+                return "\u2B50\u2B50\u2B50\u2B50";
+            case 5:
+                return "\u2B50\u2B50\u2B50\u2B50\u2B50";
+            default:
+                return "Pas de note";
+        }
     }
 
     public  Double getDistance(GPSCoordinates ref) {

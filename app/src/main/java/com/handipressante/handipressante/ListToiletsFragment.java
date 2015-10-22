@@ -28,22 +28,6 @@ import android.widget.SimpleAdapter;
 
 public class ListToiletsFragment extends ListFragment {
 
-
-
-    // Array of strings storing country names
-    String[] countries = new String[] {
-            "India",
-            "Pakistan",
-            "Sri Lanka",
-            "China",
-            "Bangladesh",
-            "Nepal",
-            "Afghanistan",
-            "North Korea",
-            "South Korea",
-            "Japan"
-    };
-
     // Array of integers points to images stored in /res/drawable/
     int[] flags = new int[]{
             R.drawable.india,
@@ -58,31 +42,30 @@ public class ListToiletsFragment extends ListFragment {
             R.drawable.japan
     };
 
-    // Array of strings to store currencies
-    String[] currency = new String[]{
-            "Indian Rupee",
-            "Pakistani Rupee",
-            "Sri Lankan Euros et le dollars ça dépend des jours",
-            "Renminbi",
-            "Bangladeshi Taka",
-            "Nepalese Rupee",
-            "Afghani",
-            "North Korean Won",
-            "South Korean Won",
-            "Japanese Yen"
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
+        // List of toilets to be displayed on the list :
+        Toilet[] listOfToilets = new Toilet[5];
+        listOfToilets[0] = new Toilet(0, true, "1 rue de la Gare", new GPSCoordinates(5, 4), 3);
+        listOfToilets[1] = new Toilet(1, false, "14 rue de l'Eglise", new GPSCoordinates(5, 4), 1);
+        listOfToilets[2] = new Toilet(2, true, "7 rue de la Maire", new GPSCoordinates(5, 4), 5);
+        listOfToilets[3] = new Toilet(3, false, "2 rue du Parc", new GPSCoordinates(5, 4), 2);
+        listOfToilets[4] = new Toilet(4, false, "34 rue de la République", new GPSCoordinates(5, 4),4);
+
+        // GPSCoordinate of user
+        GPSCoordinates myPlace = new GPSCoordinates(10, 15);
+
+
         // Each row in the list stores country name, currency and flag
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<listOfToilets.length;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
-            hm.put("txt", "Country : " + countries[i]);
-            hm.put("cur","Currency : " + currency[i]);
-            hm.put("icon_pmr", Integer.toString(flags[i]) );
+            hm.put("txt", listOfToilets[i].getAddress());
+            hm.put("cur",Toilet.rankToEmoji(listOfToilets[i].getRank()));
+            hm.put("icon_pmr", Integer.toString(listOfToilets[i].getIcon()));
             hm.put("dist", "10Km");
             aList.add(hm);
         }
@@ -102,3 +85,4 @@ public class ListToiletsFragment extends ListFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 }
+
