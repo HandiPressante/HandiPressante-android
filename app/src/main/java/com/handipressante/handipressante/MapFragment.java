@@ -98,6 +98,8 @@ public class MapFragment extends Fragment {
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         //affichage en cliquant sur le point
         startMarker.setTitle("Start point");
+        //changement de l'icône (normal que ce soit barré (à réécrire pour les versions supérieurs à l'API 22)
+        startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
 
         Marker newMarker = new Marker(mMapView);
         GeoPoint newPoint = new GeoPoint(50.000,-1.000,2944);
