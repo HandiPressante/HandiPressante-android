@@ -25,6 +25,10 @@ public class GPSCoordinates {
         return this._latitude;
     }
 
+    public double getL93X() { return 351861.03; }
+
+    public double getL93Y() { return 6789173.05; }
+
     public void setLongitude(double longitude) {
         this._longitude = longitude;
     }
