@@ -62,10 +62,23 @@ public class Toilet implements IMarker {
 
     }
 
-
+    // return distance in meters
     public  Double getDistance(GPSCoordinates ref) {
         // TODO : compute dist between _coord and ref
-        return new Double(42);
+        return new Double(520);
+    }
+
+    // return a string to display the distance
+    public String getDistanceToString(GPSCoordinates ref) {
+        Double dist = this.getDistance(ref);
+        if(dist>1000){
+            // Kilometers
+            dist = dist/1000;
+            return "à " + dist +" Km.";
+        }else{
+            // meters
+            return "à " + dist.intValue() +" m.";
+        }
     }
 
     public String getMarkerName() {
