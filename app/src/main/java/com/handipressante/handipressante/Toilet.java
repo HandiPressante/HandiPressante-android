@@ -46,17 +46,17 @@ public class Toilet implements IMarker {
 
         switch (_rank) {
             case 1:
-                return R.drawable.one;
+                return R.drawable.star_one;
             case 2:
-                return R.drawable.two;
+                return R.drawable.star_two;
             case 3:
-                return R.drawable.three;
+                return R.drawable.star_three;
             case 4:
-                return R.drawable.four;
+                return R.drawable.star_four;
             case 5:
-                return R.drawable.five;
+                return R.drawable.star_five;
             default:
-                return R.drawable.one;
+                return R.drawable.star_zero;
 
         }
 
