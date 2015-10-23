@@ -27,10 +27,7 @@ import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
 public class ListToiletsFragment extends ListFragment {
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
