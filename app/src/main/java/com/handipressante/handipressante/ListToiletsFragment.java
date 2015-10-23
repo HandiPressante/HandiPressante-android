@@ -56,7 +56,7 @@ public class ListToiletsFragment extends ListFragment {
             hm.put("txt", listOfToilets[i].getAddress());
             hm.put("rank",Integer.toString(listOfToilets[i].getRankIcon()));
             hm.put("icon_pmr", Integer.toString(listOfToilets[i].getIcon()));
-            hm.put("dist", "10Km");
+            hm.put("dist", listOfToilets[i].getDistanceToString(new GPSCoordinates()));
             aList.add(hm);
         }
 
