@@ -1,15 +1,5 @@
 package com.handipressante.handipressante;
 
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.util.GeoPoint;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -37,7 +27,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.SubMenu;
-import android.support.v4.app.Fragment;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -45,14 +34,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.view.LayoutInflater;
 import android.location.GpsStatus;
 import android.widget.Toast;
 import android.location.LocationListener;
@@ -62,9 +48,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -82,9 +65,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ZoomButtonsController;
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.kml.StyleMap;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
@@ -96,6 +77,14 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import java.util.ArrayList;
 import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.tileprovider.tilesource.ITileSource;
+import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
+import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
 import org.osmdroid.views.overlay.MyLocationOverlay;
@@ -125,14 +114,10 @@ public class MapFragment extends Fragment {
     //initialiser startPoint
     //public Location mylocation;
 
-    //Coordonnées par defaut
-    public LocationManager locationManager;
-    //Location location = null;
-    ArrayList<OverlayItem> anotherOverlayItemArray;
     //donne la position courante(provenant de myLocation) à loc
     public void setLoc(Location _loc){
         loc = _loc;
-        Log.e("yvo", " (loc) : " + loc);
+     /*   System.out.println("--------------------------------------------------------------- Testo (loc) : "+ loc);*/
     }
     
     @Override
@@ -155,11 +140,6 @@ public class MapFragment extends Fragment {
         //Choisir le niveau de zoom
         mMapView.setMaxZoomLevel(20);
         mapController.setZoom(ZOOM);
-
-        /*GpsMyLocationProvider imlp = new GpsMyLocationProvider(this.getContext());
-
-        // public void setLocationUpdateMinDistance(final float meters) (distance de mise a jour)
-        imlp.setLocationUpdateMinDistance(10);*/
 
         //choisir le point centre du depart
         //GeoPoint startPoint = new GeoPoint(48.120227199999995, -1.6345466);
@@ -194,12 +174,48 @@ public class MapFragment extends Fragment {
         //changement de l'icône (normal que ce soit barré (à réécrire pour les versions supérieurs à l'API 22)
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         Marker newMarker = new Marker(mMapView);
-        GeoPoint newPoint = new GeoPoint(48.15,-1.07,2944);
+        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
+        
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setTitle("Point test");
         mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(newMarker);
+
+
+        mMapView.invalidate();
+
+        //new thread for navigate
+        new Thread(new Runnable()
+        {
+            public void run() {
+
+                RoadManager roadManager = new OSRMRoadManager();
+                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+                waypoints.add(startPoint);
+                waypoints.add(newPoint);
+                Road road = roadManager.getRoad(waypoints);
+                try {
+                    road = roadManager.getRoad(waypoints);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                final Road finalRoad = road;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (finalRoad.mStatus != Road.STATUS_OK) {
+                            //handle error... warn the user, etc.
+                        }
+
+                        Polyline roadOverlay = RoadManager.buildRoadOverlay(finalRoad, Color.RED, 8, getContext());
+                        mMapView.getOverlays().add(roadOverlay);
+                    }
+                });
+            }
+        }).start();
+
 
 
         return mMapView;
