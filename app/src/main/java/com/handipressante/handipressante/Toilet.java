@@ -74,10 +74,10 @@ public class Toilet implements IMarker {
         if(dist>1000){
             // Kilometers
             dist = dist/1000;
-            return "à " + dist +" Km.";
+            return "à " + dist +" Km";
         }else{
             // meters
-            return "à " + dist.intValue() +" m.";
+            return "à " + dist.intValue() +" m";
         }
     }
 
