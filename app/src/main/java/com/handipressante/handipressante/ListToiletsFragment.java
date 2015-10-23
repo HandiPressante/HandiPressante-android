@@ -1,7 +1,9 @@
 package com.handipressante.handipressante;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,40 @@ public class ListToiletsFragment extends ListFragment {
 
         setListAdapter(adapter);
 
+        new DownloadToiletsTask().execute(new GPSCoordinates(351861.03, 6789173.05));
+
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
+    // URL string and uses it to create an HttpUrlConnection. Once the connection
+    // has been established, the AsyncTask downloads the contents of the webpage as
+    // an InputStream. Finally, the InputStream is converted into a string, which is
+    // displayed in the UI by the AsyncTask's onPostExecute method.
+    private class DownloadToiletsTask extends AsyncTask<GPSCoordinates, Void, List<Toilet>> {
+        @Override
+        protected List<Toilet> doInBackground(GPSCoordinates... params) {
+            IDataModel model = new OnlineDataModel(getContext());
+            return model.getToilets(params[0], 400, 400);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(List<Toilet> result) {
+
+            for (Toilet t : result) {
+                Log.d("Debug", "########################");
+                Log.d("Debug", "Toilette " + t.getId());
+                Log.d("Debug", "Adresse : " + t.getAddress());
+                Log.d("Debug", "PMR : " + t.isAdapted());
+                Log.d("Debug", "X 93 : " + t.getCoordinates().getL93X());
+                Log.d("Debug", "Y 93 : " + t.getCoordinates().getL93Y());
+                Log.d("Debug", "########################");
+            }
+            //textView.setText(result);
+        }
+
+
     }
 }
 
