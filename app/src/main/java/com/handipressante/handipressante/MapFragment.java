@@ -101,15 +101,18 @@ public class MapFragment extends Fragment {
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
         try {
-            Thread.sleep(600);
+            Thread.sleep(6000);
             System.out.println("-------------------- Testo : sleep");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.println("--------------------------------------------------------------- Testo (loc2) : " + loc);
-        //lm = pos.getLocation();
-        GeoPoint startPoint = new GeoPoint(loc);
-        mapController.setCenter(startPoint);
+        
+        if (loc != null) {
+            //lm = pos.getLocation();
+            GeoPoint startPoint = new GeoPoint(loc);
+            mapController.setCenter(startPoint);
+        }
 
         return mMapView;
     }
