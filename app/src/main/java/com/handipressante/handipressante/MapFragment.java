@@ -96,6 +96,7 @@ import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import java.util.ArrayList;
 import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
 import org.osmdroid.views.overlay.MyLocationOverlay;
@@ -177,7 +178,7 @@ public class MapFragment extends Fragment {
         }
        /* System.out.println("--------------------------------------------------------------- Testo (loc2) : " + loc);*/
         //lm = pos.getLocation();
-        GeoPoint startPoint = new GeoPoint(loc);
+        final GeoPoint startPoint = new GeoPoint(loc);
         mapController.setCenter(startPoint);
 
         //créer un marqueur
@@ -193,7 +194,7 @@ public class MapFragment extends Fragment {
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
 
         Marker newMarker = new Marker(mMapView);
-        GeoPoint newPoint = new GeoPoint(48.15,-1.07,2944);
+        final GeoPoint newPoint = new GeoPoint(48.15,-1.07,2944);
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setTitle("Point test");
@@ -202,44 +203,38 @@ public class MapFragment extends Fragment {
         mMapView.getOverlays().add(newMarker);
 
 
-        //navigation
-        //création de manager de navigation
-        final RoadManager roadManager = new OSRMRoadManager();
-        roadManager.addRequestOption("routeType=fastest");
-        //ajout des points de depart et d'arrivee
-        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(startPoint);
-        GeoPoint endPoint = new GeoPoint(48.15, -1.63);
-        waypoints.add(endPoint);
-
-        Marker end = new Marker(mMapView);
-        end.setPosition(endPoint);
-        end.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mMapView.getOverlays().add(end);
-
-        Road road = roadManager.getRoad(waypoints);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, mMapView.getContext() );
-        roadOverlay.setColor(Color.RED);
-        mMapView.getOverlays().add(roadOverlay);
-
-        Drawable nodeIcon = getResources().getDrawable(R.drawable.mymarker);
-        for (int i=0; i<road.mNodes.size(); i++){
-            RoadNode node = road.mNodes.get(i);
-            Marker nodeMarker = new Marker(mMapView);
-            nodeMarker.setPosition(node.mLocation);
-            nodeMarker.setIcon(nodeIcon);
-            nodeMarker.setTitle("Step "+i);
-            mMapView.getOverlays().add(nodeMarker);
-        }
-        //pour rafraichir la carte
         mMapView.invalidate();
 
+        //new thread for navigate
+        new Thread(new Runnable()
+        {
+            public void run() {
 
+                RoadManager roadManager = new OSRMRoadManager();
+                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
+                waypoints.add(startPoint);
+                waypoints.add(newPoint);
+                Road road = roadManager.getRoad(waypoints);
+                try {
+                    road = roadManager.getRoad(waypoints);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+                final Road finalRoad = road;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (finalRoad.mStatus != Road.STATUS_OK) {
+                            //handle error... warn the user, etc.
+                        }
 
-
-
-
+                        Polyline roadOverlay = RoadManager.buildRoadOverlay(finalRoad, Color.RED, 8, getContext());
+                        mMapView.getOverlays().add(roadOverlay);
+                    }
+                });
+            }
+        }).start();
 
 
 
