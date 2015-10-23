@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getActionBar().setIcon(R.drawable.ic_drawer);
+        getActionBar().setIcon(R.drawable.menu_icon);
 
         mTitle = mDrawerTitle = getTitle();
         mTitles = new String[]{"Home", "Settings", "Title 3"};
