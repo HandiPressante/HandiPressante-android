@@ -110,26 +110,16 @@ import java.util.logging.Handler;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-//création de la vue Fragment
+//creation of the Fragment
 public class MapFragment extends Fragment {
 
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
     private final static int ZOOM = 14;
-    //LocationManager locationManager = (LocationManager) Context.getSystemService(Context.LOCATION_SERVICE);
-    //private MyLocation mloc = new MyLocation();
-    //private MyLocation.LocationResult locResult;
     private Location loc;
-    //MyLocation.LocationResult pos = mloc.getLocationResult();
-
-    //initialiser startPoint
-    //public Location mylocation;
-
-    //Coordonnées par defaut
     public LocationManager locationManager;
-    //Location location = null;
     ArrayList<OverlayItem> anotherOverlayItemArray;
-    //donne la position courante(provenant de myLocation) à loc
+    //give the current position (comming from MyLocation) to loc
     public void setLoc(Location _loc){
         loc = _loc;
         Log.e("yvo", " (loc) : " + loc);
@@ -145,24 +135,19 @@ public class MapFragment extends Fragment {
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
         mMapView = new MapView(inflater.getContext(), 256, mResourceProxy);
 
-        //Activer les boutons + et -
+        //activate the + and - (zoom)
         mMapView.setBuiltInZoomControls(true);
-        //activer le controle multitouch
+        //activate the multitouch control
         mMapView.setMultiTouchControls(true);
-        //Changer la couleur de la carte
+        //change the map's style
         mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
         IMapController mapController = mMapView.getController();
-        //Choisir le niveau de zoom
+        //choose the zoom lvl
         mMapView.setMaxZoomLevel(20);
         mapController.setZoom(ZOOM);
 
-        /*GpsMyLocationProvider imlp = new GpsMyLocationProvider(this.getContext());
 
-        // public void setLocationUpdateMinDistance(final float meters) (distance de mise a jour)
-        imlp.setLocationUpdateMinDistance(10);*/
 
-        //choisir le point centre du depart
-        //GeoPoint startPoint = new GeoPoint(48.120227199999995, -1.6345466);
 
         MyLocation mloc = new MyLocation();
         Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
@@ -176,22 +161,23 @@ public class MapFragment extends Fragment {
             e.printStackTrace();
         }
         Log.e("yvo", "(loc2) : " + loc);
-        //lm = pos.getLocation();
+
+        //startpoint if gps not enabled (Rennes's townhall)
         GeoPoint startPoint = new GeoPoint(48.11137, -1.680145);
         if(loc!=null){
             startPoint = new GeoPoint(loc);
         }
 
         mapController.setCenter(startPoint);
-        //créer un marqueur
+        //mark creation
         Marker startMarker = new Marker(mMapView);
-        //choisir sa ses coordonees
+        //selection of the mark's coordinates
         startMarker.setPosition(startPoint);
-        //affichage
+        //display
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        //affichage en cliquant sur le point
+        //text who pop-up when you select the mark
         startMarker.setTitle("Start point");
-        //changement de l'icône (normal que ce soit barré (à réécrire pour les versions supérieurs à l'API 22)
+        //icone changing
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         Marker newMarker = new Marker(mMapView);
         GeoPoint newPoint = new GeoPoint(48.15,-1.07,2944);
