@@ -56,7 +56,7 @@ public class Toilet implements IMarker {
             case 5:
                 return R.drawable.five;
             default:
-                return R.drawable.one;
+                return R.drawable.zero;
 
         }
 
