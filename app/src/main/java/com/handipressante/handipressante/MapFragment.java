@@ -3,10 +3,13 @@ package com.handipressante.handipressante;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+import org.osmdroid.util.GeoPoint;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -50,12 +53,34 @@ import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
+import android.location.GpsStatus;
+import android.widget.Toast;
+import android.location.LocationListener;
+import android.location.LocationProvider;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.SubMenu;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.widget.ZoomButtonsController;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.bonuspack.routing.RoadNode;
 import org.osmdroid.api.IMapController;
@@ -69,6 +94,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import java.util.ArrayList;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
@@ -87,9 +113,8 @@ import java.util.LinkedList;
 //création de la vue Fragment
 public class MapFragment extends Fragment {
 
-    private MapView mMapView;
-    private MapController mMapController;
     private ResourceProxy mResourceProxy;
+    private MapView mMapView;
     private final static int ZOOM = 14;
     //LocationManager locationManager = (LocationManager) Context.getSystemService(Context.LOCATION_SERVICE);
     //private MyLocation mloc = new MyLocation();
@@ -118,10 +143,8 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
-
         mMapView = new MapView(inflater.getContext(), 256, mResourceProxy);
 
-        
         //Activer les boutons + et -
         mMapView.setBuiltInZoomControls(true);
         //activer le controle multitouch
@@ -224,4 +247,3 @@ public class MapFragment extends Fragment {
     }
 
 }
-

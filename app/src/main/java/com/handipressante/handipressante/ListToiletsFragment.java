@@ -28,21 +28,6 @@ import android.widget.SimpleAdapter;
 
 public class ListToiletsFragment extends ListFragment {
 
-    // Array of integers points to images stored in /res/drawable/
-    int[] flags = new int[]{
-            R.drawable.india,
-            R.drawable.pakistan,
-            R.drawable.srilanka,
-            R.drawable.china,
-            R.drawable.bangladesh,
-            R.drawable.nepal,
-            R.drawable.afghanistan,
-            R.drawable.nkorea,
-            R.drawable.skorea,
-            R.drawable.japan
-    };
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
