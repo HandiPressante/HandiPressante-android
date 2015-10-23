@@ -43,10 +43,12 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getActionBar().setIcon(R.drawable.ic_drawer);
 
         mTitle = mDrawerTitle = getTitle();
         mTitles = new String[]{"Home", "Settings", "Title 3"};
         initDrawer();
+
 
         if (savedInstanceState == null) {
             selectItem(0);
@@ -88,7 +90,6 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
