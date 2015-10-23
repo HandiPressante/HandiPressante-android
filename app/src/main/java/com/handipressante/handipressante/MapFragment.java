@@ -132,7 +132,7 @@ public class MapFragment extends Fragment {
     //donne la position courante(provenant de myLocation) à loc
     public void setLoc(Location _loc){
         loc = _loc;
-     /*   System.out.println("--------------------------------------------------------------- Testo (loc) : "+ loc);*/
+        Log.e("yvo", " (loc) : " + loc);
     }
     
     @Override
@@ -156,33 +156,35 @@ public class MapFragment extends Fragment {
         mMapView.setMaxZoomLevel(20);
         mapController.setZoom(ZOOM);
 
-        GpsMyLocationProvider imlp = new GpsMyLocationProvider(this.getContext());
+        /*GpsMyLocationProvider imlp = new GpsMyLocationProvider(this.getContext());
 
         // public void setLocationUpdateMinDistance(final float meters) (distance de mise a jour)
-        imlp.setLocationUpdateMinDistance(10);
+        imlp.setLocationUpdateMinDistance(10);*/
 
         //choisir le point centre du depart
         //GeoPoint startPoint = new GeoPoint(48.120227199999995, -1.6345466);
 
         MyLocation mloc = new MyLocation();
-        /*System.out.println("--------------------------------------------------------------- Testo (mloc == null ?) : " + (mloc == null));
-        System.out.println("--------------------------------------------------------------- Testo (mloc.locationResult == null ?): " + (mloc.locationResult == null));*/
+        Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
+        Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
         try {
-            Thread.sleep(1000);
-        /*    System.out.println("-------------------- Testo : sleep");*/
+            Thread.sleep(50);
+            Log.e("yvo", "sleep");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-       /* System.out.println("--------------------------------------------------------------- Testo (loc2) : " + loc);*/
+        Log.e("yvo", "(loc2) : " + loc);
         //lm = pos.getLocation();
-        GeoPoint startPoint = new GeoPoint(loc);
-        mapController.setCenter(startPoint);
+        GeoPoint startPoint = new GeoPoint(48.11137, -1.680145);
+        if(loc!=null){
+            startPoint = new GeoPoint(loc);
+        }
 
+        mapController.setCenter(startPoint);
         //créer un marqueur
         Marker startMarker = new Marker(mMapView);
-
         //choisir sa ses coordonees
         startMarker.setPosition(startPoint);
         //affichage
@@ -191,56 +193,13 @@ public class MapFragment extends Fragment {
         startMarker.setTitle("Start point");
         //changement de l'icône (normal que ce soit barré (à réécrire pour les versions supérieurs à l'API 22)
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
-
         Marker newMarker = new Marker(mMapView);
         GeoPoint newPoint = new GeoPoint(48.15,-1.07,2944);
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setTitle("Point test");
-
         mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(newMarker);
-
-
-        //navigation
-        //création de manager de navigation
-        final RoadManager roadManager = new OSRMRoadManager();
-        roadManager.addRequestOption("routeType=fastest");
-        //ajout des points de depart et d'arrivee
-        ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-        waypoints.add(startPoint);
-        GeoPoint endPoint = new GeoPoint(48.15, -1.63);
-        waypoints.add(endPoint);
-
-        Marker end = new Marker(mMapView);
-        end.setPosition(endPoint);
-        end.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mMapView.getOverlays().add(end);
-
-        Road road = roadManager.getRoad(waypoints);
-        Polyline roadOverlay = RoadManager.buildRoadOverlay(road, mMapView.getContext() );
-        roadOverlay.setColor(Color.RED);
-        mMapView.getOverlays().add(roadOverlay);
-
-        Drawable nodeIcon = getResources().getDrawable(R.drawable.mymarker);
-        for (int i=0; i<road.mNodes.size(); i++){
-            RoadNode node = road.mNodes.get(i);
-            Marker nodeMarker = new Marker(mMapView);
-            nodeMarker.setPosition(node.mLocation);
-            nodeMarker.setIcon(nodeIcon);
-            nodeMarker.setTitle("Step "+i);
-            mMapView.getOverlays().add(nodeMarker);
-        }
-        //pour rafraichir la carte
-        mMapView.invalidate();
-
-
-
-
-
-
-
-
 
 
         return mMapView;
