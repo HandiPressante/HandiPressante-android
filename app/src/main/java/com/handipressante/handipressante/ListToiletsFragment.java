@@ -32,12 +32,17 @@ public class ListToiletsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         // List of toilets to be displayed on the list :
-        Toilet[] listOfToilets = new Toilet[5];
-        listOfToilets[0] = new Toilet(0, true, "1 rue de la Gare", new GPSCoordinates(5, 4), 3);
-        listOfToilets[1] = new Toilet(1, false, "14 rue de l'Eglise", new GPSCoordinates(5, 4), 1);
-        listOfToilets[2] = new Toilet(2, true, "7 rue de la Maire", new GPSCoordinates(5, 4), 5);
-        listOfToilets[3] = new Toilet(3, false, "2 rue du Parc", new GPSCoordinates(5, 4), 2);
-        listOfToilets[4] = new Toilet(4, false, "34 rue de la République", new GPSCoordinates(5, 4),4);
+        Toilet[] listOfToilets = new Toilet[10];
+        listOfToilets[0] = new Toilet(0, false, "Mairie Opéra", new GPSCoordinates(5, 4), 3);
+        listOfToilets[1] = new Toilet(1, false, "Halles Centrales", new GPSCoordinates(5, 4), 1);
+        listOfToilets[2] = new Toilet(2, true, "Champs Libres", new GPSCoordinates(5, 4), 5);
+        listOfToilets[3] = new Toilet(3, true, "Fréville", new GPSCoordinates(5, 4), 2);
+        listOfToilets[4] = new Toilet(4, false, "Kléber 2", new GPSCoordinates(5, 4),4);
+        listOfToilets[5] = new Toilet(5, true, "Gare", new GPSCoordinates(5, 4), 3);
+        listOfToilets[6] = new Toilet(6, false, "Kléber Parking", new GPSCoordinates(5, 4), 1);
+        listOfToilets[7] = new Toilet(7, false, "Guy HOUIST", new GPSCoordinates(5, 4), 5);
+        listOfToilets[8] = new Toilet(8, true, "St Cyr", new GPSCoordinates(5, 4), 2);
+        listOfToilets[9] = new Toilet(9, false, "Cimetière Nord", new GPSCoordinates(5, 4),4);
 
         // GPSCoordinate of user
         GPSCoordinates myPlace = new GPSCoordinates(10, 15);

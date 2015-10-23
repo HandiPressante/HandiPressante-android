@@ -37,7 +37,7 @@ public class MyLocation {
         // I use LocationResult callback class to pass location value from MyLocation to user code.
         locationResult = result;
         if(context == null){
-            System.out.println("------------------------------------------------- Testo : context null");
+         /*   System.out.println("------------------------------------------------- Testo : context null");*/
             return false;
         }
 
@@ -58,7 +58,7 @@ public class MyLocation {
 
         // Don't start listeners if no provider is enabled.
         if (!gps_enabled && !network_enabled) {
-            System.out.println("------------------------------------------------- Testo : gps non activé");
+        /*    System.out.println("------------------------------------------------- Testo : gps non activé");*/
             return false;
         }
 
@@ -71,7 +71,7 @@ public class MyLocation {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListenerNetwork);
         timer1 = new Timer();
-        System.out.println("------------------------------------------------- Testo : Recherche de la loc");
+       /* System.out.println("------------------------------------------------- Testo : Recherche de la loc");*/
         c = context;
         timer1.schedule(new GetLastLocation(), 500);
         return true;
@@ -102,6 +102,7 @@ public class MyLocation {
         public void onLocationChanged(Location location) {
             timer1.cancel();
             locationResult.gotLocation(location);
+            /*System.out.println(MyApplication.getAppContext() + Manifest.permission.ACCESS_FINE_LOCATION);*/
             if(ContextCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(MyApplication.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(this);
@@ -122,7 +123,7 @@ public class MyLocation {
     class GetLastLocation extends TimerTask {
         @Override
         public void run() {
-            System.out.println("------------------------------------------------- Testo : lancement de la recherche");
+         /*   System.out.println("------------------------------------------------- Testo : lancement de la recherche");*/
             if(ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(locationListenerGps);
@@ -139,18 +140,18 @@ public class MyLocation {
                     locationResult.gotLocation(gps_loc);
                 else
                     locationResult.gotLocation(net_loc);
-                System.out.println("------------------------------------------------- Testo : gps & réseau dispo");
+            /*    System.out.println("------------------------------------------------- Testo : gps & réseau dispo");*/
                 return;
             }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
-                System.out.println("------------------------------------------------- Testo : gps dispo");
+            /*    System.out.println("------------------------------------------------- Testo : gps dispo");*/
                 return;
             }
             if (net_loc != null) {
                 locationResult.gotLocation(net_loc);
-                System.out.println("------------------------------------------------- Testo : réseau dispo");
+             /*   System.out.println("------------------------------------------------- Testo : réseau dispo");*/
                 return;
             }
             System.out.println("------------------------------------------------- Testo : pas de loc trouvée");
@@ -166,7 +167,7 @@ public class MyLocation {
         }
 
         public void gotLocation(Location location){
-            System.out.println("------------------------------------------------- Testo : gotLocation");
+        /*    System.out.println("------------------------------------------------- Testo : gotLocation");*/
             mF.setLoc(location);
         }
        // public Location getLocation{return _loc;}
