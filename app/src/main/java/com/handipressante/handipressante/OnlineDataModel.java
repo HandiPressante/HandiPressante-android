@@ -3,25 +3,18 @@ package com.handipressante.handipressante;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by Nico on 21/10/2015.
- */
+
 public class OnlineDataModel implements IDataModel {
     private Context mContext;
 
@@ -39,7 +32,9 @@ public class OnlineDataModel implements IDataModel {
             try {
                 InputStream is = downloadUrl(strUrl);
                 DataFactory facto = new DataFactory();
-                return facto.createToilets(is);
+                List<Toilet> res = facto.createToilets(is);
+                is.close();
+                return res;
             } catch (IOException e) {
                 Log.e("Debug", "Unable to retrieve web page. URL may be invalid.");
                 e.printStackTrace();
@@ -75,22 +70,22 @@ public class OnlineDataModel implements IDataModel {
             Log.d("Debug", "The response is: " + response);
             is = conn.getInputStream();
 
-            DataFactory facto = new DataFactory();
+            /*DataFactory facto = new DataFactory();
 
             // TODO : search for good size
-            byte[] buffer = new byte[2048];
+            byte[] buffer = new byte[2048*2048];
             is.read(buffer);
 
-            res = new ByteArrayInputStream(buffer);
+            res = new ByteArrayInputStream(buffer);*/
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
-            if (is != null) {
+            /*if (is != null) {
                 is.close();
-            }
+            }*/
         }
 
-        return res;
+        return is;
     }
 }

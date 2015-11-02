@@ -88,7 +88,7 @@ public class ListToiletsFragment extends ListFragment {
         @Override
         protected List<Toilet> doInBackground(GPSCoordinates... params) {
             IDataModel model = new OnlineDataModel(getContext());
-            return model.getToilets(params[0], 400, 400);
+            return model.getToilets(params[0], 600, 600);
         }
 
         // onPostExecute displays the results of the AsyncTask.
@@ -104,7 +104,55 @@ public class ListToiletsFragment extends ListFragment {
                 Log.d("Debug", "Y 93 : " + t.getCoordinates().getL93Y());
                 Log.d("Debug", "########################");
             }
-            //textView.setText(result);
+
+            GPSCoordinates curPos = new GPSCoordinates(351861.03, 6789173.05);
+
+            ArrayList<Toilet> sortedList = new ArrayList<>();
+
+            if (result.size() > 0) sortedList.add(result.get(0));
+            for (Toilet t : result) {
+                int insertIndex = -1;
+                for (int i=0; i<sortedList.size(); i++) {
+                    if (t.getDistance(curPos) < sortedList.get(i).getDistance(curPos)) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+
+                if (insertIndex >= 0) {
+                    sortedList.add(insertIndex, t);
+                } else {
+                    sortedList.add(t);
+                }
+            }
+
+            // Each row in the list stores country name, currency and flag
+            List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+
+            int i =0;
+            for (Toilet t : sortedList) {
+                HashMap<String, String> hm = new HashMap<String,String>();
+                hm.put("txt", t.getAddress());
+                hm.put("rank", Integer.toString(t.getRankIcon()));
+                hm.put("icon_pmr", Integer.toString(t.getIcon()));
+                hm.put("dist", t.getDistanceToString(curPos));
+                aList.add(hm);
+
+                i++;
+                if (i == 5) break;
+            }
+
+            // Keys used in Hashmap
+            String[] from = { "icon_pmr","txt", "dist" ,"rank"};
+
+            // Ids of views in listview_layout
+            int[] to = { R.id.flag,R.id.txt,R.id.dist,R.id.rank};
+
+            // Instantiating an adapter to store each items
+            // R.layout.listview_layout defines the layout of each item
+            SimpleAdapter adapter = new SimpleAdapter(getActivity().getBaseContext(), aList, R.layout.fragment_list, from, to);
+
+            setListAdapter(adapter);
         }
 
 

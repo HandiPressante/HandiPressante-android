@@ -43,8 +43,10 @@ public class DataFactory {
                     t_adapted = reader.nextString().equals("1");
                 } else if (name.equals("x93")) {
                     t_x93 = reader.nextDouble();
+                    Log.d("Debug", "t_x93 = " + t_x93);
                 } else if (name.equals("y93")) {
                     t_y93 = reader.nextDouble();
+                    Log.d("Debug", "t_y93 = " + t_y93);
                 } else {
                     reader.skipValue();
                 }

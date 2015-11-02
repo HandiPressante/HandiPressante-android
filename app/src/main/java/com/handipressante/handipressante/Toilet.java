@@ -1,5 +1,7 @@
 package com.handipressante.handipressante;
 
+import android.util.Log;
+
 import java.text.DecimalFormat;
 
 /**
@@ -65,7 +67,21 @@ public class Toilet implements IMarker {
     }
 
     // return distance in meters
-    public  Double getDistance(GPSCoordinates ref, int Gitan) {
+    public  Double getDistance(GPSCoordinates ref) {
+        double x1 = _coord.getL93X();
+        Log.d("Debug", "x1 = " + x1);
+
+        double x2 = ref.getL93X();
+        Log.d("Debug", "x2 = " + x2);
+
+        double y1 = _coord.getL93Y();
+        double y2 = ref.getL93Y();
+        Log.d("Debug", "x1 - x2 = " + (x1 - x2));
+        Log.d("Debug", "(x1 - x2)² = " + Math.pow(x1 - x2, 2));
+
+        return Math.sqrt(0 + Math.pow(_coord.getL93Y() - ref.getL93Y(), 2));
+
+        /*
         // TODO : compute dist between _coord and ref
         switch (Gitan) {
             case 0:
@@ -90,12 +106,12 @@ public class Toilet implements IMarker {
                 return (double) 3385.23;
             default:
                 return (double) 4345.5;
-        }
+        }*/
     }
 
     // return a string to display the distance
     public String getDistanceToString(GPSCoordinates ref) {
-        Double dist = this.getDistance(ref, this._id);
+        Double dist = this.getDistance(ref);
         if(dist>1000){
             // Kilometers
             dist = dist/1000;
@@ -112,5 +128,17 @@ public class Toilet implements IMarker {
 
     public GPSCoordinates getCoordinates() {
         return new GPSCoordinates();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+
+        if (o instanceof Toilet) {
+            Toilet t = (Toilet)o;
+            return this._id.equals(t._id);
+        }
+
+        return false;
     }
 }

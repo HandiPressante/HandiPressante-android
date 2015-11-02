@@ -4,37 +4,27 @@ package com.handipressante.handipressante;
  * Created by Nico on 19/10/2015.
  */
 public class GPSCoordinates {
-    private double _latitude;
-    private double _longitude;
+    private double _x93;
+    private double _y93;
 
     public GPSCoordinates() {
-        _latitude = 0;
-        _longitude = 0;
+        _x93 = 0;
+        _y93 = 0;
     }
 
-    public GPSCoordinates(double latitude, double longitude) {
-        _latitude = latitude;
-        _longitude = longitude;
+    public GPSCoordinates(double x93, double y93) {
+        _x93 = x93;
+        _y93 = y93;
     }
 
-    public void setLatitude(double latitude) {
-        this._latitude = latitude;
+    public void setL93X(double x93) {
+        this._x93 = x93;
+    }
+    public void setL93Y(double y93) {
+        this._y93 = y93;
     }
 
-    public double getLatitude() {
-        return this._latitude;
-    }
+    public double getL93X() { return _x93; }
 
-    public double getL93X() { return 351861.03; }
-
-    public double getL93Y() { return 6789173.05; }
-
-    public void setLongitude(double longitude) {
-        this._longitude = longitude;
-    }
-
-    public double getLongitude() {
-        return this._longitude;
-    }
-
+    public double getL93Y() { return _y93; }
 }
