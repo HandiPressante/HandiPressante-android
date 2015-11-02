@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
     private String[] mTitles;
+    private Integer[] mIcon;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,10 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setIcon(R.drawable.menu_icon);
 
         mTitle = mDrawerTitle = getTitle();
-        mTitles = new String[]{"Home", "Settings", "Title 3"};
+        mTitles = new String[]{"Home", "Mon Compte", "Mémos"};
+
+        // List of icon in the menu
+        mIcon = new Integer[]{R.drawable.menu_icon, R.drawable.handicap_icon, R.drawable.star_five};
         initDrawer();
 
 
@@ -84,9 +88,21 @@ public class MainActivity extends FragmentActivity {
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+
+        MenuList adapter = new
+                MenuList(MainActivity.this, mTitles, mIcon);
+        mDrawerList.setAdapter(adapter);
+
+
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        /*mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mTitles));
+                */
+
+
+
+
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer

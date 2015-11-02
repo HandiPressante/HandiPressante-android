@@ -76,7 +76,7 @@ public class MyLocation {
         Log.e("yvo", "Recherche de la loc");
         c = context;
         timer1.schedule(new GetLastLocation(), 10);
-        timer1.schedule(new GetLastLocation(), 5000);
+        timer1.schedule(new GetLastLocation(), 5000, 5000);
         return true;
     }
 
@@ -159,11 +159,6 @@ public class MyLocation {
             }
             Log.e("yvo", "pas de loc trouvée");
             locationResult.gotLocation(null);
-
-            if(first == true){
-                first = false;
-                cancel();
-            }
 
         }
     }

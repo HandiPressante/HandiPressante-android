@@ -107,9 +107,11 @@ public class MapFragment extends Fragment {
     private final static int ZOOM = 14;
     private Location loc;
     boolean gps = false;
+    private View map;
+    private IMapController map_controller;
     public void setLoc(Location _loc){
         loc = _loc;
-        Log.e("yvo", "loc : "+ loc);
+        Log.e("yvo", "loc : " + loc);
     }
 
     @Override
@@ -207,7 +209,8 @@ public class MapFragment extends Fragment {
         }).start();
 
 
-
+        map = mMapView;
+        map_controller = mapController;
         return mMapView;
     }
 
@@ -221,5 +224,14 @@ public class MapFragment extends Fragment {
             return startPoint;
         }
     }
+ /*   public void onStart() {
+        super.onStart();
+        GeoPoint startPoint = new GeoPoint(loc);
+        map.invalidate();
+        while(true){
+            startPoint = new GeoPoint(loc);
+            map_controller.setCenter(startPoint);
+        }
+    }*/
 
 }
