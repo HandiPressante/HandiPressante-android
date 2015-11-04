@@ -67,16 +67,19 @@ import android.widget.ZoomButtonsController;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.overlays.Marker;
+import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import java.util.ArrayList;
 import org.osmdroid.bonuspack.routing.Road;
+import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.MinimapOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
@@ -126,10 +129,14 @@ public class MapFragment extends Fragment {
 
         //activate the + and - (zoom)
         mMapView.setBuiltInZoomControls(true);
+
         //activate the multitouch control
         mMapView.setMultiTouchControls(true);
         //change the map's style
+
         mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        mMapView.setTilesScaledToDpi(true);
+
         IMapController mapController = mMapView.getController();
         //choose the zoom lvl
         mMapView.setMaxZoomLevel(20);
@@ -162,15 +169,21 @@ public class MapFragment extends Fragment {
         //display
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         //text who pop-up when you select the mark
-        startMarker.setTitle("Start point");
+        startMarker.setTitle("Pole Saint-Helier");
         //icone changing
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         Marker newMarker = new Marker(mMapView);
         final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
 
+        //newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setTitle("Point test");
+        newMarker.setTitle("Toilettes 1");
+        newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
+
+
+
+        newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(newMarker);
 
@@ -219,8 +232,9 @@ public class MapFragment extends Fragment {
             GeoPoint startPoint = new GeoPoint(loc);
             return startPoint;
         } else{
-            //startpoint if gps not enabled (Rennes's townhall)
-            GeoPoint startPoint = new GeoPoint(48.11137, -1.680145);
+            //startpoint if gps not enabled (Pole Saint Helier- Rennes)
+            GeoPoint startPoint = new GeoPoint(
+            48.106681, -1.669463);
             return startPoint;
         }
     }
@@ -234,4 +248,7 @@ public class MapFragment extends Fragment {
         }
     }*/
 
+
+
 }
+
