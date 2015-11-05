@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,11 +16,13 @@ import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +43,7 @@ import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.location.GpsStatus;
+import android.widget.Button;
 import android.widget.Toast;
 import android.location.LocationListener;
 import android.location.LocationProvider;
@@ -66,6 +70,9 @@ import android.widget.TextView;
 import android.widget.ZoomButtonsController;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.bonuspack.overlays.FolderOverlay;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
 import org.osmdroid.bonuspack.overlays.Polyline;
@@ -96,7 +103,11 @@ import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.logging.Handler;
 import java.util.ArrayList;
@@ -107,6 +118,7 @@ public class MapFragment extends Fragment {
 
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
+    private List<Toilet> liste;
     private final static int ZOOM = 14;
     private Location loc;
     boolean gps = false;
@@ -164,33 +176,38 @@ public class MapFragment extends Fragment {
         mapController.setCenter(startPoint);
         //mark creation
         Marker startMarker = new Marker(mMapView);
+        //use custom bubble info
+        startMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
         //selection of the mark's coordinates
         startMarker.setPosition(startPoint);
         //display
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        //text who pop-up when you select the mark
+        //text which pop-up when you select the mark
         startMarker.setTitle("Pole Saint-Helier");
-        //icone changing
+        startMarker.setSubDescription("Point de départ");
+        //to change the icon
         startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        //new end point
         Marker newMarker = new Marker(mMapView);
-        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
+        /*test implementation liste toilettes */
 
-        //newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
+
+        /*fin test */
+        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
+        newMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        newMarker.setTitle("Toilettes 1");
+        newMarker.setTitle("Parlement de Bretagne");
+        newMarker.setSubDescription("300 m");
         newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
-
-
-
         newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(newMarker);
-
-
         mMapView.invalidate();
 
-        //new thread for navigate
+
+
+        //new thread for navigation
         new Thread(new Runnable()
         {
             public void run() {
@@ -199,6 +216,7 @@ public class MapFragment extends Fragment {
                 ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
                 waypoints.add(startPoint);
                 waypoints.add(newPoint);
+
                 Road road = roadManager.getRoad(waypoints);
                 try {
                     road = roadManager.getRoad(waypoints);
@@ -247,7 +265,6 @@ public class MapFragment extends Fragment {
             map_controller.setCenter(startPoint);
         }
     }*/
-
 
 
 }
