@@ -177,32 +177,26 @@ public class MapFragment extends Fragment {
         //mark creation
         Marker startMarker = new Marker(mMapView);
         //use custom bubble info
-        startMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
+        startMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         //selection of the mark's coordinates
         startMarker.setPosition(startPoint);
         //display
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
         //text which pop-up when you select the mark
         startMarker.setTitle("Pole Saint-Helier");
         startMarker.setSubDescription("Point de départ");
         //to change the icon
-        startMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        startMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
         //new end point
-        Marker newMarker = new Marker(mMapView);
+        //Marker newMarker = new Marker(mMapView);
         /*test implementation liste toilettes */
 
 
         /*fin test */
         final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
-        newMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
-        newMarker.setPosition(newPoint);
-        newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        newMarker.setTitle("Parlement de Bretagne");
-        newMarker.setSubDescription("300 m");
-        newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
-        newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        Marker DestMarker = createMarker(newPoint);
         mMapView.getOverlays().add(startMarker);
-        mMapView.getOverlays().add(newMarker);
+        mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
 
 
@@ -243,6 +237,19 @@ public class MapFragment extends Fragment {
         map = mMapView;
         map_controller = mapController;
         return mMapView;
+    }
+
+    public Marker createMarker(GeoPoint newPoint){
+        Marker newMarker = new Marker(mMapView);
+
+        newMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
+        newMarker.setPosition(newPoint);
+        newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        newMarker.setTitle("Parlement de Bretagne");
+        newMarker.setSubDescription("300 m");
+        newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
+        newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        return newMarker;
     }
 
     public GeoPoint gps_enabled(){
