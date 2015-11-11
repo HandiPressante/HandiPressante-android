@@ -17,6 +17,8 @@ public class MenuList extends ArrayAdapter<String>{
         private final Activity context;
         private final String[] menu_item;
         private final Integer[] imageId;
+
+
         public MenuList(Activity context,
                           String[] menu_item, Integer[] imageId) {
             super(context, R.layout.drawer_list_item, menu_item);

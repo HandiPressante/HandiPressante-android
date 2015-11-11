@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity {
         mTitles = new String[]{"Home", "Mon Compte", "Mémos"};
 
         // List of icon in the menu
-        mIcon = new Integer[]{R.drawable.menu_icon, R.drawable.handicap_icon, R.drawable.star_five};
+        mIcon = new Integer[]{R.drawable.home_icon, R.drawable.profil_icon, R.drawable.memo_icon};
         initDrawer();
 
 
