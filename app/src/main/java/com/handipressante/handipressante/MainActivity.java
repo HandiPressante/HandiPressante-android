@@ -47,10 +47,10 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setIcon(R.drawable.menu_icon);
 
         mTitle = mDrawerTitle = getTitle();
-        mTitles = new String[]{"Home", "Mon Compte", "Mémos"};
+        mTitles = new String[]{"Home", "Réglages", "Mémos"};
 
         // List of icon in the menu
-        mIcon = new Integer[]{R.drawable.home_icon, R.drawable.profil_icon, R.drawable.memo_icon};
+        mIcon = new Integer[]{R.drawable.home_icon, R.drawable.settings_icon, R.drawable.memo_icon};
         initDrawer();
 
 
