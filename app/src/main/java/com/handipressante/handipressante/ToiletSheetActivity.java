@@ -17,10 +17,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         // get info from parent view
         Intent intent = getIntent();
-        String id  = intent.getIntExtra(idSheet);
+        Integer id  = intent.getIntExtra("idSheet", -1);
 
-        getActionBar().setLogo(R.drawable.back_icon);
-        getActionBar().setTitle("Liste");
+        //getActionBar().setLogo(R.drawable.back_icon);
+        //getActionBar().setTitle("Liste");
 
 
 

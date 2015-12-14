@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mDrawerTitle;
     private String[] mTitles;
     private Integer[] mIcon;
-    
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

@@ -43,10 +43,10 @@ public class ListToiletsFragment extends ListFragment {
         GPSCoordinates myPlace = new GPSCoordinates(351861.03, 6789173.05);
 
         // Download toilets
-        new DownloadToiletsTask().execute(myPlace);
+        //new DownloadToiletsTask().execute(myPlace);
 
         // Default toilet in case of error
-        listOfToilets.add(new Toilet(-1, false, "Pas de toilette", new GPSCoordinates(1,1),0));
+        listOfToilets.add(new Toilet(1, false, "Pas de toilette", new GPSCoordinates(1,1),0));
 
         // Generation of view
         generateView();
