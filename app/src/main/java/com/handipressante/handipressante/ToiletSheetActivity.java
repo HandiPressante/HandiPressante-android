@@ -1,14 +1,17 @@
 package com.handipressante.handipressante;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ToiletSheetActivity extends AppCompatActivity {
+public class ToiletSheetActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +22,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Integer id  = intent.getIntExtra("idSheet", -1);
 
-        //getActionBar().setLogo(R.drawable.back_icon);
-        //getActionBar().setTitle("Liste");
+        getActionBar().setLogo(R.drawable.back_icon);
+        getActionBar().setTitle("Liste");
 
-
+        fillToiletSheet();
 
     }
 
@@ -40,15 +43,21 @@ public class ToiletSheetActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void getSheet(int id){
         Log.e("Test", "test");
+    }
+
+    public void fillToiletSheet(){
+        // Set icon whether adapted toilet or not
+        ImageView img= (ImageView) findViewById(R.id.handicapped);
+        img.setImageResource(R.drawable.handicap_icon);
+
+        // Set toilet's name
+        TextView name=(TextView)findViewById(R.id.toilet_name);
+        name.setText("Parc des Gayeulles");
+
     }
 }
