@@ -40,8 +40,6 @@ public class MainActivity extends FragmentActivity {
     private String[] mTitles;
     private Integer[] mIcon;
 
-    public static String idSheet = "Sheet not defined";
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

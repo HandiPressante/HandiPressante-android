@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,10 +17,12 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         // get info from parent view
         Intent intent = getIntent();
-        String id  = intent.getStringExtra(MainActivity.idSheet);
+        String id  = intent.getIntExtra(idSheet);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        getActionBar().setLogo(R.drawable.back_icon);
+        getActionBar().setTitle("Liste");
+
+
 
     }
 
@@ -43,5 +46,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getSheet(int id){
+        Log.e("Test", "test");
     }
 }
