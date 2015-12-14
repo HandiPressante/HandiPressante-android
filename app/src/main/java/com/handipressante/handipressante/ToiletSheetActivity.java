@@ -1,7 +1,10 @@
 package com.handipressante.handipressante;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,8 +14,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toilet_sheet);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("Title");
+
+        // get info from parent view
+        Intent intent = getIntent();
+        String id  = intent.getIntExtra(idSheet);
+
+        getActionBar().setLogo(R.drawable.back_icon);
+        getActionBar().setTitle("Liste");
+
+
 
     }
 
@@ -36,5 +46,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void getSheet(int id){
+        Log.e("Test", "test");
     }
 }

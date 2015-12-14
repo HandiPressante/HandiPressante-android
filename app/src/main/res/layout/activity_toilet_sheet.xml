@@ -6,4 +6,106 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.handipressante.handipressante.ToiletSheetActivity">
 
+    <!-- Toilet presentation block-->
+    <LinearLayout
+        android:id="@+id/presentation_block"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Handicapé?"
+                android:layout_gravity="left"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/handicapped"
+                android:layout_gravity="start" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toilet_name" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comment_button"
+                android:layout_gravity="bottom"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/map_button"
+                android:layout_gravity="bottom"/>
+
+
+
+        </LinearLayout>
+
+        <!--<Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Handicapé?"
+            android:layout_gravity="left"
+            />-->
+
+
+
+    </LinearLayout>
+
+
+    <!-- Toilet pictures block-->
+    <LinearLayout
+        android:id="@+id/picture_block"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+
+    <!-- Toilet description block-->
+    <LinearLayout
+        android:id="@+id/description_block"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+
+    <!-- Toilet rate block-->
+    <LinearLayout
+        android:id="@+id/rate_block"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+
+    <!-- Toilet comment block-->
+    <LinearLayout
+        android:id="@+id/comment_block"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
 </RelativeLayout>
