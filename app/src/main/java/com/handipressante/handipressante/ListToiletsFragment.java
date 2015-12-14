@@ -1,5 +1,5 @@
 package com.handipressante.handipressante;
-
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +29,8 @@ import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
 public class ListToiletsFragment extends ListFragment {
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -79,6 +81,11 @@ public class ListToiletsFragment extends ListFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    public void onClick(View v){
+        Intent intent = new Intent(this.getActivity(), ToiletSheetActivity.class);
+        startActivity(intent);
+    }
+
     // Uses AsyncTask to create a task away from the main UI thread. This task takes a
     // URL string and uses it to create an HttpUrlConnection. Once the connection
     // has been established, the AsyncTask downloads the contents of the webpage as
@@ -88,7 +95,7 @@ public class ListToiletsFragment extends ListFragment {
         @Override
         protected List<Toilet> doInBackground(GPSCoordinates... params) {
             IDataModel model = new OnlineDataModel(getContext());
-            return model.getToilets(params[0], 600, 600);
+            return model.getToilets(params[0], 400, 400);
         }
 
         // onPostExecute displays the results of the AsyncTask.
@@ -104,55 +111,7 @@ public class ListToiletsFragment extends ListFragment {
                 Log.d("Debug", "Y 93 : " + t.getCoordinates().getL93Y());
                 Log.d("Debug", "########################");
             }
-
-            GPSCoordinates curPos = new GPSCoordinates(351861.03, 6789173.05);
-
-            ArrayList<Toilet> sortedList = new ArrayList<>();
-
-            if (result.size() > 0) sortedList.add(result.get(0));
-            for (Toilet t : result) {
-                int insertIndex = -1;
-                for (int i=0; i<sortedList.size(); i++) {
-                    if (t.getDistance(curPos) < sortedList.get(i).getDistance(curPos)) {
-                        insertIndex = i;
-                        break;
-                    }
-                }
-
-                if (insertIndex >= 0) {
-                    sortedList.add(insertIndex, t);
-                } else {
-                    sortedList.add(t);
-                }
-            }
-
-            // Each row in the list stores country name, currency and flag
-            List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
-
-            int i =0;
-            for (Toilet t : sortedList) {
-                HashMap<String, String> hm = new HashMap<String,String>();
-                hm.put("txt", t.getAddress());
-                hm.put("rank", Integer.toString(t.getRankIcon()));
-                hm.put("icon_pmr", Integer.toString(t.getIcon()));
-                hm.put("dist", t.getDistanceToString(curPos));
-                aList.add(hm);
-
-                i++;
-                if (i == 5) break;
-            }
-
-            // Keys used in Hashmap
-            String[] from = { "icon_pmr","txt", "dist" ,"rank"};
-
-            // Ids of views in listview_layout
-            int[] to = { R.id.flag,R.id.txt,R.id.dist,R.id.rank};
-
-            // Instantiating an adapter to store each items
-            // R.layout.listview_layout defines the layout of each item
-            SimpleAdapter adapter = new SimpleAdapter(getActivity().getBaseContext(), aList, R.layout.fragment_list, from, to);
-
-            setListAdapter(adapter);
+            //textView.setText(result);
         }
 
 
