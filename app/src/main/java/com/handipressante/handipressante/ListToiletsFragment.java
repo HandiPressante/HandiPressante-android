@@ -47,34 +47,35 @@ public class ListToiletsFragment extends ListFragment {
         new DownloadToiletsTask().execute(myPlace);
 
         // Default toilet in case of error
-        listOfToilets.add(new Toilet(1, false, "Pas de toilette", new GPSCoordinates(1,1),0));
+        listOfToilets.add(0, new Toilet(123456, false, "Pas de toilette", new GPSCoordinates(1,1),2345));
 
         // Generation of view
         generateView();
 
         // Add ClickListener
-        ListView toiletList = this.getListView();
+        final ListView toiletList = this.getListView();
         toiletList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             // Show new activity when clicked
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Integer idSheet = listOfToilets.get(position).getId();
+                Log.e("Position touched", String.valueOf(position));
+                Log.e("id touched", String.valueOf(id));
+                Toilet t = (Toilet) listOfToilets.get(position);
+                Log.e("Toilet touched", t.getAddress());
+                Integer idSheet = t.getId();
                 if (idSheet != -1) // If it's not the default toilet
                 {
                     Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
                     Bundle b = new Bundle();
+                    Log.e("Id send to the sheet", String.valueOf(idSheet));
                     b.putInt("idSheet", idSheet);
                     intent.putExtras(b);
                     startActivity(intent);
                 }
             }
         });
-
-
-
         super.onActivityCreated(savedInstanceState);
-
     }
 
 

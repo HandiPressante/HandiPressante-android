@@ -24,7 +24,7 @@ public class DataFactory {
         while (reader.hasNext()) {
             reader.beginObject();
 
-            int t_id = 0;
+            int t_id = 9999;
             String t_name = "";
             String t_address = "";
             boolean t_adapted = false;
@@ -33,7 +33,7 @@ public class DataFactory {
 
             while (reader.hasNext()) {
                 String name = reader.nextName();
-                if (name.equals("id")) {
+                if (name.equals("id_toilettes")) {
                     t_id = reader.nextInt();
                 } else if (name.equals("nom")) {
                     t_name = reader.nextString();
