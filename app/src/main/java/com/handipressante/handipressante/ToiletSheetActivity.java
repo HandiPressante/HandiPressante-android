@@ -1,5 +1,6 @@
 package com.handipressante.handipressante;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +31,22 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         fillToiletSheet();
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setHomeButtonEnabled(true);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            // Something else
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -36,15 +56,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
+    
 
     public void getSheet(int id){
         Log.e("Test", "test");
