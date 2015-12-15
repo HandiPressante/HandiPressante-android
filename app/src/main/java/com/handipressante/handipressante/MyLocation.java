@@ -39,7 +39,7 @@ public class MyLocation {
         // I use LocationResult callback class to pass location value from MyLocation to user code.
         locationResult = result;
         if(context == null){
-            Log.e("yvo", " context null");
+           // Log.e("yvo", " context null");
             return false;
         }
 
@@ -60,7 +60,7 @@ public class MyLocation {
 
         // Don't start listeners if no provider is enabled.
         if (!gps_enabled && !network_enabled) {
-            Log.e("yvo", " gps non activé");
+            //Log.e("yvo", " gps non activé");
             return false;
         }
 
@@ -73,7 +73,7 @@ public class MyLocation {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListenerNetwork);
         timer1 = new Timer();
-        Log.e("yvo", "Recherche de la loc");
+       // Log.e("yvo", "Recherche de la loc");
         c = context;
         timer1.schedule(new GetLastLocation(), 10);
         timer1.schedule(new GetLastLocation(), 5000, 5000);
@@ -126,7 +126,7 @@ public class MyLocation {
     class GetLastLocation extends TimerTask {
         @Override
         public void run() {
-            Log.e("yvo", "lancement de la recherche");
+           // Log.e("yvo", "lancement de la recherche");
             if(ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(locationListenerGps);
@@ -143,21 +143,21 @@ public class MyLocation {
                     locationResult.gotLocation(gps_loc);
                 else
                     locationResult.gotLocation(net_loc);
-                Log.e("yvo", "gps & réseau dispo");
+                //Log.e("yvo", "gps & réseau dispo");
                 return;
             }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
-                Log.e("yvo", "gps dispo");
+                //Log.e("yvo", "gps dispo");
                 return;
             }
             if (net_loc != null) {
                 locationResult.gotLocation(net_loc);
-                Log.e("yvo", "réseau dispo");
+                //Log.e("yvo", "réseau dispo");
                 return;
             }
-            Log.e("yvo", "pas de loc trouvée");
+           // Log.e("yvo", "pas de loc trouvée");
             locationResult.gotLocation(null);
 
         }
@@ -171,7 +171,7 @@ public class MyLocation {
         }
 
         public void gotLocation(Location location){
-            Log.e("yvo", "gotLocation");
+            //Log.e("yvo", "gotLocation");
             mF.setLoc(location);
         }
        // public Location getLocation{return _loc;}

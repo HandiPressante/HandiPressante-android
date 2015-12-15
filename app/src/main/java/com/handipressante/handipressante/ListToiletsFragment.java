@@ -39,11 +39,12 @@ public class ListToiletsFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
         // GPSCoordinate of user ###### NEEDS TO BE DYNAMIC ########
         GPSCoordinates myPlace = new GPSCoordinates(351861.03, 6789173.05);
 
         // Download toilets
-        //new DownloadToiletsTask().execute(myPlace);
+        new DownloadToiletsTask().execute(myPlace);
 
         // Default toilet in case of error
         listOfToilets.add(new Toilet(1, false, "Pas de toilette", new GPSCoordinates(1,1),0));
@@ -71,9 +72,11 @@ public class ListToiletsFragment extends ListFragment {
         });
 
 
+
         super.onActivityCreated(savedInstanceState);
 
     }
+
 
 
     public void generateView(){
