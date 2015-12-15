@@ -341,16 +341,16 @@ public class MapFragment extends Fragment {
         loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
 
         POI toilet = new POI(0);
-        toilet.mCategory = "Toilet1";
-        toilet.mType = "Toilet";
+        toilet.mCategory = "Toilet";
+        toilet.mType = "Toilet1";
         toilet.mLocation = new GeoPoint(loc);
         POI toiletbis = new POI(0);
-        toiletbis.mCategory = "Toilet2";
-        toiletbis.mType = "Toilet";
+        toiletbis.mCategory = "Toilet";
+        toiletbis.mType = "Toilet2";
         toiletbis.mLocation = new GeoPoint(loc_bis);
         POI toiletter = new POI(0);
-        toiletter.mCategory = "Toilet3";
-        toiletter.mType = "Toilet";
+        toiletter.mCategory = "Toilet";
+        toiletter.mType = "Toilet3";
         toiletter.mLocation = new GeoPoint(loc_ter);
 
 
