@@ -330,19 +330,38 @@ public class MapFragment extends Fragment {
             }
         });
 
-        POI toilet = new POI(0);
-        toilet.mCategory = "Toilet";
-        toilet.mType = "Toilet";
-        toilet.mLocation = new GeoPoint(loc);
+
+
         NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
         ArrayList<POI> poi_list = poiProvider.getPOICloseTo( new GeoPoint(loc), "Toilet", 50, 0.1);
+
+        GeoPoint loc_bis = new GeoPoint(loc);
+        loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
+        GeoPoint loc_ter = new GeoPoint(loc);
+        loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
+
+        POI toilet = new POI(0);
+        toilet.mCategory = "Toilet1";
+        toilet.mType = "Toilet";
+        toilet.mLocation = new GeoPoint(loc);
+        POI toiletbis = new POI(0);
+        toiletbis.mCategory = "Toilet2";
+        toiletbis.mType = "Toilet";
+        toiletbis.mLocation = new GeoPoint(loc_bis);
+        POI toiletter = new POI(0);
+        toiletter.mCategory = "Toilet3";
+        toiletter.mType = "Toilet";
+        toiletter.mLocation = new GeoPoint(loc_ter);
+
 
         if (poi_list == null){
             poi_list = new ArrayList<>();
         }
-        Log.e("handipressante", "toilet null ? " + (toilet == null));
-        Log.e("handipressante", "poi_list null ? " + (poi_list == null));
+        //Log.e("handipressante", "toilet null ? " + (toilet == null));
+        //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
         poi_list.add(toilet);
+        poi_list.add(toiletbis);
+        poi_list.add(toiletter);
 
         RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(mMapView.getContext());
         mMapView.getOverlays().add(poiMarkers);
@@ -355,6 +374,11 @@ public class MapFragment extends Fragment {
             poiMarker.setIcon(poiIcon);
             poiMarkers.add(poiMarker);
         }
+
+        Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
+        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
+        poiMarkers.setIcon(clusterIcon);
+
 
         // Get the bounds of the map viewed
        /* BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
