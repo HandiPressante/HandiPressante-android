@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -110,6 +111,18 @@ public class MainActivity extends FragmentActivity {
         createDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
+
+    //method used with a button to send coords to external map app
+
+    public void sendCord(View view) {
+        Uri geoLocation = Uri.parse("geo:0,0");
+        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 
     /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

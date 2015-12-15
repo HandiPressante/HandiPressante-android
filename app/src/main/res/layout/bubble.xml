@@ -29,12 +29,12 @@
                 android:layout_weight="1"
                 android:text="Title" />
             <Button android:id="@+id/bubble_moreinfo"
-                android:background="@drawable/btn_moreinfo"
-                android:visibility="gone"
+                android:background="@drawable/icon_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                android:onClick="sendCord"/>
         </LinearLayout>
         <TextView android:id="@+id/bubble_description"
             android:layout_width="wrap_content"
