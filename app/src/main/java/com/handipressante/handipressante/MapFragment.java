@@ -1,10 +1,14 @@
 package com.handipressante.handipressante;
 
-
-
+import android.app.Activity;
+import android.content.pm.ResolveInfo;
+import android.view.MotionEvent;
+import android.view.View.OnClickListener;
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
@@ -77,6 +82,7 @@ import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.location.GpsStatus;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 import android.location.LocationListener;
@@ -107,11 +113,15 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.FolderOverlay;
+import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.Marker;
 import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
 import org.osmdroid.bonuspack.overlays.Polyline;
 import org.osmdroid.bonuspack.routing.OSRMRoadManager;
 import org.osmdroid.bonuspack.routing.RoadManager;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -161,7 +171,11 @@ public class MapFragment extends Fragment {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
+<<<<<<< HEAD
 
+=======
+    Button button;
+>>>>>>> origin/master
     public void setLoc(Location _loc){
         loc = _loc;
         //Log.e("yvo", "loc : " + loc);
@@ -205,8 +219,7 @@ public class MapFragment extends Fragment {
         }
       //  Log.e("yvo", "(loc2) : " + loc);
 
-
-        if(loc!=null){
+        if (loc != null) {
             gps = true;
         }
         final GeoPoint startPoint = gps_enabled();
@@ -228,21 +241,17 @@ public class MapFragment extends Fragment {
         //new end point
     */    //Marker newMarker = new Marker(mMapView);
         /*test implementation liste toilettes */
-
-
+        
         /*fin test */
         mMyLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
         final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
         Marker DestMarker = createMarker(newPoint);
-     //   mMapView.getOverlays().add(startMarker);
+        //mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
-
-
-
+        
         //new thread for navigation
-        new Thread(new Runnable()
-        {
+        new Thread(new Runnable() {
             public void run() {
 
                 RoadManager roadManager = new OSRMRoadManager();
@@ -265,22 +274,29 @@ public class MapFragment extends Fragment {
                             //handle error... warn the user, etc.
                         }
 
-                        Polyline roadOverlay = RoadManager.buildRoadOverlay(finalRoad, Color.RED, 8, getContext());
+                        Polyline roadOverlay = RoadManager.buildRoadOverlay(finalRoad, Color.BLUE, 8, getContext());
                         mMapView.getOverlays().add(roadOverlay);
                     }
                 });
             }
         }).start();
 
-
+        
         map_controller = mapController;
         return mMapView;
     }
 
+    //ouvrir sur google maps
+    Uri geolocation;
+    public Uri getUri() {
+       Uri geoloc = geolocation;
+        return geoloc;
+    }
+
+    //create a new marker
     public Marker createMarker(GeoPoint newPoint){
         Marker newMarker = new Marker(mMapView);
-
-        newMarker.setInfoWindow(new CustomInfoWindow((MapView) mMapView));
+        newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         newMarker.setTitle("Parlement de Bretagne");
@@ -386,6 +402,16 @@ public class MapFragment extends Fragment {
             }
         }
 */
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+
+>>>>>>> origin/master
 /*
         List<Overlay> mMyLocationOverlay = mMapView.getOverlays();
 
