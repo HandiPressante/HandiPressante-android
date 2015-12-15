@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Liste");
 
-        fillToiletSheet();
+        fillToiletSheet(id);
 
     }
 
@@ -50,14 +51,20 @@ public class ToiletSheetActivity extends FragmentActivity {
         Log.e("Test", "test");
     }
 
-    public void fillToiletSheet(){
+    public void fillToiletSheet(int id){
         // Set icon whether adapted toilet or not
         ImageView img= (ImageView) findViewById(R.id.handicapped);
         img.setImageResource(R.drawable.handicap_icon);
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText("Parc des Gayeulles");
+        name.setText("Toilettes n°" + String.valueOf(id));
+
+        ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
+        navigation_button.setBackgroundResource(R.drawable.navigation_icon);
+
+        ImageButton comment_button = (ImageButton) findViewById(R.id.comment_button);
+        comment_button.setBackgroundResource(R.drawable.icon_addrate);
 
     }
 }

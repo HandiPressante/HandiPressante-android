@@ -52,7 +52,6 @@ public class MainActivity extends FragmentActivity {
         mIcon = new Integer[]{R.drawable.home_icon, R.drawable.settings_icon, R.drawable.memo_icon};
         initDrawer();
 
-
         if (savedInstanceState == null) {
             selectItem(0);
         }
