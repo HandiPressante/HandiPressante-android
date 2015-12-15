@@ -1,7 +1,10 @@
 package com.handipressante.handipressante;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ResolveInfo;
+import android.support.annotation.MainThread;
 import android.view.MotionEvent;
 import android.view.View.OnClickListener;
 import android.Manifest;
@@ -69,7 +72,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 
-
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -108,6 +110,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ZoomButtonsController;
+
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.location.NominatimPOIProvider;
@@ -128,8 +131,10 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -148,6 +153,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -173,7 +179,8 @@ public class MapFragment extends Fragment {
     private IMapController map_controller;
 
     Button button;
-    public void setLoc(Location _loc){
+
+    public void setLoc(Location _loc) {
         loc = _loc;
         //Log.e("yvo", "loc : " + loc);
     }
@@ -204,17 +211,17 @@ public class MapFragment extends Fragment {
         mapController.setZoom(ZOOM);
 
         MyLocation mloc = new MyLocation();
-       // Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
-       // Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
+        // Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
+        // Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
         try {
             Thread.sleep(50);
-          //  Log.e("yvo", "sleep");
+            //  Log.e("yvo", "sleep");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-      //  Log.e("yvo", "(loc2) : " + loc);
+        //  Log.e("yvo", "(loc2) : " + loc);
 
         if (loc != null) {
             gps = true;
@@ -240,13 +247,13 @@ public class MapFragment extends Fragment {
         /*test implementation liste toilettes */
         
         /*fin test */
-        mMyLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
-        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
+        mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
+        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216, 2944);
         Marker DestMarker = createMarker(newPoint);
         //mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
-        
+
         //new thread for navigation
         new Thread(new Runnable() {
             public void run() {
@@ -278,20 +285,21 @@ public class MapFragment extends Fragment {
             }
         }).start();
 
-        
+
         map_controller = mapController;
         return mMapView;
     }
 
     //ouvrir sur google maps
     Uri geolocation;
+
     public Uri getUri() {
-       Uri geoloc = geolocation;
+        Uri geoloc = geolocation;
         return geoloc;
     }
 
     //create a new marker
-    public Marker createMarker(GeoPoint newPoint){
+    public Marker createMarker(GeoPoint newPoint) {
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         newMarker.setPosition(newPoint);
@@ -303,101 +311,119 @@ public class MapFragment extends Fragment {
         return newMarker;
     }
 
-    public GeoPoint gps_enabled(){
-        if(gps){
+    public GeoPoint gps_enabled() {
+        if (gps) {
             GeoPoint startPoint = new GeoPoint(loc);
             return startPoint;
-        } else{
+        } else {
             //startpoint if gps not enabled (Pole Saint Helier- Rennes)
             GeoPoint startPoint = new GeoPoint(
-            48.106681, -1.669463);
+                    48.106681, -1.669463);
             return startPoint;
         }
     }
+
     public void onStart() {
         super.onStart();
 
+        MyLocation mloc = new MyLocation();
+        Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
+        Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
+        mloc.locationResult.setMap(this);
+        if (!mloc.searchLocation(getContext(), mloc.locationResult)) {
+            new AlertDialog.Builder(mMapView.getContext())
+                    .setTitle("Erreur")
+                    .setMessage("Vous n'avez pas de GPS activé, revenir à la liste ?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent i = getActivity().getBaseContext().getPackageManager()
+                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName() );
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(i);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
 
-
-        mMyLocationOverlay.runOnFirstFix(new Runnable() {
-            public void run() {
-                GeoPoint loc = mMyLocationOverlay.getMyLocation();
-                if(loc != null){
-                    mMapView.getController().animateTo(mMyLocationOverlay.getMyLocation());
-                }else{
-                    loc = new GeoPoint(48.120624199999995, 1.6344577);
+            mMyLocationOverlay.runOnFirstFix(new Runnable() {
+                public void run() {
+                    GeoPoint loc = mMyLocationOverlay.getMyLocation();
+                    if (loc != null) {
+                        mMapView.getController().animateTo(mMyLocationOverlay.getMyLocation());
+                    } else {
+                        loc = new GeoPoint(48.120624199999995, 1.6344577);
+                    }
                 }
+            });
+
+
+            NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
+            ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
+
+            GeoPoint loc_bis = new GeoPoint(loc);
+            loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
+            GeoPoint loc_ter = new GeoPoint(loc);
+            loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
+
+            POI toilet = new POI(0);
+            toilet.mCategory = "Toilet";
+            toilet.mType = "Toilet1";
+            toilet.mLocation = new GeoPoint(loc);
+            POI toiletbis = new POI(0);
+            toiletbis.mCategory = "Toilet";
+            toiletbis.mType = "Toilet2";
+            toiletbis.mLocation = new GeoPoint(loc_bis);
+            POI toiletter = new POI(0);
+            toiletter.mCategory = "Toilet";
+            toiletter.mType = "Toilet3";
+            toiletter.mLocation = new GeoPoint(loc_ter);
+
+
+            if (poi_list == null) {
+                poi_list = new ArrayList<>();
             }
-        });
+            //Log.e("handipressante", "toilet null ? " + (toilet == null));
+            //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
+            poi_list.add(toilet);
+            poi_list.add(toiletbis);
+            poi_list.add(toiletter);
+
+            RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
+            mMapView.getOverlays().add(poiMarkers);
+            Drawable poiIcon = getResources().getDrawable(R.drawable.mymarker);
+            for (POI poi : poi_list) {
+                Marker poiMarker = new Marker(mMapView);
+                poiMarker.setTitle(poi.mType);
+                poiMarker.setSnippet(poi.mDescription);
+                poiMarker.setPosition(poi.mLocation);
+                poiMarker.setIcon(poiIcon);
+                poiMarkers.add(poiMarker);
+            }
+
+            Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
+            Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
+            poiMarkers.setIcon(clusterIcon);
 
 
-
-        NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
-        ArrayList<POI> poi_list = poiProvider.getPOICloseTo( new GeoPoint(loc), "Toilet", 50, 0.1);
-
-        GeoPoint loc_bis = new GeoPoint(loc);
-        loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
-        GeoPoint loc_ter = new GeoPoint(loc);
-        loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
-
-        POI toilet = new POI(0);
-        toilet.mCategory = "Toilet";
-        toilet.mType = "Toilet1";
-        toilet.mLocation = new GeoPoint(loc);
-        POI toiletbis = new POI(0);
-        toiletbis.mCategory = "Toilet";
-        toiletbis.mType = "Toilet2";
-        toiletbis.mLocation = new GeoPoint(loc_bis);
-        POI toiletter = new POI(0);
-        toiletter.mCategory = "Toilet";
-        toiletter.mType = "Toilet3";
-        toiletter.mLocation = new GeoPoint(loc_ter);
-
-
-        if (poi_list == null){
-            poi_list = new ArrayList<>();
-        }
-        //Log.e("handipressante", "toilet null ? " + (toilet == null));
-        //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
-        poi_list.add(toilet);
-        poi_list.add(toiletbis);
-        poi_list.add(toiletter);
-
-        RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(mMapView.getContext());
-        mMapView.getOverlays().add(poiMarkers);
-        Drawable poiIcon = getResources().getDrawable(R.drawable.mymarker);
-        for (POI poi:poi_list){
-            Marker poiMarker = new Marker(mMapView);
-            poiMarker.setTitle(poi.mType);
-            poiMarker.setSnippet(poi.mDescription);
-            poiMarker.setPosition(poi.mLocation);
-            poiMarker.setIcon(poiIcon);
-            poiMarkers.add(poiMarker);
-        }
-
-        Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
-        Bitmap clusterIcon = ((BitmapDrawable)clusterIconD).getBitmap();
-        poiMarkers.setIcon(clusterIcon);
-
-
-        // Get the bounds of the map viewed
+            // Get the bounds of the map viewed
        /* BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
         GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLatitudeE6());
         GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLatitudeE6());
         GeoPoint East = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonEastE6());
         GeoPoint West = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonWestE6());*/
-        mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
-        //mMyLocationOverlay.setEnabled(mMyLocationOverlay.isOptionsMenuEnabled());
-        //mMyLocationOverlay.setOptionsMenuEnabled(mMyLocationOverlay.isOptionsMenuEnabled());
-        mMyLocationOverlay.enableMyLocation();
-        mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
-        mMyLocationOverlay.enableFollowLocation();
-        mMapView.getOverlays().add(mMyLocationOverlay);
-        // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
 
-        mMapView.invalidate();
 
-        //try to change the drawable of the actual position
+            // mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+            mMyLocationOverlay.enableMyLocation();
+            mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+            mMyLocationOverlay.enableFollowLocation();
+            mMapView.getOverlays().add(mMyLocationOverlay);
+            // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
+
+            mMapView.invalidate();
+
+            //try to change the drawable of the actual position
 /*
         Marker actualMarker = new Marker(mMapView);
         //text which pop-up when you select the mark
@@ -486,7 +512,7 @@ public class MapFragment extends Fragment {
             mMapView.invalidate();
         }*/
 
-
+        }
     }
 }
 
