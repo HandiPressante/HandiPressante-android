@@ -171,11 +171,8 @@ public class MapFragment extends Fragment {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
-<<<<<<< HEAD
 
-=======
     Button button;
->>>>>>> origin/master
     public void setLoc(Location _loc){
         loc = _loc;
         //Log.e("yvo", "loc : " + loc);
@@ -402,16 +399,6 @@ public class MapFragment extends Fragment {
             }
         }
 */
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
->>>>>>> origin/master
 /*
         List<Overlay> mMyLocationOverlay = mMapView.getOverlays();
 
