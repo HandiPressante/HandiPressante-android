@@ -191,17 +191,17 @@ public class MapFragment extends Fragment {
         mapController.setZoom(ZOOM);
 
         MyLocation mloc = new MyLocation();
-        Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
-        Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
+       // Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
+       // Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
         try {
             Thread.sleep(50);
-            Log.e("yvo", "sleep");
+          //  Log.e("yvo", "sleep");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Log.e("yvo", "(loc2) : " + loc);
+      //  Log.e("yvo", "(loc2) : " + loc);
 
 
         if(loc!=null){
