@@ -1,6 +1,7 @@
 package com.handipressante.handipressante;
 
 
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -30,6 +31,38 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.SubMenu;
+
+import java.util.LinkedList;
+
+import microsoft.mappoint.TileSystem;
+
+import org.osmdroid.DefaultResourceProxyImpl;
+import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.api.IMapView;
+import org.osmdroid.util.BoundingBoxE6;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.IOverlayMenuProvider;
+import org.osmdroid.views.overlay.Overlay.Snappable;
+import org.osmdroid.views.util.constants.MapViewConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.Paint.Style;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.location.Location;
+import android.util.FloatMath;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+
+
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -85,10 +118,12 @@ import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import java.util.ArrayList;
+import java.util.List;
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.views.overlay.MinimapOverlay;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 import org.osmdroid.views.overlay.compass.CompassOverlay;
@@ -109,6 +144,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Handler;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -122,11 +158,11 @@ public class MapFragment extends Fragment {
     private final static int ZOOM = 14;
     private Location loc;
     boolean gps = false;
-    private View map;
+    MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
     public void setLoc(Location _loc){
         loc = _loc;
-        Log.e("yvo", "loc : " + loc);
+        //Log.e("yvo", "loc : " + loc);
     }
 
     @Override
@@ -138,6 +174,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
         mMapView = new MapView(inflater.getContext(), 256, mResourceProxy);
+        IMapController mapController = mMapView.getController();
 
         //activate the + and - (zoom)
         mMapView.setBuiltInZoomControls(true);
@@ -149,7 +186,6 @@ public class MapFragment extends Fragment {
         mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
         mMapView.setTilesScaledToDpi(true);
 
-        IMapController mapController = mMapView.getController();
         //choose the zoom lvl
         mMapView.setMaxZoomLevel(20);
         mapController.setZoom(ZOOM);
@@ -175,7 +211,7 @@ public class MapFragment extends Fragment {
 
         mapController.setCenter(startPoint);
         //mark creation
-        Marker startMarker = new Marker(mMapView);
+    /*    Marker startMarker = new Marker(mMapView);
         //use custom bubble info
         startMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         //selection of the mark's coordinates
@@ -188,14 +224,15 @@ public class MapFragment extends Fragment {
         //to change the icon
         startMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
         //new end point
-        //Marker newMarker = new Marker(mMapView);
+    */    //Marker newMarker = new Marker(mMapView);
         /*test implementation liste toilettes */
 
 
         /*fin test */
+        mMyLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
         final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216,2944);
         Marker DestMarker = createMarker(newPoint);
-        mMapView.getOverlays().add(startMarker);
+     //   mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
 
@@ -234,7 +271,6 @@ public class MapFragment extends Fragment {
         }).start();
 
 
-        map = mMapView;
         map_controller = mapController;
         return mMapView;
     }
@@ -263,16 +299,116 @@ public class MapFragment extends Fragment {
             return startPoint;
         }
     }
- /*   public void onStart() {
+    public void onStart() {
         super.onStart();
-        GeoPoint startPoint = new GeoPoint(loc);
-        map.invalidate();
-        while(true){
-            startPoint = new GeoPoint(loc);
-            map_controller.setCenter(startPoint);
+
+        // Get the bounds of the map viewed
+       /* BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
+        GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLatitudeE6());
+        GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLatitudeE6());
+        GeoPoint East = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonEastE6());
+        GeoPoint West = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonWestE6());*/
+        mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+        //mMyLocationOverlay.setEnabled(mMyLocationOverlay.isOptionsMenuEnabled());
+        //mMyLocationOverlay.setOptionsMenuEnabled(mMyLocationOverlay.isOptionsMenuEnabled());
+        mMyLocationOverlay.enableMyLocation();
+        mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+        mMyLocationOverlay.enableFollowLocation();
+        mMapView.getOverlays().add(mMyLocationOverlay);
+        // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
+
+        mMapView.invalidate();
+
+        //try to change the drawable of the actual position
+/*
+        Marker actualMarker = new Marker(mMapView);
+        //text which pop-up when you select the mark
+        actualMarker.setTitle("Position Actuelle");
+        //to change the icon
+        actualMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
+        int count =0;
+        while(count<100){
+            GeoPoint actual = mMyLocationOverlay.getMyLocation();
+            Log.e("yvo", "isnull ? " + (actual == null));
+            if(actual != null) {
+                Log.e("yvo", actual.toString());
+                //selection of the mark's coordinates
+                actualMarker.setPosition(actual);
+                actualMarker.setSubDescription(actual.toString());
+                mMapView.getOverlays().add(actualMarker);
+                mMapView.invalidate();
+            }try {
+                Thread.sleep(2000);
+                Log.e("yvo", "sleep");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-    }*/
+*/
 
 
+/*
+        List<Overlay> mMyLocationOverlay = mMapView.getOverlays();
+
+        GpsMyLocationProvider imlp = new GpsMyLocationProvider(MapFragment.this.getContext());
+        imlp.setLocationUpdateMinDistance(100); // [m]  // Set the minimum distance for location updates
+        imlp.setLocationUpdateMinTime(10000);   // [ms] // Set the minimum time interval for location updates
+        mMyLocationOverlay = new MyLocationNewOverlay(MapFragment.this.getContext(), imlp, mMapView);
+        mMyLocationOverlay.setDrawAccuracyEnabled(true);
+
+        mMapView.getOverlays().add(mCellTowerGridMarkerClusterer);
+        mMapView.getOverlays().add(mMyLocationOverlay);
+        mMapView.getOverlays().add(mCompassOverlay);
+        mMapView.getOverlays().add(mScaleBarOverlay);*/
+
+
+        /*IMapController mapController = map_controller;
+        MyLocation mloc = new MyLocation();
+        Log.e("yvo", "2 (mloc == null ?) : " + (mloc == null));
+        Log.e("yvo", "2(mloc.locationResult == null ?): " + (mloc.locationResult == null));
+        mloc.locationResult.setMap(this);
+        mloc.searchLocation(getContext(), mloc.locationResult);
+        try {
+            Thread.sleep(50);
+            Log.e("yvo", "2sleep");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.e("yvo", "2(loc2) : " + loc);
+
+        if(loc!=null){
+            gps = true;
+        }
+        GeoPoint actualPoint = new GeoPoint(loc);
+        GeoPoint continuity = new GeoPoint(loc);
+        //mark creation
+        Marker myPosition = new Marker(mMapView);
+        myPosition.setImage(getResources().getDrawable(R.drawable.yourmarker));
+        mMapView.invalidate();
+        int c = 0;
+
+        while(c < 10000){
+            if(gps){
+                actualPoint = new GeoPoint(loc);
+            }else{
+                actualPoint = continuity;
+            }
+            map_controller.setCenter(actualPoint);
+            //selection of the mark's coordinates
+            myPosition.setPosition(actualPoint);
+            continuity = actualPoint;
+            map_controller = mapController;
+            mMapView.getOverlays().add(myPosition);
+            try {
+                Thread.sleep(2500);
+                Log.e("yvo", "2sleep");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.e("yvo", "2(loc2) : " + loc);
+            c++;
+            mMapView.invalidate();
+        }*/
+    }
 }
 

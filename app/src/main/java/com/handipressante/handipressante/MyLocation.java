@@ -143,18 +143,18 @@ public class MyLocation {
                     locationResult.gotLocation(gps_loc);
                 else
                     locationResult.gotLocation(net_loc);
-                Log.e("yvo", "gps & réseau dispo");
+                //Log.e("yvo", "gps & réseau dispo");
                 return;
             }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
-                Log.e("yvo", "gps dispo");
+                //Log.e("yvo", "gps dispo");
                 return;
             }
             if (net_loc != null) {
                 locationResult.gotLocation(net_loc);
-                Log.e("yvo", "réseau dispo");
+                //Log.e("yvo", "réseau dispo");
                 return;
             }
             Log.e("yvo", "pas de loc trouvée");
@@ -171,7 +171,7 @@ public class MyLocation {
         }
 
         public void gotLocation(Location location){
-            Log.e("yvo", "gotLocation");
+            //Log.e("yvo", "gotLocation");
             mF.setLoc(location);
         }
        // public Location getLocation{return _loc;}
