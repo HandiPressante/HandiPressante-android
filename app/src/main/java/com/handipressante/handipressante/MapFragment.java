@@ -178,12 +178,18 @@ public class MapFragment extends Fragment {
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
     private TestDataModel testModel = new TestDataModel();
+    private POI poi_dest;
 
     Button button;
 
     public void setLoc(Location _loc) {
         loc = _loc;
         //Log.e("yvo", "loc : " + loc);
+    }
+
+    public void setDestination(GeoPoint geo){
+        poi_dest = new POI(0);
+        poi_dest.mLocation = geo;
     }
 
     @Override
@@ -249,21 +255,23 @@ public class MapFragment extends Fragment {
         
         /*fin test */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
-        final POI poi_dest = new POI(0);
-        poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
-        Marker DestMarker = createMarker(poi_dest);
-        //mMapView.getOverlays().add(startMarker);
-        mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
 
+        map_controller = mapController;
+        return mMapView;
+    }
+
+
+    public void newRoad(final POI poi){
         //new thread for navigation
         new Thread(new Runnable() {
             public void run() {
 
+                final GeoPoint startPoint = gps_enabled();
                 RoadManager roadManager = new OSRMRoadManager();
                 ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
                 waypoints.add(startPoint);
-                waypoints.add(poi_dest.mLocation);
+                waypoints.add(poi.mLocation);
 
                 Road road = roadManager.getRoad(waypoints);
                 try {
@@ -286,10 +294,6 @@ public class MapFragment extends Fragment {
                 });
             }
         }).start();
-
-
-        map_controller = mapController;
-        return mMapView;
     }
 
     //ouvrir sur google maps
@@ -388,22 +392,36 @@ public class MapFragment extends Fragment {
             for(Toilet t : listToilets){
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
-                toilet.mType = t.getMarkerName();
+                toilet.mType = t.getAddress();    //toilet.mType = t.getMarkerName();
                 toilet.mLocation = t.getGeo();
                 poi_list.add(toilet);
                 i++;
             }
 
+
+           /* POI poi_dest = new POI(0);
+            poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
+            Marker DestMarker = createMarker(poi_dest);
+            newRoad(poi_dest);
+            mMapView.getOverlays().add(DestMarker);*/
+
+
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
             for (POI poi : poi_list) {
                 Marker poiMarker = createMarker(poi);
+                newRoad(poi);
                 poiMarkers.add(poiMarker);
             }
+
+
+
+
 
             Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
+
 
 
             // Get the bounds of the map viewed
