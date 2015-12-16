@@ -184,7 +184,6 @@ public class MapFragment extends Fragment {
 
     public void setLoc(Location _loc) {
         loc = _loc;
-        //Log.e("yvo", "loc : " + loc);
     }
 
     public void setDestination(GeoPoint geo){
