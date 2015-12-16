@@ -1,5 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -163,6 +168,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
                 <!-- Name of the category-->
                 <TextView
                     android:layout_width="wrap_content"
@@ -173,15 +179,21 @@
                     android:textColor="#be3733"
                     android:enabled="false" />
 
-                    <!-- Image (stars) of the category-->
-                <ImageView
-                    android:id="@+id/cleanliness_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:maxWidth="75dip"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/star_five" />
+                <!-- Image (stars) of the category-->
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/cleanliness_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="50dp"
+                        android:layout_alignParentRight="true"
+                        android:maxWidth="75dip"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/star_five" />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -202,14 +214,20 @@
                     android:textColor="#be3733"/>
 
                 <!-- Image (stars) of the category-->
-                <ImageView
-                    android:id="@+id/equipement_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:maxWidth="75dip"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/star_five" />
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/equipement_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="50dp"
+                        android:layout_alignParentRight="true"
+                        android:maxWidth="75dip"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/star_five" />
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -229,14 +247,20 @@
                     android:textColor="#be3733"/>
 
                 <!-- Image (stars) of the category-->
-                <ImageView
-                    android:id="@+id/accessibility_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:maxWidth="75dip"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/star_five" />
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/accessibility_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="50dp"
+                        android:layout_alignParentRight="true"
+                        android:maxWidth="75dip"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/star_five" />
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -287,3 +311,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+</ScrollView>
