@@ -177,6 +177,7 @@ public class MapFragment extends Fragment {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
+    private TestDataModel testModel = new TestDataModel();
 
     Button button;
 
@@ -248,8 +249,9 @@ public class MapFragment extends Fragment {
         
         /*fin test */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
-        final GeoPoint newPoint = new GeoPoint(48.112050, -1.677216, 2944);
-        Marker DestMarker = createMarker(newPoint);
+        final POI poi_dest = new POI(0);
+        poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
+        Marker DestMarker = createMarker(poi_dest);
         //mMapView.getOverlays().add(startMarker);
         mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
@@ -261,7 +263,7 @@ public class MapFragment extends Fragment {
                 RoadManager roadManager = new OSRMRoadManager();
                 ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
                 waypoints.add(startPoint);
-                waypoints.add(newPoint);
+                waypoints.add(poi_dest.mLocation);
 
                 Road road = roadManager.getRoad(waypoints);
                 try {
@@ -299,16 +301,24 @@ public class MapFragment extends Fragment {
     }
 
     //create a new marker
-    public Marker createMarker(GeoPoint newPoint) {
+    public Marker createMarker(POI poi) {
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
-        newMarker.setPosition(newPoint);
+        newMarker.setPosition(poi.mLocation);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        newMarker.setTitle("Parlement de Bretagne");
-        /*poiMarker.setTitle(poi.mType);
-        poiMarker.setSnippet(poi.mDescription);*/
-        newMarker.setSubDescription("300 m");
-        newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
+        //newMarker.setTitle("Parlement de Bretagne");
+        newMarker.setTitle(poi.mType);
+        newMarker.setSnippet(poi.mDescription);
+        //newMarker.setSubDescription("300 m");
+        int i = R.drawable.star_zero;
+        if(testModel.getToilet(poi.mLocation) != null){
+            i = testModel.getToilet(poi.mLocation).getRankIcon();
+        }
+//        int i = testModel.getToilet(poi.mLocation).getRankIcon();
+//        if((i != R.drawable.star_zero) && (i != R.drawable.star_one) && (i != R.drawable.star_two) && (i != R.drawable.star_three) && (i != R.drawable.star_four) && (i != R.drawable.star_five)){
+//            i = R.drawable.star_zero;
+//        }
+        newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
         newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         return newMarker;
     }
@@ -364,23 +374,9 @@ public class MapFragment extends Fragment {
             NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
 
-            GeoPoint loc_bis = new GeoPoint(loc);
-            loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
-            GeoPoint loc_ter = new GeoPoint(loc);
-            loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
+            //testModel = new TestDataModel();
+            List<Toilet> listToilets = testModel.getToilets(1, 2, 3, 4);
 
-            POI toilet = new POI(0);
-            toilet.mCategory = "Toilet";
-            toilet.mType = "Toilet1";
-            toilet.mLocation = new GeoPoint(loc);
-            POI toiletbis = new POI(0);
-            toiletbis.mCategory = "Toilet";
-            toiletbis.mType = "Toilet2";
-            toiletbis.mLocation = new GeoPoint(loc_bis);
-            POI toiletter = new POI(0);
-            toiletter.mCategory = "Toilet";
-            toiletter.mType = "Toilet3";
-            toiletter.mLocation = new GeoPoint(loc_ter);
 
 
             if (poi_list == null) {
@@ -388,14 +384,20 @@ public class MapFragment extends Fragment {
             }
             //Log.e("handipressante", "toilet null ? " + (toilet == null));
             //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
-        poi_list.add(toilet);
-            poi_list.add(toiletbis);
-            poi_list.add(toiletter);
+            int i=0;
+            for(Toilet t : listToilets){
+                POI toilet = new POI(0);
+                toilet.mCategory = "Toilet";
+                toilet.mType = t.getMarkerName();
+                toilet.mLocation = t.getGeo();
+                poi_list.add(toilet);
+                i++;
+            }
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
             for (POI poi : poi_list) {
-                Marker poiMarker = createMarker(poi.mLocation);
+                Marker poiMarker = createMarker(poi);
                 poiMarkers.add(poiMarker);
             }
 
@@ -414,7 +416,7 @@ public class MapFragment extends Fragment {
 
             // mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
             mMyLocationOverlay.enableMyLocation();
-            mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+            //mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
             mMyLocationOverlay.enableFollowLocation();
             mMapView.getOverlays().add(mMyLocationOverlay);
             // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
