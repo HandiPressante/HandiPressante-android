@@ -305,6 +305,8 @@ public class MapFragment extends Fragment {
         newMarker.setPosition(newPoint);
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         newMarker.setTitle("Parlement de Bretagne");
+        /*poiMarker.setTitle(poi.mType);
+        poiMarker.setSnippet(poi.mDescription);*/
         newMarker.setSubDescription("300 m");
         newMarker.setImage(getResources().getDrawable(R.drawable.star_five));
         newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
@@ -330,7 +332,7 @@ public class MapFragment extends Fragment {
         Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
         Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
-       /* if (!mloc.isGPSenabled(getActivity().getBaseContext())) {
+        if (!gps) {//!mloc.isGPSenabled(getActivity().getBaseContext())
             Log.e("handipressante", "gps non activé");
             new AlertDialog.Builder(mMapView.getContext())
                     .setTitle("Erreur")
@@ -345,7 +347,7 @@ public class MapFragment extends Fragment {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
-        } else {*/
+        } else {
             Log.e("handipressante", "gps activé");
             mMyLocationOverlay.runOnFirstFix(new Runnable() {
                 public void run() {
@@ -386,19 +388,14 @@ public class MapFragment extends Fragment {
             }
             //Log.e("handipressante", "toilet null ? " + (toilet == null));
             //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
-            poi_list.add(toilet);
+        poi_list.add(toilet);
             poi_list.add(toiletbis);
             poi_list.add(toiletter);
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
-            Drawable poiIcon = getResources().getDrawable(R.drawable.mymarker);
             for (POI poi : poi_list) {
-                Marker poiMarker = new Marker(mMapView);
-                poiMarker.setTitle(poi.mType);
-                poiMarker.setSnippet(poi.mDescription);
-                poiMarker.setPosition(poi.mLocation);
-                poiMarker.setIcon(poiIcon);
+                Marker poiMarker = createMarker(poi.mLocation);
                 poiMarkers.add(poiMarker);
             }
 
@@ -513,7 +510,7 @@ public class MapFragment extends Fragment {
             mMapView.invalidate();
         }*/
 
-       // }
+        }
     }
 }
 
