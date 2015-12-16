@@ -41,6 +41,7 @@ public class MyLocation {
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         Log.e("handipressante", "lm null ? " + (lm == null));
+        Log.e("handipressante", LocationManager.GPS_PROVIDER);
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 

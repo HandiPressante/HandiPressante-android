@@ -22,9 +22,10 @@ public class OnlineDataModel implements IDataModel {
         mContext = context;
     }
 
-   /* public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max){
-        return new List<Toilet>;
-    }*/
+    public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max){
+        ArrayList<Toilet> res = new ArrayList<>();
+        return res;
+    }
 
 
 
