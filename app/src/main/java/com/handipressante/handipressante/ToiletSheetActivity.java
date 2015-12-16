@@ -70,7 +70,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText("Toilettes n°" + String.valueOf(id));
+        name.setText("ID : " + String.valueOf(id));
 
         ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
         navigation_button.setBackgroundResource(R.drawable.navigation_icon);
