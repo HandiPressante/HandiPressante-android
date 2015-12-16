@@ -350,7 +350,7 @@ public class MapFragment extends Fragment {
             Log.e("handipressante", "gps non activé");
             new AlertDialog.Builder(mMapView.getContext())
                     .setTitle("Erreur")
-                    .setMessage("Vous n'avez pas de GPS activé, revenir à la liste ?")
+                    .setMessage("Vous n'avez pas de GPS activé, merci de l'activer pour accéder à la carte")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = getActivity().getBaseContext().getPackageManager()
