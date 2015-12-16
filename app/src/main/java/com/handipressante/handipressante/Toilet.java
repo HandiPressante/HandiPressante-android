@@ -2,6 +2,8 @@ package com.handipressante.handipressante;
 
 import android.util.Log;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.text.DecimalFormat;
 
 /**
@@ -12,6 +14,8 @@ public class Toilet implements IMarker {
     private Boolean _adapted;
     private String _address;
     private GPSCoordinates _coord;
+    private GeoPoint _coordGeo;
+
     private Integer _rank; // from 1 to 5
 
     Toilet(Integer id, Boolean adapted, String address, GPSCoordinates coord, Integer rank) {
@@ -21,6 +25,16 @@ public class Toilet implements IMarker {
         _coord = coord;
         _rank = rank;
     }
+
+    Toilet(Integer id, Boolean adapted, String address, GeoPoint coord, Integer rank) {
+        _id = id;
+        _adapted = adapted;
+        _address = address;
+        _coordGeo = coord;
+        _rank = rank;
+    }
+
+    public GeoPoint getGeo() {return _coordGeo;}
 
     public Integer getId() {
         return _id;
@@ -127,7 +141,7 @@ public class Toilet implements IMarker {
     }
 
     public GPSCoordinates getCoordinates() {
-        return new GPSCoordinates();
+        return _coord;
     }
 
     @Override

@@ -1,9 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#eaeaea"
     tools:context="com.handipressante.handipressante.ToiletSheetActivity">
 
     <!-- Toilet presentation block-->
@@ -11,6 +14,10 @@
         android:id="@+id/presentation_block"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_horizontal_margin"
+        android:background="#FFFFFF"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -19,17 +26,17 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/handicapped"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/handicapped"
                 android:layout_gravity="start" />
 
             <ImageView
+                android:id="@+id/global_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="75dip"
                 android:adjustViewBounds="true"
-                android:id="@+id/global_rate"
                 android:layout_gravity="start"
                 android:src="@drawable/star_five"/>
 
@@ -42,11 +49,11 @@
             android:layout_gravity="right">
 
             <TextView
+                android:id="@+id/toilet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/toilet_name"
                 android:fontFamily="sans-serif-medium"
-                android:textSize="20dp"/>
+                android:textSize="18dp"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -55,23 +62,25 @@
                 android:gravity="right">
 
                 <ImageButton
-                    android:layout_width="55dip"
-                    android:layout_height="55dip"
+                    android:id="@+id/comment_button"
+                    android:layout_width="90dip"
+                    android:layout_height="100dip"
                     android:layout_gravity="right"
-                    android:id="@+id/comment_button" />
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/icon_addrate"/>
 
                 <ImageButton
-                    android:layout_width="55dip"
-                    android:layout_height="70dip"
                     android:id="@+id/map_button"
-                    android:layout_gravity="right" />
+                    android:layout_width="75dip"
+                    android:layout_height="110dip"
+                    android:layout_gravity="right"
+                    android:background="@drawable/navigation_icon"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
     <!-- Toilet pictures block-->
     <LinearLayout
@@ -82,12 +91,33 @@
     </LinearLayout>
 
 
+
     <!-- Toilet description block-->
     <LinearLayout
         android:id="@+id/description_block"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_below="@+id/presentation_block"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:background="#FFFFFF">
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:src="@drawable/description_title" />
+
+        <TextView
+            android:id="@+id/toilet_description"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="13dp"/>
 
     </LinearLayout>
 

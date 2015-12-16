@@ -22,6 +22,13 @@ public class OnlineDataModel implements IDataModel {
         mContext = context;
     }
 
+    public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max){
+        ArrayList<Toilet> res = new ArrayList<>();
+        return res;
+    }
+
+
+
     public List<Toilet> getToilets(GPSCoordinates ref, double xRange, double yRange) {
         String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettes/" + ref.getL93X() + "/" + ref.getL93Y() + "/" + (xRange/2) + "/" + (yRange/2);
 

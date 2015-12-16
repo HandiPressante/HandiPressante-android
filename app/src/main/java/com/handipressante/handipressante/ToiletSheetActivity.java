@@ -72,11 +72,16 @@ public class ToiletSheetActivity extends FragmentActivity {
         TextView name=(TextView)findViewById(R.id.toilet_name);
         name.setText("ID : " + String.valueOf(id));
 
-        ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
-        navigation_button.setBackgroundResource(R.drawable.navigation_icon);
+        // Set toilet's description (wiki)
+        TextView description=(TextView)findViewById(R.id.toilet_description);
+        description.setText("bla bla bla bla bla bla bla bla bla");
 
-        ImageButton comment_button = (ImageButton) findViewById(R.id.comment_button);
-        comment_button.setBackgroundResource(R.drawable.icon_addrate);
+
+        /*ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
+        navigation_button.setBackgroundResource(R.drawable.navigation_icon);*/
+
+        /*ImageButton comment_button = (ImageButton) findViewById(R.id.comment_button);
+        comment_button.setBackgroundResource(R.drawable.icon_addrate);*/
 
     }
 }
