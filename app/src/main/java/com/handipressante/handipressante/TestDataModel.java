@@ -14,7 +14,7 @@ public class TestDataModel implements IDataModel {
 
     public TestDataModel(){
 
-        GeoPoint loc =  new GeoPoint(48.120624199999995, 1.6344577);
+        GeoPoint loc =  new GeoPoint(48.1157242, - 1.6443362);
         GeoPoint loc_bis = new GeoPoint(loc);
         loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
         GeoPoint loc_ter = new GeoPoint(loc);

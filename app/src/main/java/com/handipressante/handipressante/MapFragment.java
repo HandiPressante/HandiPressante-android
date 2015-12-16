@@ -178,12 +178,17 @@ public class MapFragment extends Fragment {
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
     private TestDataModel testModel = new TestDataModel();
+    private POI poi_dest;
 
     Button button;
 
     public void setLoc(Location _loc) {
         loc = _loc;
-        //Log.e("yvo", "loc : " + loc);
+    }
+
+    public void setDestination(GeoPoint geo){
+        poi_dest = new POI(0);
+        poi_dest.mLocation = geo;
     }
 
     @Override
@@ -212,17 +217,13 @@ public class MapFragment extends Fragment {
         mapController.setZoom(ZOOM);
 
         MyLocation mloc = new MyLocation();
-        // Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
-        // Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
         try {
             Thread.sleep(50);
-            //  Log.e("yvo", "sleep");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //  Log.e("yvo", "(loc2) : " + loc);
 
         if (loc != null) {
             gps = true;
@@ -249,21 +250,23 @@ public class MapFragment extends Fragment {
         
         /*fin test */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
-        final POI poi_dest = new POI(0);
-        poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
-        Marker DestMarker = createMarker(poi_dest);
-        //mMapView.getOverlays().add(startMarker);
-        mMapView.getOverlays().add(DestMarker);
         mMapView.invalidate();
 
+        map_controller = mapController;
+        return mMapView;
+    }
+
+
+    public void newRoad(final POI poi){
         //new thread for navigation
         new Thread(new Runnable() {
             public void run() {
 
+                final GeoPoint startPoint = gps_enabled();
                 RoadManager roadManager = new OSRMRoadManager();
                 ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
                 waypoints.add(startPoint);
-                waypoints.add(poi_dest.mLocation);
+                waypoints.add(poi.mLocation);
 
                 Road road = roadManager.getRoad(waypoints);
                 try {
@@ -286,10 +289,6 @@ public class MapFragment extends Fragment {
                 });
             }
         }).start();
-
-
-        map_controller = mapController;
-        return mMapView;
     }
 
     //ouvrir sur google maps
@@ -314,10 +313,6 @@ public class MapFragment extends Fragment {
         if(testModel.getToilet(poi.mLocation) != null){
             i = testModel.getToilet(poi.mLocation).getRankIcon();
         }
-//        int i = testModel.getToilet(poi.mLocation).getRankIcon();
-//        if((i != R.drawable.star_zero) && (i != R.drawable.star_one) && (i != R.drawable.star_two) && (i != R.drawable.star_three) && (i != R.drawable.star_four) && (i != R.drawable.star_five)){
-//            i = R.drawable.star_zero;
-//        }
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
         newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         return newMarker;
@@ -339,14 +334,11 @@ public class MapFragment extends Fragment {
         super.onStart();
 
         MyLocation mloc = new MyLocation();
-        Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
-        Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
-        if (!gps) {//!mloc.isGPSenabled(getActivity().getBaseContext())
-            Log.e("handipressante", "gps non activé");
+        if (!gps) {
             new AlertDialog.Builder(mMapView.getContext())
                     .setTitle("Erreur")
-                    .setMessage("Vous n'avez pas de GPS activé, revenir à la liste ?")
+                    .setMessage("Vous n'avez pas de GPS activé, merci de l'activer pour accéder à la carte")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = getActivity().getBaseContext().getPackageManager()
@@ -358,7 +350,6 @@ public class MapFragment extends Fragment {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } else {
-            Log.e("handipressante", "gps activé");
             mMyLocationOverlay.runOnFirstFix(new Runnable() {
                 public void run() {
                     GeoPoint loc = mMyLocationOverlay.getMyLocation();
@@ -373,37 +364,51 @@ public class MapFragment extends Fragment {
 
             NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
-
-            //testModel = new TestDataModel();
             List<Toilet> listToilets = testModel.getToilets(1, 2, 3, 4);
-
-
 
             if (poi_list == null) {
                 poi_list = new ArrayList<>();
             }
-            //Log.e("handipressante", "toilet null ? " + (toilet == null));
-            //Log.e("handipressante", "poi_list null ? " + (poi_list == null));
             int i=0;
             for(Toilet t : listToilets){
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
-                toilet.mType = t.getMarkerName();
+                toilet.mType = t.getAddress();
                 toilet.mLocation = t.getGeo();
                 poi_list.add(toilet);
                 i++;
             }
+
+           /* POI poi_dest = new POI(0);
+            poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
+            Marker DestMarker = createMarker(poi_dest);
+            newRoad(poi_dest);
+            mMapView.getOverlays().add(DestMarker);*/
+
+            if(poi_dest == null){
+                poi_dest = new POI(0);
+                poi_dest.mLocation = new GeoPoint(48.1157242, - 1.6443362);
+            }
+
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
             for (POI poi : poi_list) {
                 Marker poiMarker = createMarker(poi);
                 poiMarkers.add(poiMarker);
+                if(poi.mLocation.equals(poi_dest.mLocation)){
+                    poi_dest = poi;
+                }
             }
+            newRoad(poi_dest);
+
+
+
 
             Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
+
 
 
             // Get the bounds of the map viewed
@@ -416,7 +421,7 @@ public class MapFragment extends Fragment {
 
             // mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
             mMyLocationOverlay.enableMyLocation();
-            //mMyLocationOverlay.setDrawAccuracyEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
+            mMyLocationOverlay.setDrawAccuracyEnabled(false);
             mMyLocationOverlay.enableFollowLocation();
             mMapView.getOverlays().add(mMyLocationOverlay);
             // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
