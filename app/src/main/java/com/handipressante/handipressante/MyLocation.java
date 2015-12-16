@@ -35,6 +35,15 @@ public class MyLocation {
         lm = null;
         locationResult = new LocationResult();
     }
+
+    public boolean isGPSenabled(Context context){
+        if (lm == null)
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        Log.e("handipressante", "lm null ? " + (lm == null));
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     public boolean searchLocation(Context context, LocationResult result) {
         // I use LocationResult callback class to pass location value from MyLocation to user code.
         locationResult = result;

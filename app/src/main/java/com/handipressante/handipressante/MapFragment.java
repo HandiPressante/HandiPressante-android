@@ -330,7 +330,8 @@ public class MapFragment extends Fragment {
         Log.e("yvo", " (mloc == null ?) : " + (mloc == null));
         Log.e("yvo", "(mloc.locationResult == null ?): " + (mloc.locationResult == null));
         mloc.locationResult.setMap(this);
-        if (!mloc.searchLocation(getContext(), mloc.locationResult)) {
+       /* if (!mloc.isGPSenabled(getActivity().getBaseContext())) {
+            Log.e("handipressante", "gps non activé");
             new AlertDialog.Builder(mMapView.getContext())
                     .setTitle("Erreur")
                     .setMessage("Vous n'avez pas de GPS activé, revenir à la liste ?")
@@ -344,8 +345,8 @@ public class MapFragment extends Fragment {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
-        } else {
-
+        } else {*/
+            Log.e("handipressante", "gps activé");
             mMyLocationOverlay.runOnFirstFix(new Runnable() {
                 public void run() {
                     GeoPoint loc = mMyLocationOverlay.getMyLocation();
@@ -512,7 +513,7 @@ public class MapFragment extends Fragment {
             mMapView.invalidate();
         }*/
 
-        }
+       // }
     }
 }
 
