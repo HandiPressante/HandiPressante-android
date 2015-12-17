@@ -137,8 +137,10 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -157,6 +159,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -191,11 +194,14 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         poi_dest.mLocation = geo;
     }
 
-    @Override public boolean singleTapConfirmedHelper(GeoPoint p) {
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
         InfoWindow.closeAllInfoWindowsOn(mMapView);
         return true;
     }
-    @Override public boolean longPressHelper(GeoPoint p) {
+
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
         //DO NOTHING FOR NOW:
         return false;
     }
@@ -246,7 +252,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         final GeoPoint startPoint = gps_enabled();
 
 
-
         mapController.setCenter(startPoint);
         //mark creation
     /*    Marker startMarker = new Marker(mMapView);
@@ -265,7 +270,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
         mMapView.invalidate();
-
 
 
         map_controller = mapController;
@@ -370,14 +374,23 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                     }
                 }
             });
+            // Get the bounds of the map viewed
+            BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
+            Log.e("handipressante",BB.getCenter().toString());
 
-            NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
-            ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
-            List<Toilet> listToilets = testModel.getToilets(1, 2, 3, 4);
+            GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLongitudeE6());
+            Log.e("handipressante",South.toString());
+            GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLongitudeE6());
+            GeoPoint East = new GeoPoint(BB.getCenter().getLatitudeE6(), BB.getLonEastE6());
+            GeoPoint West = new GeoPoint(BB.getCenter().getLatitudeE6(), BB.getLonWestE6());
+            //NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
+            ArrayList<POI> poi_list = new ArrayList<>();// = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
+            List<Toilet> listToilets = testModel.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
+            Log.e("handipressante", ""+ West.getLongitude()+" "+ North.getLatitude()+" "+ East.getLongitude()+" "+ South.getLatitude());
 
-            if (poi_list == null) {
+           /* if (poi_list == null) {
                 poi_list = new ArrayList<>();
-            }
+            }*/
             for (Toilet t : listToilets) {
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
@@ -392,10 +405,11 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
+            poiMarkers.getTextPaint().setTextSize(0.00000000001f);
             mMapView.getOverlays().add(poiMarkers);
             for (final POI poi : poi_list) {
                 final Marker poiMarker = createMarker(poi);
-                
+
                 poiMarkers.add(poiMarker);
                 if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
@@ -436,19 +450,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                 });
 
             }
-
-
             Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster);
             //clusterIconD.
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
-
-            // Get the bounds of the map viewed
-       /* BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
-        GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLatitudeE6());
-        GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLatitudeE6());
-        GeoPoint East = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonEastE6());
-        GeoPoint West = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonWestE6());*/
 
             mMyLocationOverlay.enableMyLocation();
             mMyLocationOverlay.setDrawAccuracyEnabled(false);
