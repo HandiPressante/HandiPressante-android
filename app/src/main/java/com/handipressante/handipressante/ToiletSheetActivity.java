@@ -74,7 +74,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
-        description.setText("bla bla bla bla bla bla bla bla bla");
+        description.setText("Ces toilettes n'ont pas de description! Soyez les premiers à la remplir!");
 
 
         /*ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
