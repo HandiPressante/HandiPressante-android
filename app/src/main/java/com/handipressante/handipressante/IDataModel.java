@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface IDataModel {
     List<Toilet> getToilets(GPSCoordinates ref, double xRange, double yRange);
-    List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max);
+    List<Toilet> getToilets(double long_min, double lat_max, double long_max, double lat_min);
 }

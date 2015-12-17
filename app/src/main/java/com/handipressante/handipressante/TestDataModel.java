@@ -49,7 +49,7 @@ public class TestDataModel implements IDataModel {
         return null;
     }
 
-    public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max) {
+    public List<Toilet> getToilets(double long_min, double lat_max, double long_max, double lat_min) {
 
         return toiletsList;
     }
