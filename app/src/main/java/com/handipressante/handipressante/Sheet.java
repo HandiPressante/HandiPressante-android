@@ -11,6 +11,17 @@ public class Sheet {
     protected Integer _rankAccessibility;
     protected Boolean _isAdapted;
 
+    public Sheet(){
+        _id = -1;
+        _name = "Undefined";
+        _description = "Undefined";
+        _rankGeneral = -1;
+        _rankCleanliness = -1;
+        _rankFacilities = -1;
+        _rankAccessibility = -1;
+        _isAdapted = false;
+    }
+
     public Sheet(Integer id,String name, String description,Integer rankGeneral,Integer rankCleanliness,Integer rankFacilities,Integer rankAccessibility, Boolean isAdapted){
         _id = id;
         _name = name;

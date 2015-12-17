@@ -1,6 +1,7 @@
 package com.handipressante.handipressante;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -60,18 +61,30 @@ public class ToiletSheetActivity extends FragmentActivity {
     
 
     public void getSheet(int id){
-        Log.e("Test", "test");
+        Log.d("Test", "test");
     }
 
     public void fillToiletSheet(int id){
+        OnlineDataModel odm = new OnlineDataModel(getBaseContext());
+        //Sheet sheetDownload = odm.getSheet(id);
+        Sheet sheetDownload = new Sheet(/*id */ 80,
+                                        /*nom*/ "Toilette de la Mairie",
+                                        /*Description*/ "L'accès à ces toilettes est relativement facile. La cabine est un peu petite mais elle est régulièrement nettoyée.",
+                                        /*Général Rank*/ 4,
+                                        /*Cleanliness Rank*/ 5,
+                                        /*Facilities Rank*/ 3,
+                                        /*Accessibility Rank*/ 4,
+                                        /*isAdapted*/ true);
+       // Log.d("Beginning display of sheet", sheetDownload.get_name());
+
         // Set icon whether adapted toilet or not
         ImageView img= (ImageView) findViewById(R.id.handicapped);
         img.setImageResource(R.drawable.handicap_icon);
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText("Toilettes n°" + String.valueOf(id));
-
+        //name.setText(sheetDownload.get_name());
+        name.setText(String.valueOf(id));
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
         description.setText("Ces toilettes n'ont pas de description! Soyez les premiers à la remplir!");
