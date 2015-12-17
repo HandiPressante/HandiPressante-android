@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ResolveInfo;
+import android.media.Image;
 import android.support.annotation.MainThread;
 import android.view.MotionEvent;
 import android.view.View.OnClickListener;
@@ -84,8 +85,10 @@ import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.location.GpsStatus;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.location.LocationListener;
 import android.location.LocationProvider;
@@ -131,10 +134,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -153,7 +154,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -178,7 +178,6 @@ public class MapFragment extends Fragment {
     private IMapController map_controller;
     private TestDataModel testModel = new TestDataModel();
     private POI poi_dest;
-    Button button;
 
     public void setLoc(Location _loc) {
         loc = _loc;
@@ -243,10 +242,7 @@ public class MapFragment extends Fragment {
         //to change the icon
         startMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
         //new end point
-    */    //Marker newMarker = new Marker(mMapView);
-        /*test implementation liste toilettes */
-        
-        /*fin test */
+    */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
         mMapView.invalidate();
 
@@ -286,14 +282,6 @@ public class MapFragment extends Fragment {
                 });
             }
         }).start();
-    }
-
-    //ouvrir sur google maps
-    Uri geolocation;
-
-    public Uri getUri() {
-        Uri geoloc = geolocation;
-        return geoloc;
     }
 
     //create a new marker
@@ -383,12 +371,31 @@ public class MapFragment extends Fragment {
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
-            for (POI poi : poi_list) {
-                Marker poiMarker = createMarker(poi);
+            for (final POI poi : poi_list) {
+                final Marker poiMarker = createMarker(poi);
+                
                 poiMarkers.add(poiMarker);
                 if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
                 }
+                newRoad(poi);
+                //parse Uri with coordinates of the poi.
+                final Uri mUri = Uri.parse("geo:"+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude()+"?q="+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude());
+                //Listener that opens Maps when tou click on Itinerary button
+                poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Uri geoLocation = mUri;
+
+                        //intent to start a new activity
+                        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
+                        intent.setData(geoLocation);
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
 
             Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
