@@ -40,6 +40,15 @@ public class TestDataModel implements IDataModel {
         return null;
     }
 
+    public Toilet getToilet(int id){
+        for (Toilet t : toiletsList) {
+            if (t.getId().equals(id)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
     public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max) {
 
         return toiletsList;
