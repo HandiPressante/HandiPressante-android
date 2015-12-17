@@ -59,16 +59,16 @@ public class ListToiletsFragment extends ListFragment {
             // Show new activity when clicked
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Log.e("Position touched", String.valueOf(position));
-                Log.e("id touched", String.valueOf(id));
+                Log.d("Position touched", String.valueOf(position));
+                Log.d("id touched", String.valueOf(id));
                 Toilet t = (Toilet) listOfToilets.get(position);
-                Log.e("Toilet touched", t.getAddress());
+                Log.d("Toilet touched", t.getAddress());
                 Integer idSheet = t.getId();
                 if (idSheet != -1) // If it's not the default toilet
                 {
                     Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
                     Bundle b = new Bundle();
-                    Log.e("Id send to the sheet", String.valueOf(idSheet));
+                    Log.d("Id send to the sheet", String.valueOf(idSheet));
                     b.putInt("idSheet", idSheet);
                     intent.putExtras(b);
                     startActivity(intent);

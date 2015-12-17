@@ -15,7 +15,8 @@ import java.util.List;
  * Created by Nico on 23/10/2015.
  */
 public class DataFactory {
-    List<Toilet> createToilets(InputStream in) throws IOException {
+
+    public List<Toilet> createToilets(InputStream in) throws IOException {
         List<Toilet> res = new ArrayList<Toilet>();
 
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -58,6 +59,43 @@ public class DataFactory {
         }
         reader.endArray();
 
+
+        return res;
+    }
+
+
+    public Sheet createSheet(InputStream in) throws IOException {
+        Sheet res = new Sheet();
+
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equals("id")) {
+                res._id = reader.nextInt();
+            } else if (name.equals("nom")) {
+                res._name = reader.nextString();
+            } else if (name.equals("description")) {
+                res._description = reader.nextString();
+            } else if (name.equals("lieu")) {
+                reader.skipValue();
+            } else if (name.equals("horaire")) {
+                reader.skipValue();
+            } else if (name.equals("pmr")) {
+                res._isAdapted = reader.nextBoolean();
+            } else if (name.equals("moyenne_proprete")) {
+                res._rankCleanliness = reader.nextInt();
+            } else if (name.equals("moyenne_equipement")) {
+                res._rankFacilities = reader.nextInt();
+            } else if (name.equals("moyenne_accessibilite")) {
+                res._rankAccessibility = reader.nextInt();
+            }else {
+                reader.skipValue();
+            }
+
+            // Generating general rank
+            res._rankGeneral = ((res.get_rankAccessibility() + res.get_rankCleanliness() + res.get_rankFacilities())/3);
+        }
 
         return res;
     }

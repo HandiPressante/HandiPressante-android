@@ -54,45 +54,77 @@ public class OnlineDataModel implements IDataModel {
         return new ArrayList<Toilet>();
     }
 
+    public Sheet getSheet(int id) {
+        String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettes/fiches/" + String.valueOf(id);
+        //String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettes/fiches/80";
+        Log.d("URL : ", strUrl);
+        ConnectivityManager connMgr = (ConnectivityManager)
+                mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        System.out.println("NetworkInfo end");
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            try {
+                System.out.println("Lecture du stream");
+                InputStream is = downloadUrl(strUrl);
+                System.out.println("Sheet Downloaded");
+                DataFactory facto = new DataFactory();
+                Sheet res = facto.createSheet(is);
+                Log.d("Sheet downloaded", res.get_name());
+                is.close();
+                return res;
+            } catch (IOException e) {
+                Log.e("Debug", "Unable to retrieve web page. URL may be invalid.");
+                e.printStackTrace();
+            }
+        } else {
+            Log.e("DataModel", "No network");
+        }
+
+
+        // If not, return default Sheet
+        return new Sheet();
+    }
+
+
     // Given a URL, establishes an HttpUrlConnection and retrieves
     // the web page content as a InputStream, which it returns as
     // a string.
     private InputStream downloadUrl(String myurl) throws IOException {
+
         InputStream is = null;
         ByteArrayInputStream res = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-        int len = 500;
 
         try {
+            System.out.println("downloadURL 1");
             URL url = new URL(myurl);
+            Log.d("downloadURL 2", url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            Log.d("downloadURL 3", conn.toString());
             conn.setReadTimeout(10000 /* milliseconds */);
+            Log.d("downloadURL 4", conn.toString());
             conn.setConnectTimeout(15000 /* milliseconds */);
+            Log.d("downloadURL 5", conn.toString());
             conn.setRequestMethod("GET");
+            Log.d("downloadURL 6", conn.toString());
             conn.setDoInput(true);
+            Log.d("downloadURL 7", conn.toString());
             // Starts the query
             conn.connect();
+            Log.d("downloadURL 8", conn.toString());
             int response = conn.getResponseCode();
+            Log.d("downloadURL 9", conn.toString());
             Log.d("Debug", "The response is: " + response);
+            Log.d("downloadURL 10", conn.toString());
             is = conn.getInputStream();
+            Log.d("downloadURL 11", is.toString());
 
-            /*DataFactory facto = new DataFactory();
-
-            // TODO : search for good size
-            byte[] buffer = new byte[2048*2048];
-            is.read(buffer);
-
-            res = new ByteArrayInputStream(buffer);*/
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
         } finally {
             /*if (is != null) {
                 is.close();
             }*/
         }
-
+        System.out.println("downloadURL 12");
         return is;
     }
 }
