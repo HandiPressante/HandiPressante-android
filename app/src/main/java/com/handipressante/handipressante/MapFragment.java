@@ -378,7 +378,6 @@ public class MapFragment extends Fragment {
                 if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
                 }
-                newRoad(poi);
                 //parse Uri with coordinates of the poi.
                 final Uri mUri = Uri.parse("geo:"+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude()+"?q="+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude());
                 //Listener that opens Maps when tou click on Itinerary button
