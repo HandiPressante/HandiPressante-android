@@ -15,6 +15,8 @@ public class Toilet implements IMarker {
     private String _address;
     private GeoPoint _coord;
 
+    private String _description;
+
     private Integer _rankAverage;
     private Integer _rankCleanliness;
     private Integer _rankFacilities;
@@ -29,6 +31,7 @@ public class Toilet implements IMarker {
         _coord = new GeoPoint(0, 0);
         _distance = 0.0;
 
+        _description = "";
         _rankAverage = 0;
         _rankCleanliness = 0;
         _rankFacilities = 0;
@@ -42,6 +45,7 @@ public class Toilet implements IMarker {
         _coord = coord;
         _distance = distance;
 
+        _description = "";
         _rankAverage = 0;
         _rankCleanliness = 0;
         _rankFacilities = 0;
@@ -94,6 +98,14 @@ public class Toilet implements IMarker {
 
     public void setRankAccessibility(Integer rank) {
         _rankAccessibility = rank;
+    }
+
+    public String getDescription() {
+        return _description;
+    }
+
+    public void setDescription(String description) {
+        _description = description;
     }
 
     public int getIcon() {

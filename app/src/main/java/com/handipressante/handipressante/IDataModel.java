@@ -25,4 +25,7 @@ public interface IDataModel {
      * @return Toilets in the given rectangle
      */
     List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight);
+
+
+    Toilet getToiletFromCache(int id);
 }

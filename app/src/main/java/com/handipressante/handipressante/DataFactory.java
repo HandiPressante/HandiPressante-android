@@ -34,6 +34,7 @@ public class DataFactory {
             double t_lat = 0;
             double t_long = 0;
 
+            String t_description = "";
             double t_rankCleanliness = 0;
             double t_rankFacilities = 0;
             double t_rankAccessibility = 0;
@@ -46,7 +47,7 @@ public class DataFactory {
 
                 if (reader.peek() == JsonToken.NULL) {
                     reader.skipValue();
-                } else if (name.equals("ids")) {
+                } else if (name.equals("id")) {
                     t_id = reader.nextInt();
                 } else if (name.equals("nom")) {
                     t_name = reader.nextString();
@@ -58,6 +59,8 @@ public class DataFactory {
                     t_lat = reader.nextDouble();
                 } else if (name.equals("long64")) {
                     t_long = reader.nextDouble();
+                } else if (name.equals("description")) {
+                    t_description = reader.nextString();
                 } else if (name.equals("distance")) {
                     t_distance = reader.nextDouble();
                 } else if (name.equals("moyenne_proprete")) {
@@ -75,6 +78,7 @@ public class DataFactory {
             reader.endObject();
 
             Toilet t = new Toilet(t_id, t_adapted, t_address, new GeoPoint(t_lat, t_long), t_distance);
+            t.setDescription(t_description);
             t.setRankCleanliness((int) Math.round(t_rankCleanliness));
             t.setRankFacilities((int) Math.round(t_rankFacilities));
             t.setRankAccessibility((int) Math.round(t_rankAccessibility));

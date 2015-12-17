@@ -58,4 +58,12 @@ public class TestDataModel implements IDataModel {
     public List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight) {
         return _toilets;
     }
+
+    public Toilet getToiletFromCache(int id) {
+        for (Toilet t : _toilets) {
+            if (t.getId().equals(id)) return t;
+        }
+
+        return new Toilet();
+    }
 }

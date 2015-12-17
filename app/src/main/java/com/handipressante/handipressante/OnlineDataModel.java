@@ -37,6 +37,14 @@ public class OnlineDataModel implements IDataModel {
         _toilets = new ArrayList<>();
     }
 
+    public Toilet getToiletFromCache(int id) {
+        for (Toilet t : _toilets) {
+            if (t.getId().equals(id)) return t;
+        }
+
+        return new Toilet();
+    }
+
     public List<Toilet> getToiletsList(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
         if (_toilets.size() > 0) return _toilets;
 

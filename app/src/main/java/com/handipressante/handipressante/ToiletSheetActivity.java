@@ -31,7 +31,7 @@ import java.util.List;
 
 public class ToiletSheetActivity extends FragmentActivity {
 
-    private IDataModel _model = new TestDataModel();
+    private IDataModel _model;
     private Integer _id;
 
     @Override
@@ -50,10 +50,17 @@ public class ToiletSheetActivity extends FragmentActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
 
-        new DownloadSheetTask().execute(id);
+        _model = OnlineDataModel.instance(getBaseContext());
+        //new DownloadSheetTask().execute(id);
 
-        Sheet s = new Sheet();
-        fillToiletSheet(s);
+        //Sheet s = new Sheet();
+        System.out.println("Nico - id " + _id);
+
+        Toilet t2 = _model.getToiletFromCache(_id);
+        System.out.println("Nico - from cache" + t2.getAddress());
+
+        Toilet t = new Toilet();
+        fillToiletSheet(t2);
     }
 
     public void onStart(){
@@ -105,11 +112,11 @@ public class ToiletSheetActivity extends FragmentActivity {
         Log.d("Test", "test");
     }
 
-    public void fillToiletSheet(Sheet sheet){
+    public void fillToiletSheet(Toilet toilet){
 
         // Set icon whether adapted toilet or not
         ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
-        if (sheet.get_isAdapted()) {
+        if (toilet.isAdapted()) {
             handicapped.setImageResource(R.drawable.handicap_icon);
         } else {
             handicapped.setImageResource(R.drawable.not_handicap_icon);
@@ -117,20 +124,20 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText(sheet.get_name());
+        name.setText(toilet.getAddress());
 
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
-        if(sheet.get_description().isEmpty()){
+        if(toilet.getDescription().isEmpty()){
             description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !");
             description.setTypeface(null, Typeface.ITALIC);
         }else{
-            description.setText(sheet.get_description());
+            description.setText(toilet.getDescription());
         }
 
         // Set general rate
         ImageView global_rate= (ImageView) findViewById(R.id.global_rate);
-        switch (sheet.get_rankGeneral()){
+        switch (toilet.getRankAverage()){
             case 0 :
                 global_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -157,7 +164,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set cleanliness rate
         ImageView cleanliness_rate= (ImageView) findViewById(R.id.cleanliness_rate);
-        switch (sheet.get_rankCleanliness()){
+        switch (toilet.getRankCleanliness()){
             case 0 :
                 cleanliness_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -184,7 +191,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set facilities rate
         ImageView facilities_rate= (ImageView) findViewById(R.id.facilities_rate);
-        switch (sheet.get_rankFacilities()){
+        switch (toilet.getRankFacilities()){
             case 0 :
                 facilities_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -211,7 +218,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set accessibility rate
         ImageView accessibility_rate= (ImageView) findViewById(R.id.accessibility_rate);
-        switch (sheet.get_rankAccessibility()){
+        switch (toilet.getRankAccessibility()){
             case 0 :
                 accessibility_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -235,13 +242,13 @@ public class ToiletSheetActivity extends FragmentActivity {
                 break;
         }
 
-        addComment(sheet);
+        addComment(toilet);
 
     }
 
 
 
-    public void addComment(Sheet sheetDownload){
+    public void addComment(Toilet toilet){
         LinearLayout container = (LinearLayout) findViewById(R.id.comment_bubble);
         boolean comment = false;
 
@@ -318,7 +325,7 @@ public class ToiletSheetActivity extends FragmentActivity {
             Log.d("Debug", "Rank : " + result.get_rankGeneral());
             Log.d("Debug", "########################");
 
-            fillToiletSheet(result);
+            //fillToiletSheet(result);
         }
 
 
