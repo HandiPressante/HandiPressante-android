@@ -168,7 +168,6 @@ import java.util.LinkedList;
 
 //creation of the Fragment
 public class MapFragment extends Fragment {
-
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
     private List<Toilet> liste;
@@ -179,14 +178,13 @@ public class MapFragment extends Fragment {
     private IMapController map_controller;
     private TestDataModel testModel = new TestDataModel();
     private POI poi_dest;
-
     Button button;
 
     public void setLoc(Location _loc) {
         loc = _loc;
     }
 
-    public void setDestination(GeoPoint geo){
+    public void setDestination(GeoPoint geo) {
         poi_dest = new POI(0);
         poi_dest.mLocation = geo;
     }
@@ -256,7 +254,7 @@ public class MapFragment extends Fragment {
         return mMapView;
     }
 
-    public void newRoad(final POI poi){
+    public void newRoad(final POI poi) {
         //new thread for navigation
         new Thread(new Runnable() {
             public void run() {
@@ -309,13 +307,13 @@ public class MapFragment extends Fragment {
         newMarker.setSnippet(poi.mDescription);
         //newMarker.setSubDescription("300 m");
         int i = R.drawable.star_zero;
-        if(testModel.getToilet(poi.mLocation) != null){
+        if (testModel.getToilet(poi.mLocation) != null) {
             i = testModel.getToilet(poi.mLocation).getRankIcon();
         }
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
-        if(testModel.getToilet(poi.mLocation).isAdapted()){
+        if (testModel.getToilet(poi.mLocation).isAdapted()) {
             newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
-        }else{
+        } else {
             newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         }
         return newMarker;
@@ -344,7 +342,7 @@ public class MapFragment extends Fragment {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = getActivity().getBaseContext().getPackageManager()
-                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName() );
+                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                         }
@@ -370,7 +368,7 @@ public class MapFragment extends Fragment {
             if (poi_list == null) {
                 poi_list = new ArrayList<>();
             }
-            for(Toilet t : listToilets){
+            for (Toilet t : listToilets) {
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
                 toilet.mType = t.getAddress();
@@ -378,9 +376,9 @@ public class MapFragment extends Fragment {
                 poi_list.add(toilet);
             }
 
-            if(poi_dest == null){
+            if (poi_dest == null) {
                 poi_dest = new POI(0);
-                poi_dest.mLocation = new GeoPoint(48.1157242, - 1.6443362);
+                poi_dest.mLocation = new GeoPoint(48.1157242, -1.6443362);
             }
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
@@ -388,7 +386,7 @@ public class MapFragment extends Fragment {
             for (POI poi : poi_list) {
                 Marker poiMarker = createMarker(poi);
                 poiMarkers.add(poiMarker);
-                if(poi.mLocation.equals(poi_dest.mLocation)){
+                if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
                 }
             }

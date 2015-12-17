@@ -12,9 +12,9 @@ import java.util.List;
 public class TestDataModel implements IDataModel {
     ArrayList<Toilet> toiletsList;
 
-    public TestDataModel(){
+    public TestDataModel() {
 
-        GeoPoint loc =  new GeoPoint(48.1157242, - 1.6443362);
+        GeoPoint loc = new GeoPoint(48.1157242, -1.6443362);
         GeoPoint loc_bis = new GeoPoint(loc);
         loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
         GeoPoint loc_ter = new GeoPoint(loc);
@@ -31,20 +31,19 @@ public class TestDataModel implements IDataModel {
 
     }
 
-    public Toilet getToilet(GeoPoint geo){
-        for(Toilet t : toiletsList){
-            if(t.getGeo().equals(geo)){
+    public Toilet getToilet(GeoPoint geo) {
+        for (Toilet t : toiletsList) {
+            if (t.getGeo().equals(geo)) {
                 return t;
             }
         }
         return null;
     }
+
     public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max) {
 
         return toiletsList;
     }
-
-
 
     public List<Toilet> getToilets(GPSCoordinates ref, double xRange, double yRange) {
         ArrayList<Toilet> res = new ArrayList<>();
