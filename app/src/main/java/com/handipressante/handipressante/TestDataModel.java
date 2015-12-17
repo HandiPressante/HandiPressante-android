@@ -20,9 +20,9 @@ public class TestDataModel implements IDataModel {
         GeoPoint loc_ter = new GeoPoint(loc);
         loc_ter.setLongitudeE6(loc_bis.getLongitudeE6() + 10000);
 
-        Toilet t1 = new Toilet(1, false, "Départ info, étage, couloir TP", loc, 0);
+        Toilet t1 = new Toilet(80, false, "Départ info, étage, couloir TP", loc, 0);
         Toilet t2 = new Toilet(2, true, "Amphi D", loc_bis, 1);
-        Toilet t3 = new Toilet(3, true, "Département STPI RdC", loc_ter, 2);
+        Toilet t3 = new Toilet(67, true, "Département STPI RdC", loc_ter, 2);
 
         toiletsList = new ArrayList<Toilet>();
         toiletsList.add(t1);
