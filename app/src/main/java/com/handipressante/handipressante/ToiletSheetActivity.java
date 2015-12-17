@@ -3,6 +3,7 @@ package com.handipressante.handipressante;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ToiletSheetActivity extends FragmentActivity {
@@ -72,29 +74,159 @@ public class ToiletSheetActivity extends FragmentActivity {
                                         /*Description*/ "L'accès à ces toilettes est relativement facile. La cabine est un peu petite mais elle est régulièrement nettoyée.",
                                         /*Général Rank*/ 4,
                                         /*Cleanliness Rank*/ 5,
-                                        /*Facilities Rank*/ 3,
+                                        /*Facilities Rank*/ 2,
                                         /*Accessibility Rank*/ 4,
                                         /*isAdapted*/ true);
-       // Log.d("Beginning display of sheet", sheetDownload.get_name());
 
         // Set icon whether adapted toilet or not
-        ImageView img= (ImageView) findViewById(R.id.handicapped);
-        img.setImageResource(R.drawable.handicap_icon);
+        ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
+        if (sheetDownload.get_isAdapted()){
+            handicapped.setImageResource(R.drawable.handicap_icon);
+        }else{
+            handicapped.setImageResource(R.drawable.not_handicap_icon);
+        }
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        //name.setText(sheetDownload.get_name());
-        name.setText(String.valueOf(id));
+        name.setText(sheetDownload.get_name());
+
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
-        description.setText("Ces toilettes n'ont pas de description! Soyez les premiers à la remplir!");
+        if(sheetDownload.get_description().isEmpty()){
+            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !");
+            description.setTypeface(null, Typeface.ITALIC);
+        }else{
+            description.setText(sheetDownload.get_description());
+        }
+
+        // Set general rate
+        ImageView global_rate= (ImageView) findViewById(R.id.global_rate);
+        switch (sheetDownload.get_rankGeneral()){
+            case 0 :
+                global_rate.setImageResource(R.drawable.star_zero);
+                break;
+            case 1 :
+                global_rate.setImageResource(R.drawable.star_one);
+                break;
+            case 2 :
+                global_rate.setImageResource(R.drawable.star_two);
+                break;
+            case 3 :
+                global_rate.setImageResource(R.drawable.star_three);
+                break;
+            case 4 :
+                global_rate.setImageResource(R.drawable.star_four);
+                break;
+            case 5 :
+                global_rate.setImageResource(R.drawable.star_five);
+                break;
+            default:
+                global_rate.setImageResource(R.drawable.no_rate_stars);
+                break;
+        }
 
 
-        /*ImageButton navigation_button = (ImageButton) findViewById(R.id.map_button);
-        navigation_button.setBackgroundResource(R.drawable.navigation_icon);*/
+        // Set cleanliness rate
+        ImageView cleanliness_rate= (ImageView) findViewById(R.id.cleanliness_rate);
+        switch (sheetDownload.get_rankCleanliness()){
+            case 0 :
+                cleanliness_rate.setImageResource(R.drawable.star_zero);
+                break;
+            case 1 :
+                cleanliness_rate.setImageResource(R.drawable.star_one);
+                break;
+            case 2 :
+                cleanliness_rate.setImageResource(R.drawable.star_two);
+                break;
+            case 3 :
+                cleanliness_rate.setImageResource(R.drawable.star_three);
+                break;
+            case 4 :
+                cleanliness_rate.setImageResource(R.drawable.star_four);
+                break;
+            case 5 :
+                cleanliness_rate.setImageResource(R.drawable.star_five);
+                break;
+            default:
+                cleanliness_rate.setImageResource(R.drawable.no_rate_stars);
+                break;
+        }
 
-        /*ImageButton comment_button = (ImageButton) findViewById(R.id.comment_button);
-        comment_button.setBackgroundResource(R.drawable.icon_addrate);*/
+
+        // Set facilities rate
+        ImageView facilities_rate= (ImageView) findViewById(R.id.facilities_rate);
+        switch (sheetDownload.get_rankFacilities()){
+            case 0 :
+                facilities_rate.setImageResource(R.drawable.star_zero);
+                break;
+            case 1 :
+                facilities_rate.setImageResource(R.drawable.star_one);
+                break;
+            case 2 :
+                facilities_rate.setImageResource(R.drawable.star_two);
+                break;
+            case 3 :
+                facilities_rate.setImageResource(R.drawable.star_three);
+                break;
+            case 4 :
+                facilities_rate.setImageResource(R.drawable.star_four);
+                break;
+            case 5 :
+                facilities_rate.setImageResource(R.drawable.star_five);
+                break;
+            default:
+                facilities_rate.setImageResource(R.drawable.no_rate_stars);
+                break;
+        }
+
+
+        // Set accessibility rate
+        ImageView accessibility_rate= (ImageView) findViewById(R.id.accessibility_rate);
+        switch (sheetDownload.get_rankAccessibility()){
+            case 0 :
+                accessibility_rate.setImageResource(R.drawable.star_zero);
+                break;
+            case 1 :
+                accessibility_rate.setImageResource(R.drawable.star_one);
+                break;
+            case 2 :
+                accessibility_rate.setImageResource(R.drawable.star_two);
+                break;
+            case 3 :
+                accessibility_rate.setImageResource(R.drawable.star_three);
+                break;
+            case 4 :
+                accessibility_rate.setImageResource(R.drawable.star_four);
+                break;
+            case 5 :
+                accessibility_rate.setImageResource(R.drawable.star_five);
+                break;
+            default:
+                accessibility_rate.setImageResource(R.drawable.no_rate_stars);
+                break;
+        }
+
+
+        addComment(sheetDownload);
+
+    }
+
+
+
+    public void addComment(Sheet sheetDownload){
+        LinearLayout container = (LinearLayout) findViewById(R.id.comment_bubble);
+
+        // Create LinearLayout
+        LinearLayout comment_layout = new LinearLayout(this);
+        comment_layout.setOrientation(LinearLayout.VERTICAL);
+        container.addView(comment_layout);
+
+
+        // Create TextView for name
+        TextView name = new TextView(this);
+        name.setText(" Marie Babel");
+        name.setTypeface(null, Typeface.BOLD);
+        comment_layout.addView(name);
 
     }
 }
