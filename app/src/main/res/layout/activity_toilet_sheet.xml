@@ -290,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Block for one comment-->
+                <!-- IMPORTANT : LOOK OF THE COMMENT BUBBLE -->
                 <!--<LinearLayout
                     android:id="@+id/one_comment_block"
                     android:layout_width="fill_parent"
