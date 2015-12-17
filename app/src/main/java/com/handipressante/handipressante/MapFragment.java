@@ -405,7 +405,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
-            poiMarkers.getTextPaint().setTextSize(0.00000000001f);
+            poiMarkers.getTextPaint().setTextSize(0f);
             mMapView.getOverlays().add(poiMarkers);
             for (final POI poi : poi_list) {
                 final Marker poiMarker = createMarker(poi);
