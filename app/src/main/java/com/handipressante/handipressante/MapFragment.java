@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ResolveInfo;
+import android.media.Image;
 import android.support.annotation.MainThread;
 import android.view.MotionEvent;
 import android.view.View.OnClickListener;
@@ -84,8 +85,10 @@ import android.graphics.Canvas;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.location.GpsStatus;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.location.LocationListener;
 import android.location.LocationProvider;
@@ -131,10 +134,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.osmdroid.bonuspack.routing.Road;
 import org.osmdroid.bonuspack.kml.ColorStyle;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -153,7 +154,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -168,7 +168,6 @@ import java.util.LinkedList;
 
 //creation of the Fragment
 public class MapFragment extends Fragment {
-
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
     private List<Toilet> liste;
@@ -180,13 +179,11 @@ public class MapFragment extends Fragment {
     private TestDataModel testModel = new TestDataModel();
     private POI poi_dest;
 
-    Button button;
-
     public void setLoc(Location _loc) {
         loc = _loc;
     }
 
-    public void setDestination(GeoPoint geo){
+    public void setDestination(GeoPoint geo) {
         poi_dest = new POI(0);
         poi_dest.mLocation = geo;
     }
@@ -245,10 +242,7 @@ public class MapFragment extends Fragment {
         //to change the icon
         startMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
         //new end point
-    */    //Marker newMarker = new Marker(mMapView);
-        /*test implementation liste toilettes */
-        
-        /*fin test */
+    */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
         mMapView.invalidate();
 
@@ -256,8 +250,7 @@ public class MapFragment extends Fragment {
         return mMapView;
     }
 
-
-    public void newRoad(final POI poi){
+    public void newRoad(final POI poi) {
         //new thread for navigation
         new Thread(new Runnable() {
             public void run() {
@@ -291,14 +284,6 @@ public class MapFragment extends Fragment {
         }).start();
     }
 
-    //ouvrir sur google maps
-    Uri geolocation;
-
-    public Uri getUri() {
-        Uri geoloc = geolocation;
-        return geoloc;
-    }
-
     //create a new marker
     public Marker createMarker(POI poi) {
         Marker newMarker = new Marker(mMapView);
@@ -310,11 +295,15 @@ public class MapFragment extends Fragment {
         newMarker.setSnippet(poi.mDescription);
         //newMarker.setSubDescription("300 m");
         int i = R.drawable.star_zero;
-        if(testModel.getToilet(poi.mLocation) != null){
+        if (testModel.getToilet(poi.mLocation) != null) {
             i = testModel.getToilet(poi.mLocation).getRankIcon();
         }
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
-        newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        if (testModel.getToilet(poi.mLocation).isAdapted()) {
+            newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        } else {
+            newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+        }
         return newMarker;
     }
 
@@ -332,7 +321,6 @@ public class MapFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-
         MyLocation mloc = new MyLocation();
         mloc.locationResult.setMap(this);
         if (!gps) {
@@ -342,7 +330,7 @@ public class MapFragment extends Fragment {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent i = getActivity().getBaseContext().getPackageManager()
-                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName() );
+                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(i);
                         }
@@ -361,7 +349,6 @@ public class MapFragment extends Fragment {
                 }
             });
 
-
             NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
             List<Toilet> listToilets = testModel.getToilets(1, 2, 3, 4);
@@ -369,47 +356,51 @@ public class MapFragment extends Fragment {
             if (poi_list == null) {
                 poi_list = new ArrayList<>();
             }
-            int i=0;
-            for(Toilet t : listToilets){
+            for (Toilet t : listToilets) {
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
                 toilet.mType = t.getAddress();
                 toilet.mLocation = t.getGeo();
                 poi_list.add(toilet);
-                i++;
             }
 
-           /* POI poi_dest = new POI(0);
-            poi_dest.mLocation = new GeoPoint(48.112050, -1.677216, 2944);
-            Marker DestMarker = createMarker(poi_dest);
-            newRoad(poi_dest);
-            mMapView.getOverlays().add(DestMarker);*/
-
-            if(poi_dest == null){
+            if (poi_dest == null) {
                 poi_dest = new POI(0);
-                poi_dest.mLocation = new GeoPoint(48.1157242, - 1.6443362);
+                poi_dest.mLocation = new GeoPoint(48.1157242, -1.6443362);
             }
-
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
-            for (POI poi : poi_list) {
-                Marker poiMarker = createMarker(poi);
+            for (final POI poi : poi_list) {
+                final Marker poiMarker = createMarker(poi);
+                
                 poiMarkers.add(poiMarker);
-                if(poi.mLocation.equals(poi_dest.mLocation)){
+                if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
                 }
+                newRoad(poi);
+                //parse Uri with coordinates of the poi.
+                final Uri mUri = Uri.parse("geo:"+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude()+"?q="+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude());
+                //Listener that opens Maps when tou click on Itinerary button
+                poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Uri geoLocation = mUri;
+
+                        //intent to start a new activity
+                        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
+                        intent.setData(geoLocation);
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
-            newRoad(poi_dest);
-
-
-
 
             Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
-
-
 
             // Get the bounds of the map viewed
        /* BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
@@ -418,104 +409,11 @@ public class MapFragment extends Fragment {
         GeoPoint East = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonEastE6());
         GeoPoint West = new GeoPoint(BB.getCenter().getLongitudeE6(), BB.getLonWestE6());*/
 
-
-            // mMyLocationOverlay.setEnabled(mMyLocationOverlay.isDrawAccuracyEnabled());
             mMyLocationOverlay.enableMyLocation();
             mMyLocationOverlay.setDrawAccuracyEnabled(false);
             mMyLocationOverlay.enableFollowLocation();
             mMapView.getOverlays().add(mMyLocationOverlay);
-            // mMapView.getOverlays().add(createMarker(mMyLocationOverlay.getMyLocation()));
-
             mMapView.invalidate();
-
-            //try to change the drawable of the actual position
-/*
-        Marker actualMarker = new Marker(mMapView);
-        //text which pop-up when you select the mark
-        actualMarker.setTitle("Position Actuelle");
-        //to change the icon
-        actualMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
-        int count =0;
-        while(count<100){
-            GeoPoint actual = mMyLocationOverlay.getMyLocation();
-            Log.e("yvo", "isnull ? " + (actual == null));
-            if(actual != null) {
-                Log.e("yvo", actual.toString());
-                //selection of the mark's coordinates
-                actualMarker.setPosition(actual);
-                actualMarker.setSubDescription(actual.toString());
-                mMapView.getOverlays().add(actualMarker);
-                mMapView.invalidate();
-            }try {
-                Thread.sleep(2000);
-                Log.e("yvo", "sleep");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-*/
-/*
-        List<Overlay> mMyLocationOverlay = mMapView.getOverlays();
-
-        GpsMyLocationProvider imlp = new GpsMyLocationProvider(MapFragment.this.getContext());
-        imlp.setLocationUpdateMinDistance(100); // [m]  // Set the minimum distance for location updates
-        imlp.setLocationUpdateMinTime(10000);   // [ms] // Set the minimum time interval for location updates
-        mMyLocationOverlay = new MyLocationNewOverlay(MapFragment.this.getContext(), imlp, mMapView);
-        mMyLocationOverlay.setDrawAccuracyEnabled(true);
-
-        mMapView.getOverlays().add(mCellTowerGridMarkerClusterer);
-        mMapView.getOverlays().add(mMyLocationOverlay);
-        mMapView.getOverlays().add(mCompassOverlay);
-        mMapView.getOverlays().add(mScaleBarOverlay);*/
-
-
-        /*IMapController mapController = map_controller;
-        MyLocation mloc = new MyLocation();
-        Log.e("yvo", "2 (mloc == null ?) : " + (mloc == null));
-        Log.e("yvo", "2(mloc.locationResult == null ?): " + (mloc.locationResult == null));
-        mloc.locationResult.setMap(this);
-        mloc.searchLocation(getContext(), mloc.locationResult);
-        try {
-            Thread.sleep(50);
-            Log.e("yvo", "2sleep");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Log.e("yvo", "2(loc2) : " + loc);
-
-        if(loc!=null){
-            gps = true;
-        }
-        GeoPoint actualPoint = new GeoPoint(loc);
-        GeoPoint continuity = new GeoPoint(loc);
-        //mark creation
-        Marker myPosition = new Marker(mMapView);
-        myPosition.setImage(getResources().getDrawable(R.drawable.yourmarker));
-        mMapView.invalidate();
-        int c = 0;
-
-        while(c < 10000){
-            if(gps){
-                actualPoint = new GeoPoint(loc);
-            }else{
-                actualPoint = continuity;
-            }
-            map_controller.setCenter(actualPoint);
-            //selection of the mark's coordinates
-            myPosition.setPosition(actualPoint);
-            continuity = actualPoint;
-            map_controller = mapController;
-            mMapView.getOverlays().add(myPosition);
-            try {
-                Thread.sleep(2500);
-                Log.e("yvo", "2sleep");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.e("yvo", "2(loc2) : " + loc);
-            c++;
-            mMapView.invalidate();
-        }*/
 
         }
     }

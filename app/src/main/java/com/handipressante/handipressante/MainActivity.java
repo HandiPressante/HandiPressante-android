@@ -1,6 +1,7 @@
 package com.handipressante.handipressante;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -29,6 +30,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import org.osmdroid.bonuspack.location.POI;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapView;
 
 public class MainActivity extends FragmentActivity {
 
@@ -111,16 +116,10 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    //method used with a button to send coords to external map app
+    //method used with a button to send coords to external map app. Don't touch at the moment!!
 
-    public void sendCord(View view) {
-        Uri geoLocation = Uri.parse("geo:0,0");
-        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
-        intent.setData(geoLocation);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
+
+
 
 
     /* The click listner for ListView in the navigation drawer */

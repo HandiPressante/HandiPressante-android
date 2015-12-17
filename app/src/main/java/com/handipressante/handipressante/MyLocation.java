@@ -26,13 +26,13 @@ public class MyLocation {
     boolean first = true;
     Context c;
 
-    public MyLocation(){
+    public MyLocation() {
         timer1 = new Timer();
         lm = null;
         locationResult = new LocationResult();
     }
 
-    public boolean isGPSenabled(Context context){
+    public boolean isGPSenabled(Context context) {
         if (lm == null)
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -44,8 +44,8 @@ public class MyLocation {
     public boolean searchLocation(Context context, LocationResult result) {
         // I use LocationResult callback class to pass location value from MyLocation to user code.
         locationResult = result;
-        if(context == null){
-           // Log.e("yvo", " context null");
+        if (context == null) {
+            // Log.e("yvo", " context null");
             return false;
         }
 
@@ -55,13 +55,11 @@ public class MyLocation {
         // Exceptions will be thrown if the provider is not permitted.
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
         }
         try {
             network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
         }
 
         // Don't start listeners if no provider is enabled.
@@ -79,7 +77,7 @@ public class MyLocation {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListenerNetwork);
         timer1 = new Timer();
-       // Log.e("yvo", "Recherche de la loc");
+        // Log.e("yvo", "Recherche de la loc");
         c = context;
         timer1.schedule(new GetLastLocation(), 10);
         timer1.schedule(new GetLastLocation(), 5000, 5000);
@@ -90,11 +88,11 @@ public class MyLocation {
         public void onLocationChanged(Location location) {
             timer1.cancel();
             locationResult.gotLocation(location);
-            if(ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    lm.removeUpdates(this);
-                    lm.removeUpdates(locationListenerNetwork);
-                }
+                lm.removeUpdates(this);
+                lm.removeUpdates(locationListenerNetwork);
+            }
         }
 
         public void onProviderDisabled(String provider) {
@@ -111,7 +109,7 @@ public class MyLocation {
         public void onLocationChanged(Location location) {
             timer1.cancel();
             locationResult.gotLocation(location);
-            if(ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(this);
                 lm.removeUpdates(locationListenerGps);
@@ -131,7 +129,7 @@ public class MyLocation {
     class GetLastLocation extends TimerTask {
         @Override
         public void run() {
-            if(ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(locationListenerGps);
                 lm.removeUpdates(locationListenerNetwork);
@@ -166,11 +164,11 @@ public class MyLocation {
     public static class LocationResult {
         MapFragment mF;
 
-        public void setMap(MapFragment m){
+        public void setMap(MapFragment m) {
             mF = m;
         }
 
-        public void gotLocation(Location location){
+        public void gotLocation(Location location) {
             mF.setLoc(location);
         }
     }

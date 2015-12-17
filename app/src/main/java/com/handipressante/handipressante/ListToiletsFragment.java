@@ -74,6 +74,7 @@ public class ListToiletsFragment extends ListFragment {
                 }
             }
         });
+
         super.onActivityCreated(savedInstanceState);
     }
 

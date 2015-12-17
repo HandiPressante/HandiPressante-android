@@ -34,7 +34,9 @@ public class Toilet implements IMarker {
         _rank = rank;
     }
 
-    public GeoPoint getGeo() {return _coordGeo;}
+    public GeoPoint getGeo() {
+        return _coordGeo;
+    }
 
     public Integer getId() {
         return _id;
@@ -52,15 +54,15 @@ public class Toilet implements IMarker {
         return _rank;
     }
 
-    public int getIcon(){
-        if(_adapted){
+    public int getIcon() {
+        if (_adapted) {
             return R.drawable.handicap_icon;
-        }else{
+        } else {
             return R.drawable.not_handicap_icon;
         }
     }
 
-    public int getRankIcon(){
+    public int getRankIcon() {
 
         switch (_rank) {
             case 1:
@@ -81,7 +83,7 @@ public class Toilet implements IMarker {
     }
 
     // return distance in meters
-    public  Double getDistance(GPSCoordinates ref) {
+    public Double getDistance(GPSCoordinates ref) {
         double x1 = _coord.getL93X();
         Log.d("Debug", "x1 = " + x1);
 
@@ -126,13 +128,13 @@ public class Toilet implements IMarker {
     // return a string to display the distance
     public String getDistanceToString(GPSCoordinates ref) {
         Double dist = this.getDistance(ref);
-        if(dist>1000){
+        if (dist > 1000) {
             // Kilometers
-            dist = dist/1000;
-            return (new DecimalFormat(".#").format(dist)) +" Km";
-        }else{
+            dist = dist / 1000;
+            return (new DecimalFormat(".#").format(dist)) + " Km";
+        } else {
             // meters
-            return dist.intValue() +" m";
+            return dist.intValue() + " m";
         }
     }
 
@@ -149,7 +151,7 @@ public class Toilet implements IMarker {
         if (o == this) return true;
 
         if (o instanceof Toilet) {
-            Toilet t = (Toilet)o;
+            Toilet t = (Toilet) o;
             return this._id.equals(t._id);
         }
 
