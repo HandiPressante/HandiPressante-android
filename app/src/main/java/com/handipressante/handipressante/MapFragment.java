@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.NinePatchDrawable;
 import android.media.Image;
 import android.support.annotation.MainThread;
 import android.view.MotionEvent;
@@ -321,9 +322,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         }
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
         if (testModel.getToilet(poi.mLocation).isAdapted()) {
-            newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+            newMarker.setIcon(getResources().getDrawable(R.drawable.pmr_pin));
         } else {
-            newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
+            newMarker.setIcon(getResources().getDrawable(R.drawable.not_pmr_pin));
         }
         return newMarker;
     }
@@ -400,7 +401,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                     poi_dest = poi;
                 }
                 //parse Uri with coordinates of the poi.
-                final Uri mUri = Uri.parse("geo:"+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude()+"?q="+poi.mLocation.getLatitude()+","+poi.mLocation.getLongitude());
+                final Uri mUri = Uri.parse("geo:" + poi.mLocation.getLatitude() + "," + poi.mLocation.getLongitude() + "?q=" + poi.mLocation.getLatitude() + "," + poi.mLocation.getLongitude());
                 //Listener that opens Maps when tou click on Itinerary button
                 poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -436,7 +437,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
 
             }
 
-            Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
+
+            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster);
+            //clusterIconD.
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
 
