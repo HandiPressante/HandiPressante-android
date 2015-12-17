@@ -22,9 +22,29 @@ public class OnlineDataModel implements IDataModel {
         mContext = context;
     }
 
-    public List<Toilet> getToilets(double lat_min, double lat_max, double long_min, double long_max){
-        ArrayList<Toilet> res = new ArrayList<>();
-        return res;
+    public List<Toilet> getToilets(double long_min, double lat_max, double long_max, double lat_min){
+//        String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettescarte/" + long_min + "/" + ref.getL93Y() + "/" + (xRange/2) + "/" + (yRange/2);
+//
+//        ConnectivityManager connMgr = (ConnectivityManager)
+//                mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+//        if (networkInfo != null && networkInfo.isConnected()) {
+//            try {
+//                InputStream is = downloadUrl(strUrl);
+//                DataFactory facto = new DataFactory();
+//                List<Toilet> res = facto.createToilets(is);
+//                is.close();
+//                return res;
+//            } catch (IOException e) {
+//                Log.e("Debug", "Unable to retrieve web page. URL may be invalid.");
+//                e.printStackTrace();
+//            }
+//        } else {
+//            Log.e("DataModel", "No network");
+//        }
+
+
+        return new ArrayList<Toilet>();
     }
 
 

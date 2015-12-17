@@ -1,7 +1,10 @@
 package com.handipressante.handipressante;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -133,31 +136,49 @@ public class MyLocation {
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 lm.removeUpdates(locationListenerGps);
                 lm.removeUpdates(locationListenerNetwork);
-            }
-            Location net_loc = null, gps_loc = null;
-            if (gps_enabled)
+                Location net_loc = null, gps_loc = null;
+                if (gps_enabled)
                 gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (network_enabled)
-                net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            // If there are both values, use the latest one.
-            if (gps_loc != null && net_loc != null) {
-                if (gps_loc.getTime() > net_loc.getTime())
+                if (network_enabled)
+                    net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                // If there are both values, use the latest one.
+                if (gps_loc != null && net_loc != null) {
+                    if (gps_loc.getTime() > net_loc.getTime())
+                        locationResult.gotLocation(gps_loc);
+                    else
+                        locationResult.gotLocation(net_loc);
+                    return;
+                }
+                if (gps_loc != null) {
                     locationResult.gotLocation(gps_loc);
-                else
+                    return;
+                }
+                if (net_loc != null) {
                     locationResult.gotLocation(net_loc);
-                return;
+                    return;
+                }
+                locationResult.gotLocation(null);
+            }else{
+                locationResult.mF.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        new AlertDialog.Builder(c)//locationResult.mF.getActivity().getBaseContext()
+                                .setTitle("Erreur")
+                                .setMessage("Vous n'avez pas autorisé Handipressante à accéder au GPS, merci de l'autoriser pour accéder à la carte")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = c.getPackageManager()
+                                                .getLaunchIntentForPackage(c.getPackageName());
+                                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        locationResult.mF.startActivity(i);
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                });
             }
-
-            if (gps_loc != null) {
-                locationResult.gotLocation(gps_loc);
-                return;
-            }
-            if (net_loc != null) {
-                locationResult.gotLocation(net_loc);
-                return;
-            }
-            locationResult.gotLocation(null);
-
+            this.cancel();
+            timer1.cancel();
         }
     }
 

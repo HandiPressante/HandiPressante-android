@@ -15,7 +15,6 @@ public class Toilet implements IMarker {
     private String _address;
     private GPSCoordinates _coord;
     private GeoPoint _coordGeo;
-
     private Integer _rank; // from 1 to 5
 
     Toilet(Integer id, Boolean adapted, String address, GPSCoordinates coord, Integer rank) {
