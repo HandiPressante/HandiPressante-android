@@ -57,8 +57,7 @@ public class ListToiletsFragment extends ListFragment {
         toiletList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             // Show new activity when clicked
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("Position touched", String.valueOf(position));
                 Log.d("id touched", String.valueOf(id));
                 Toilet t = (Toilet) listOfToilets.get(position);

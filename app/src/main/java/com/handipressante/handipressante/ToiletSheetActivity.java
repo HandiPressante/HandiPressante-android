@@ -67,6 +67,14 @@ public class ToiletSheetActivity extends FragmentActivity {
     public void fillToiletSheet(int id){
         OnlineDataModel odm = new OnlineDataModel(getBaseContext());
         //Sheet sheetDownload = odm.getSheet(id);
+        Sheet sheetDownload = new Sheet(/*id */ 80,
+                                        /*nom*/ "Toilette de la Mairie",
+                                        /*Description*/ "L'accès à ces toilettes est relativement facile. La cabine est un peu petite mais elle est régulièrement nettoyée.",
+                                        /*Général Rank*/ 4,
+                                        /*Cleanliness Rank*/ 5,
+                                        /*Facilities Rank*/ 3,
+                                        /*Accessibility Rank*/ 4,
+                                        /*isAdapted*/ true);
        // Log.d("Beginning display of sheet", sheetDownload.get_name());
 
         // Set icon whether adapted toilet or not
