@@ -24,5 +24,5 @@ public interface IDataModel {
      * @param bottomRight Bottom right corner coordinates
      * @return Toilets in the given rectangle
      */
-    List<Toilet> getToiletsMap(GeoPoint topLeft, GPSCoordinates bottomRight);
+    List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight);
 }

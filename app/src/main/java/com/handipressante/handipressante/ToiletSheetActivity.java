@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.widget.LinearLayout.LayoutParams;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         _id = id;
 
         getActionBar().setLogo(R.drawable.back_icon);
-        getActionBar().setTitle("Liste");
+        getActionBar().setTitle("Retour");
 
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -60,7 +62,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         Toilet toilet = new Toilet(1, true, "adresse", new GeoPoint(48.3, -1.1), 0.0);
         toilet.setRankAverage(3);
         GeoPoint geo = toilet.getGeo();
-        final Uri mUri = Uri.parse("geo:"+geo.getLatitude()+","+geo.getLongitude()+"?q="+geo.getLatitude()+","+geo.getLongitude());
+        final Uri mUri = Uri.parse("geo:" + geo.getLatitude() + "," + geo.getLongitude() + "?q=" + geo.getLatitude() + "," + geo.getLongitude());
         //Listener that opens Maps when tou click on Itinerary button
         findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,38 +243,53 @@ public class ToiletSheetActivity extends FragmentActivity {
 
     public void addComment(Sheet sheetDownload){
         LinearLayout container = (LinearLayout) findViewById(R.id.comment_bubble);
+        boolean comment = false;
 
-        // Create LinearLayout
-        LinearLayout comment_layout = new LinearLayout(this);
-        comment_layout.setOrientation(LinearLayout.VERTICAL);
-        
-        container.addView(comment_layout);
-
-
-        // Create TextView for name
-        TextView name = new TextView(this);
-        name.setText("Marie Babel");
-        name.setTypeface(null, Typeface.BOLD);
-        comment_layout.addView(name);
+        if (comment) {
+            // Create LinearLayout
+            LinearLayout comment_layout = new LinearLayout(this);
+            comment_layout.setOrientation(LinearLayout.VERTICAL);
+            container.addView(comment_layout);
 
 
-        // Create TextView for comment text
-        TextView comment_text = new TextView(this);
-        comment_text.setText("Ceci est mon commentaire pour ces toilettes bla bla bla bla bla bla bla bla");
-        comment_layout.addView(comment_text);
+            // Create TextView for name
+            TextView name = new TextView(this);
+            name.setText("Marie Babel");
+            name.setTypeface(null, Typeface.BOLD);
+            comment_layout.addView(name);
 
 
-        // Create TextView for comment text
-        TextView comment_date = new TextView(this);
-        comment_date.setTypeface(null, Typeface.ITALIC);
-        comment_date.setText("17/12/15");
-        comment_layout.addView(comment_date);
+            // Create TextView for comment text
+            TextView comment_text = new TextView(this);
+            comment_text.setText("Ceci est mon commentaire pour ces toilettes bla bla bla bla bla bla bla bla");
+            comment_layout.addView(comment_text);
 
-        // Create View for line separator
-        View separator = new View(this);
-        separator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 2));
-        separator.setBackgroundColor(Color.parseColor("#dfdfdf"));
-        comment_layout.addView(separator);
+
+            // Create TextView for comment text
+            TextView comment_date = new TextView(this);
+            comment_date.setTypeface(null, Typeface.ITALIC);
+            comment_date.setText("17/12/15");
+            comment_layout.addView(comment_date);
+
+            // Create View for line separator
+            View separator = new View(this);
+            separator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 2));
+            separator.setBackgroundColor(Color.parseColor("#dfdfdf"));
+            comment_layout.addView(separator);
+
+        }else{
+            // Create LinearLayout
+            LinearLayout comment_layout = new LinearLayout(this);
+            comment_layout.setOrientation(LinearLayout.VERTICAL);
+            container.addView(comment_layout);
+
+
+            // Create TextView for name
+            TextView no_comment = new TextView(this);
+            no_comment.setText(" Il n'y a pas encore de commentaires pour ces toilettes !");
+            no_comment.setTypeface(null, Typeface.ITALIC);
+            comment_layout.addView(no_comment);
+        }
 
     }
 

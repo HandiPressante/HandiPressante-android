@@ -33,11 +33,29 @@ public class TestDataModel implements IDataModel {
 
     }
 
+    public Toilet getToilet(GeoPoint geo) {
+        for (Toilet t : _toilets) {
+            if (t.getGeo().equals(geo)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public Toilet getToilet(int id){
+        for (Toilet t : _toilets) {
+            if (t.getId().equals(id)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
     public List<Toilet> getToiletsList(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
         return _toilets;
     }
 
-    public List<Toilet> getToiletsMap(GeoPoint topLeft, GPSCoordinates bottomRight) {
+    public List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight) {
         return _toilets;
     }
 }
