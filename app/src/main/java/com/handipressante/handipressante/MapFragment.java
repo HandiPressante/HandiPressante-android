@@ -50,6 +50,8 @@ import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.api.IMapView;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
+import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
+import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -167,7 +169,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 //creation of the Fragment
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements MapEventsReceiver {
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
     private List<Toilet> liste;
@@ -188,6 +190,15 @@ public class MapFragment extends Fragment {
         poi_dest.mLocation = geo;
     }
 
+    @Override public boolean singleTapConfirmedHelper(GeoPoint p) {
+        InfoWindow.closeAllInfoWindowsOn(mMapView);
+        return true;
+    }
+    @Override public boolean longPressHelper(GeoPoint p) {
+        //DO NOTHING FOR NOW:
+        return false;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,8 +207,13 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
-        mMapView = new MapView(inflater.getContext(), 256, mResourceProxy);
+        mMapView = new MapView(inflater.getContext(), 512, mResourceProxy);
         IMapController mapController = mMapView.getController();
+
+        //newoverlay to listen when you click on the map
+        MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(mMapView.getContext(), this);
+        mMapView.getOverlays().add(0, mapEventsOverlay);
+        InfoWindow.closeAllInfoWindowsOn(mMapView);
 
         //activate the + and - (zoom)
         mMapView.setBuiltInZoomControls(true);
@@ -213,6 +229,7 @@ public class MapFragment extends Fragment {
         mMapView.setMaxZoomLevel(20);
         mapController.setZoom(ZOOM);
 
+
         MyLocation mloc = new MyLocation();
         mloc.locationResult.setMap(this);
         mloc.searchLocation(getContext(), mloc.locationResult);
@@ -226,6 +243,8 @@ public class MapFragment extends Fragment {
             gps = true;
         }
         final GeoPoint startPoint = gps_enabled();
+
+
 
         mapController.setCenter(startPoint);
         //mark creation
@@ -245,6 +264,8 @@ public class MapFragment extends Fragment {
     */
         mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
         mMapView.invalidate();
+
+
 
         map_controller = mapController;
         return mMapView;
@@ -395,6 +416,24 @@ public class MapFragment extends Fragment {
                         }
                     }
                 });
+
+                poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_moreinfo).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Integer idSheet = testModel.getToilet(poi.mLocation).getId();
+                        if (idSheet != -1) // If it's not the default toilet
+                        {
+                            Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
+                            Bundle b = new Bundle();
+                            Log.d("Id send to the sheet", String.valueOf(idSheet));
+                            b.putInt("idSheet", idSheet);
+                            intent.putExtras(b);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
             }
 
             Drawable clusterIconD = getResources().getDrawable(R.drawable.yourmarker);
