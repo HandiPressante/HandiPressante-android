@@ -3,6 +3,7 @@ package com.handipressante.handipressante;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,8 +18,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.osmdroid.util.GeoPoint;
+
 public class ToiletSheetActivity extends FragmentActivity {
 
+    private TestDataModel testModel = new TestDataModel();
+    Integer _id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +32,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         // get info from parent view
         Intent intent = getIntent();
         Integer id  = intent.getIntExtra("idSheet", -1);
+        _id = id;
 
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Liste");
@@ -37,6 +43,27 @@ public class ToiletSheetActivity extends FragmentActivity {
         actionBar.setHomeButtonEnabled(true);
     }
 
+    public void onStart(){
+        super.onStart();
+        Toilet toilet = testModel.getToilet(_id);
+        GeoPoint geo = toilet.getGeo();
+        final Uri mUri = Uri.parse("geo:"+geo.getLatitude()+","+geo.getLongitude()+"?q="+geo.getLatitude()+","+geo.getLongitude());
+        //Listener that opens Maps when tou click on Itinerary button
+        findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Uri geoLocation = mUri;
+
+                //intent to start a new activity
+                Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
+                intent.setData(geoLocation);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -58,9 +85,8 @@ public class ToiletSheetActivity extends FragmentActivity {
         return true;
     }
 
-    
-
     public void getSheet(int id){
+        //methode existant dans le datamodel peut servir
         Log.d("Test", "test");
     }
 
