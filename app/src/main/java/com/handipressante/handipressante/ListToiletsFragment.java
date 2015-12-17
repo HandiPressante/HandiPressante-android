@@ -71,14 +71,14 @@ public class ListToiletsFragment extends ListFragment {
         //GPSCoordinates myPlace = new GPSCoordinates(351861.03, 6789173.05);
         GeoPoint myPlace = new GeoPoint(48.12079, -1.63440);
 
-        // Download toilets
-        new DownloadToiletsTask().execute(myPlace);
-
+        listOfToilets = new ArrayList<>();
         // Default toilet in case of error
-        listOfToilets.add(0, new Toilet(123456, false, "Pas de toilette", new GeoPoint(0,0), 0.0));
-
+        listOfToilets.add(0, new Toilet(123456, false, "Pas de toilette", new GeoPoint(0, 0), 0.0));
         // Generation of view
         generateView();
+
+        // Download toilets
+        new DownloadToiletsTask().execute(myPlace);
 
         // Add ClickListener
         final ListView toiletList = this.getListView();
