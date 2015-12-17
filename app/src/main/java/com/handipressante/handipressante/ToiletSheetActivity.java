@@ -3,6 +3,7 @@ package com.handipressante.handipressante;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.view.View;
 import android.widget.AdapterView;
@@ -206,7 +208,6 @@ public class ToiletSheetActivity extends FragmentActivity {
                 break;
         }
 
-
         addComment(sheetDownload);
 
     }
@@ -219,14 +220,34 @@ public class ToiletSheetActivity extends FragmentActivity {
         // Create LinearLayout
         LinearLayout comment_layout = new LinearLayout(this);
         comment_layout.setOrientation(LinearLayout.VERTICAL);
+        
         container.addView(comment_layout);
 
 
         // Create TextView for name
         TextView name = new TextView(this);
-        name.setText(" Marie Babel");
+        name.setText("Marie Babel");
         name.setTypeface(null, Typeface.BOLD);
         comment_layout.addView(name);
+
+
+        // Create TextView for comment text
+        TextView comment_text = new TextView(this);
+        comment_text.setText("Ceci est mon commentaire pour ces toilettes bla bla bla bla bla bla bla bla");
+        comment_layout.addView(comment_text);
+
+
+        // Create TextView for comment text
+        TextView comment_date = new TextView(this);
+        comment_date.setTypeface(null, Typeface.ITALIC);
+        comment_date.setText("17/12/15");
+        comment_layout.addView(comment_date);
+
+        // Create View for line separator
+        View separator = new View(this);
+        separator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 2));
+        separator.setBackgroundColor(Color.parseColor("#dfdfdf"));
+        comment_layout.addView(separator);
 
     }
 }
