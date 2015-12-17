@@ -5,6 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +18,59 @@ import java.util.Set;
 
 
 public class OnlineDataModel implements IDataModel {
-    private Context mContext;
+    private static OnlineDataModel _instance = null;
 
-    public OnlineDataModel(Context context) {
+    private Context mContext;
+    private List<Toilet> _toilets;
+
+    public static OnlineDataModel instance(Context context) {
+        if (_instance == null) _instance = new OnlineDataModel();
+        _instance.setContext(context);
+        return _instance;
+    }
+
+    public void setContext(Context context) {
         mContext = context;
     }
+
+    private OnlineDataModel() {
+        _toilets = new ArrayList<>();
+    }
+
+    public List<Toilet> getToiletsList(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
+        if (_toilets.size() > 0) return _toilets;
+
+        String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettesliste/" + ref.getLongitude() + "/" + ref.getLatitude() + "/" + mincount + "/" + maxcount + "/" + distanceMax;
+
+        ConnectivityManager connMgr = (ConnectivityManager)
+                mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            try {
+                InputStream is = downloadUrl(strUrl);
+                DataFactory facto = new DataFactory();
+                List<Toilet> res = facto.createToilets(is);
+                is.close();
+
+                _toilets = res;
+                return res;
+            } catch (IOException e) {
+                Log.e("Debug", "Unable to retrieve web page. URL may be invalid.");
+                e.printStackTrace();
+            }
+        } else {
+            Log.e("DataModel", "No network");
+        }
+
+
+        return new ArrayList<Toilet>();
+    }
+
+    public List<Toilet> getToiletsMap(GeoPoint topLeft, GPSCoordinates bottomRight) {
+        return _toilets;
+        //return new ArrayList<>();
+    }
+
 
     public List<Toilet> getToilets(double long_min, double lat_max, double long_max, double lat_min){
 //        String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettescarte/" + long_min + "/" + ref.getL93Y() + "/" + (xRange/2) + "/" + (yRange/2);
@@ -90,6 +140,7 @@ public class OnlineDataModel implements IDataModel {
                 System.out.println("Sheet Downloaded");
                 DataFactory facto = new DataFactory();
                 Sheet res = facto.createSheet(is);
+                System.out.println("Sheet build");
                 Log.d("Sheet downloaded", res.get_name());
                 is.close();
                 return res;

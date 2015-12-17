@@ -13,28 +13,43 @@ public class Toilet implements IMarker {
     private Integer _id;
     private Boolean _adapted;
     private String _address;
-    private GPSCoordinates _coord;
-    private GeoPoint _coordGeo;
-    private Integer _rank; // from 1 to 5
+    private GeoPoint _coord;
 
-    Toilet(Integer id, Boolean adapted, String address, GPSCoordinates coord, Integer rank) {
+    private Integer _rankAverage;
+    private Integer _rankCleanliness;
+    private Integer _rankFacilities;
+    private Integer _rankAccessibility;
+
+    private Double _distance;
+
+    Toilet() {
+        _id = 0;
+        _adapted = false;
+        _address = "Undefined";
+        _coord = new GeoPoint(0, 0);
+        _distance = 0.0;
+
+        _rankAverage = 0;
+        _rankCleanliness = 0;
+        _rankFacilities = 0;
+        _rankAccessibility = 0;
+    }
+
+    Toilet(Integer id, Boolean adapted, String address, GeoPoint coord, Double distance) {
         _id = id;
         _adapted = adapted;
         _address = address;
         _coord = coord;
-        _rank = rank;
-    }
+        _distance = distance;
 
-    Toilet(Integer id, Boolean adapted, String address, GeoPoint coord, Integer rank) {
-        _id = id;
-        _adapted = adapted;
-        _address = address;
-        _coordGeo = coord;
-        _rank = rank;
+        _rankAverage = 0;
+        _rankCleanliness = 0;
+        _rankFacilities = 0;
+        _rankAccessibility = 0;
     }
 
     public GeoPoint getGeo() {
-        return _coordGeo;
+        return _coord;
     }
 
     public Integer getId() {
@@ -49,8 +64,36 @@ public class Toilet implements IMarker {
         return _address;
     }
 
-    public Integer getRank() {
-        return _rank;
+    public Integer getRankAverage() {
+        return _rankAverage;
+    }
+
+    public void setRankAverage(Integer rank) {
+        _rankAverage = rank;
+    }
+
+    public Integer getRankCleanliness() {
+        return _rankCleanliness;
+    }
+
+    public void setRankCleanliness(Integer rank) {
+        _rankCleanliness = rank;
+    }
+
+    public Integer getRankFacilities() {
+        return _rankFacilities;
+    }
+
+    public void setRankFacilities(Integer rank) {
+        _rankFacilities = rank;
+    }
+
+    public Integer getRankAccessibility() {
+        return _rankAccessibility;
+    }
+
+    public void setRankAccessibility(Integer rank) {
+        _rankAccessibility = rank;
     }
 
     public int getIcon() {
@@ -61,9 +104,9 @@ public class Toilet implements IMarker {
         }
     }
 
-    public int getRankIcon() {
+    public int getRankIcon(Integer rank) {
 
-        switch (_rank) {
+        switch (rank) {
             case 1:
                 return R.drawable.star_one;
             case 2:
@@ -83,7 +126,7 @@ public class Toilet implements IMarker {
 
     // return distance in meters
     public Double getDistance(GPSCoordinates ref) {
-        double x1 = _coord.getL93X();
+        /*double x1 = _coord.getL93X();
         Log.d("Debug", "x1 = " + x1);
 
         double x2 = ref.getL93X();
@@ -94,7 +137,8 @@ public class Toilet implements IMarker {
         Log.d("Debug", "x1 - x2 = " + (x1 - x2));
         Log.d("Debug", "(x1 - x2)² = " + Math.pow(x1 - x2, 2));
 
-        return Math.sqrt(0 + Math.pow(_coord.getL93Y() - ref.getL93Y(), 2));
+        return Math.sqrt(0 + Math.pow(_coord.getL93Y() - ref.getL93Y(), 2));*/
+        return 250.0;
 
         /*
         // TODO : compute dist between _coord and ref
@@ -137,12 +181,29 @@ public class Toilet implements IMarker {
         }
     }
 
+    // return a string to display the distance
+    public String getDistanceToString() {
+        Double dist = this.getDistance();
+        if (dist > 1000) {
+            // Kilometers
+            dist = dist / 1000;
+            return (new DecimalFormat(".#").format(dist)) + " Km";
+        } else {
+            // meters
+            return dist.intValue() + " m";
+        }
+    }
+
     public String getMarkerName() {
         return "NoName";
     }
 
-    public GPSCoordinates getCoordinates() {
+    public GeoPoint getCoordinates() {
         return _coord;
+    }
+
+    public Double getDistance() {
+        return _distance;
     }
 
     @Override

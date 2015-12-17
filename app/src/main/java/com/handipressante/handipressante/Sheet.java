@@ -2,14 +2,14 @@ package com.handipressante.handipressante;
 
 public class Sheet {
 
-    protected Integer _id;
-    protected String _name;
-    protected String _description;
-    protected Integer _rankGeneral;
-    protected Integer _rankCleanliness;
-    protected Integer _rankFacilities;
-    protected Integer _rankAccessibility;
-    protected Boolean _isAdapted;
+    public Integer _id;
+    public String _name;
+    public String _description;
+    public Integer _rankGeneral;
+    public Integer _rankCleanliness;
+    public Integer _rankFacilities;
+    public Integer _rankAccessibility;
+    public Boolean _isAdapted;
 
     public Sheet(){
         _id = -1;

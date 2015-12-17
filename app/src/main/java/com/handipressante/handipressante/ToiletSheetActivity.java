@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,10 +25,13 @@ import android.widget.TextView;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.util.List;
+
 public class ToiletSheetActivity extends FragmentActivity {
 
-    private TestDataModel testModel = new TestDataModel();
-    Integer _id;
+    private IDataModel _model = new TestDataModel();
+    private Integer _id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +45,20 @@ public class ToiletSheetActivity extends FragmentActivity {
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Liste");
 
-        fillToiletSheet(id);
-
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
+
+        new DownloadSheetTask().execute(id);
+
+        Sheet s = new Sheet();
+        fillToiletSheet(s);
     }
 
     public void onStart(){
         super.onStart();
-        Toilet toilet = testModel.getToilet(_id);
+        //Toilet toilet = testModel.getToilet(_id);
+        Toilet toilet = new Toilet(1, true, "adresse", new GeoPoint(48.3, -1.1), 0.0);
+        toilet.setRankAverage(3);
         GeoPoint geo = toilet.getGeo();
         final Uri mUri = Uri.parse("geo:"+geo.getLatitude()+","+geo.getLongitude()+"?q="+geo.getLatitude()+","+geo.getLongitude());
         //Listener that opens Maps when tou click on Itinerary button
@@ -94,42 +103,32 @@ public class ToiletSheetActivity extends FragmentActivity {
         Log.d("Test", "test");
     }
 
-    public void fillToiletSheet(int id){
-        OnlineDataModel odm = new OnlineDataModel(getBaseContext());
-        //Sheet sheetDownload = odm.getSheet(id);
-        Sheet sheetDownload = new Sheet(/*id */ 80,
-                                        /*nom*/ "Toilette de la Mairie",
-                                        /*Description*/ "L'accès à ces toilettes est relativement facile. La cabine est un peu petite mais elle est régulièrement nettoyée.",
-                                        /*Général Rank*/ 4,
-                                        /*Cleanliness Rank*/ 5,
-                                        /*Facilities Rank*/ 2,
-                                        /*Accessibility Rank*/ 4,
-                                        /*isAdapted*/ true);
+    public void fillToiletSheet(Sheet sheet){
 
         // Set icon whether adapted toilet or not
         ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
-        if (sheetDownload.get_isAdapted()){
+        if (sheet.get_isAdapted()) {
             handicapped.setImageResource(R.drawable.handicap_icon);
-        }else{
+        } else {
             handicapped.setImageResource(R.drawable.not_handicap_icon);
         }
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText(sheetDownload.get_name());
+        name.setText(sheet.get_name());
 
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
-        if(sheetDownload.get_description().isEmpty()){
+        if(sheet.get_description().isEmpty()){
             description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !");
             description.setTypeface(null, Typeface.ITALIC);
         }else{
-            description.setText(sheetDownload.get_description());
+            description.setText(sheet.get_description());
         }
 
         // Set general rate
         ImageView global_rate= (ImageView) findViewById(R.id.global_rate);
-        switch (sheetDownload.get_rankGeneral()){
+        switch (sheet.get_rankGeneral()){
             case 0 :
                 global_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -156,7 +155,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set cleanliness rate
         ImageView cleanliness_rate= (ImageView) findViewById(R.id.cleanliness_rate);
-        switch (sheetDownload.get_rankCleanliness()){
+        switch (sheet.get_rankCleanliness()){
             case 0 :
                 cleanliness_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -183,7 +182,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set facilities rate
         ImageView facilities_rate= (ImageView) findViewById(R.id.facilities_rate);
-        switch (sheetDownload.get_rankFacilities()){
+        switch (sheet.get_rankFacilities()){
             case 0 :
                 facilities_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -210,7 +209,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set accessibility rate
         ImageView accessibility_rate= (ImageView) findViewById(R.id.accessibility_rate);
-        switch (sheetDownload.get_rankAccessibility()){
+        switch (sheet.get_rankAccessibility()){
             case 0 :
                 accessibility_rate.setImageResource(R.drawable.star_zero);
                 break;
@@ -234,7 +233,7 @@ public class ToiletSheetActivity extends FragmentActivity {
                 break;
         }
 
-        addComment(sheetDownload);
+        addComment(sheet);
 
     }
 
@@ -274,6 +273,37 @@ public class ToiletSheetActivity extends FragmentActivity {
         separator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 2));
         separator.setBackgroundColor(Color.parseColor("#dfdfdf"));
         comment_layout.addView(separator);
+
+    }
+
+    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
+    // URL string and uses it to create an HttpUrlConnection. Once the connection
+    // has been established, the AsyncTask downloads the contents of the webpage as
+    // an InputStream. Finally, the InputStream is converted into a string, which is
+    // displayed in the UI by the AsyncTask's onPostExecute method.
+    private class DownloadSheetTask extends AsyncTask<Integer, Void, Sheet> {
+        @Override
+        protected Sheet doInBackground(Integer... params) {
+            //IDataModel model = new OnlineDataModel(getBaseContext());
+            IDataModel model = new TestDataModel();
+            return new Sheet();
+            //return model.getSheet(params[0]);
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(Sheet result) {
+            System.out.println("Sheet : " + result.get_id());
+            Log.d("Debug", "########################");
+            Log.d("Debug", "Toilette " + result.get_id());
+            Log.d("Debug", "Name : " + result.get_name());
+            Log.d("Debug", "PMR : " + result.get_isAdapted());
+            Log.d("Debug", "Rank : " + result.get_rankGeneral());
+            Log.d("Debug", "########################");
+
+            fillToiletSheet(result);
+        }
+
 
     }
 }

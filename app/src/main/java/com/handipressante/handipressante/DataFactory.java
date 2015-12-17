@@ -4,6 +4,8 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,12 +31,22 @@ public class DataFactory {
             String t_name = "";
             String t_address = "";
             boolean t_adapted = false;
-            double t_x93 = 0;
-            double t_y93 = 0;
+            double t_lat = 0;
+            double t_long = 0;
+
+            double t_rankCleanliness = 0;
+            double t_rankFacilities = 0;
+            double t_rankAccessibility = 0;
+            double t_rankAverage = 0;
+
+            double t_distance = 0;
 
             while (reader.hasNext()) {
                 String name = reader.nextName();
-                if (name.equals("id_toilettes")) {
+
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                } else if (name.equals("ids")) {
                     t_id = reader.nextInt();
                 } else if (name.equals("nom")) {
                     t_name = reader.nextString();
@@ -42,19 +54,32 @@ public class DataFactory {
                     t_address = reader.nextString();
                 } else if (name.equals("pmr")) {
                     t_adapted = reader.nextString().equals("1");
-                } else if (name.equals("x93")) {
-                    t_x93 = reader.nextDouble();
-                    Log.d("Debug", "t_x93 = " + t_x93);
-                } else if (name.equals("y93")) {
-                    t_y93 = reader.nextDouble();
-                    Log.d("Debug", "t_y93 = " + t_y93);
+                } else if (name.equals("lat64")) {
+                    t_lat = reader.nextDouble();
+                } else if (name.equals("long64")) {
+                    t_long = reader.nextDouble();
+                } else if (name.equals("distance")) {
+                    t_distance = reader.nextDouble();
+                } else if (name.equals("moyenne_proprete")) {
+                    t_rankCleanliness = reader.nextDouble();
+                } else if (name.equals("moyenne_equipement")) {
+                    t_rankFacilities = reader.nextDouble();
+                } else if (name.equals("moyenne_accessibilite")) {
+                    t_rankAccessibility = reader.nextDouble();
+                } else if (name.equals("moyenne")) {
+                    t_rankAverage = reader.nextDouble();
                 } else {
                     reader.skipValue();
                 }
             }
             reader.endObject();
 
-            Toilet t = new Toilet(t_id, t_adapted, t_address, new GPSCoordinates(t_x93, t_y93), 0);
+            Toilet t = new Toilet(t_id, t_adapted, t_address, new GeoPoint(t_lat, t_long), t_distance);
+            t.setRankCleanliness((int) Math.round(t_rankCleanliness));
+            t.setRankFacilities((int) Math.round(t_rankFacilities));
+            t.setRankAccessibility((int) Math.round(t_rankAccessibility));
+            t.setRankAverage((int) Math.round(t_rankAverage));
+
             res.add(t);
         }
         reader.endArray();
@@ -65,37 +90,54 @@ public class DataFactory {
 
 
     public Sheet createSheet(InputStream in) throws IOException {
-        Sheet res = new Sheet();
-
         JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
+        reader.beginObject();
+        int i = 0;
+        int t_id = 9999;
+        String t_name = "";
+        String t_description = "";
+        boolean t_adapted = false;
+        double t_rankCleanliness = 0;
+        double t_rankFacilities = 0;
+        double t_rankAccessibility = 0;
+        double t_rankAverage = 0;
+
         while (reader.hasNext()) {
+            System.out.println("loop " + i++);
             String name = reader.nextName();
-            if (name.equals("id")) {
-                res._id = reader.nextInt();
+            System.out.println("Key : " + name);
+
+
+            if (reader.peek() == JsonToken.NULL) {
+                reader.skipValue();
+            } else if (name.equals("id")) {
+                t_id = reader.nextInt();
             } else if (name.equals("nom")) {
-                res._name = reader.nextString();
+                t_name = reader.nextString();
             } else if (name.equals("description")) {
-                res._description = reader.nextString();
+                t_description = reader.nextString();
             } else if (name.equals("lieu")) {
                 reader.skipValue();
             } else if (name.equals("horaire")) {
                 reader.skipValue();
             } else if (name.equals("pmr")) {
-                res._isAdapted = reader.nextBoolean();
+                t_adapted = reader.nextBoolean();
             } else if (name.equals("moyenne_proprete")) {
-                res._rankCleanliness = reader.nextInt();
+                t_rankCleanliness = reader.nextDouble();
             } else if (name.equals("moyenne_equipement")) {
-                res._rankFacilities = reader.nextInt();
+                t_rankFacilities = reader.nextDouble();
             } else if (name.equals("moyenne_accessibilite")) {
-                res._rankAccessibility = reader.nextInt();
+                t_rankAccessibility = reader.nextDouble();
             }else {
                 reader.skipValue();
             }
-
-            // Generating general rank
-            res._rankGeneral = ((res.get_rankAccessibility() + res.get_rankCleanliness() + res.get_rankFacilities())/3);
         }
+        reader.endObject();
+
+        // Generating general rank
+        t_rankAverage = ((t_rankAccessibility + t_rankCleanliness + t_rankFacilities)/3);
+        Sheet res = new Sheet(t_id, t_name, t_description, (int)Math.round(t_rankAverage), (int)Math.round(t_rankCleanliness), (int)Math.round(t_rankFacilities), (int)Math.round(t_rankAccessibility), t_adapted);
 
         return res;
     }

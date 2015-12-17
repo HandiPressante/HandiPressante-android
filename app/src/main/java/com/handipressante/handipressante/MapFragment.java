@@ -176,8 +176,10 @@ public class MapFragment extends Fragment {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
-    private TestDataModel testModel = new TestDataModel();
     private POI poi_dest;
+
+    private IDataModel _model = new TestDataModel();
+    private List<Toilet> _toilets = new ArrayList<>();
 
     public void setLoc(Location _loc) {
         loc = _loc;
@@ -285,7 +287,7 @@ public class MapFragment extends Fragment {
     }
 
     //create a new marker
-    public Marker createMarker(POI poi) {
+    public Marker createMarker(POI poi, final Toilet toilet) {
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         newMarker.setPosition(poi.mLocation);
@@ -295,11 +297,19 @@ public class MapFragment extends Fragment {
         newMarker.setSnippet(poi.mDescription);
         //newMarker.setSubDescription("300 m");
         int i = R.drawable.star_zero;
+
+        /*
         if (testModel.getToilet(poi.mLocation) != null) {
             i = testModel.getToilet(poi.mLocation).getRankIcon();
         }
+        */
+
+        if (toilet != null) {
+            i = toilet.getRankIcon(toilet.getRankAverage());
+        }
+
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
-        if (testModel.getToilet(poi.mLocation).isAdapted()) {
+        if (toilet.isAdapted()) {
             newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
         } else {
             newMarker.setIcon(getResources().getDrawable(R.drawable.mymarker));
@@ -351,12 +361,12 @@ public class MapFragment extends Fragment {
 
             NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
-            List<Toilet> listToilets = testModel.getToilets(1, 2, 3, 4);
+            _toilets = _model.getToiletsMap(new GeoPoint(0,0), new GPSCoordinates(0,0));
 
             if (poi_list == null) {
                 poi_list = new ArrayList<>();
             }
-            for (Toilet t : listToilets) {
+            for (Toilet t : _toilets) {
                 POI toilet = new POI(0);
                 toilet.mCategory = "Toilet";
                 toilet.mType = t.getAddress();
@@ -371,9 +381,12 @@ public class MapFragment extends Fragment {
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
             mMapView.getOverlays().add(poiMarkers);
-            for (final POI poi : poi_list) {
-                final Marker poiMarker = createMarker(poi);
-                
+            for (int i=0; i<poi_list.size(); i++) {
+                POI poi = poi_list.get(i);
+                Toilet toilet = _toilets.get(i);
+
+                final Marker poiMarker = createMarker(poi, toilet);
+
                 poiMarkers.add(poiMarker);
                 if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
