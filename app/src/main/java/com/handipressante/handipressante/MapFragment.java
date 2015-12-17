@@ -333,16 +333,27 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         return newMarker;
     }
 
+    public Marker startMarker(GeoPoint geo)
+    {
+        Marker startM = new Marker(mMapView);
+        startM.setIcon(getResources().getDrawable(R.drawable.map_start));
+        startM.setPosition(geo);
+        return startM;
+    }
+
     public GeoPoint gps_enabled() {
         if (gps) {
             GeoPoint startPoint = new GeoPoint(loc);
+
             return startPoint;
         } else {
             //startpoint if gps not enabled (Pole Saint Helier- Rennes)
             GeoPoint startPoint = new GeoPoint(
                     48.106681, -1.669463);
+
             return startPoint;
         }
+
     }
 
     public void onStart() {
@@ -367,17 +378,18 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             mMyLocationOverlay.runOnFirstFix(new Runnable() {
                 public void run() {
                     GeoPoint loc = mMyLocationOverlay.getMyLocation();
+
                     if (loc != null) {
                         mMapView.getController().animateTo(mMyLocationOverlay.getMyLocation());
                     } else {
                         loc = new GeoPoint(48.120624199999995, 1.6344577);
                     }
+
                 }
             });
             // Get the bounds of the map viewed
             BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
             Log.e("handipressante",BB.getCenter().toString());
-
             GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLongitudeE6());
             Log.e("handipressante",South.toString());
             GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLongitudeE6());
@@ -387,6 +399,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             ArrayList<POI> poi_list = new ArrayList<>();// = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
             List<Toilet> listToilets = testModel.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
             Log.e("handipressante", ""+ West.getLongitude()+" "+ North.getLatitude()+" "+ East.getLongitude()+" "+ South.getLatitude());
+
 
            /* if (poi_list == null) {
                 poi_list = new ArrayList<>();
@@ -405,7 +418,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             }
 
             RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
-            poiMarkers.getTextPaint().setTextSize(0.00000000001f);
+            poiMarkers.getTextPaint().setTextSize(100.0f);
             mMapView.getOverlays().add(poiMarkers);
             for (final POI poi : poi_list) {
                 final Marker poiMarker = createMarker(poi);
@@ -450,7 +463,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                 });
 
             }
-            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster);
+            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_test);
             //clusterIconD.
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
