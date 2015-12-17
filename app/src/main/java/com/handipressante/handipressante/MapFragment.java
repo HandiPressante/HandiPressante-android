@@ -463,7 +463,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                 });
 
             }
-            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_test);
+            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_full);
             //clusterIconD.
             Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
             poiMarkers.setIcon(clusterIcon);
