@@ -1,5 +1,7 @@
 package com.handipressante.handipressante;
 
+import android.content.Context;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.util.List;
@@ -26,6 +28,25 @@ public interface IDataModel {
      */
     List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight);
 
+    /**
+     *
+     * @param geo Position where the toilet is being searched
+     * @return The toilet at the position geo
+     */
+    Toilet getToilet(GeoPoint geo);
+
+    /**
+     *
+     * @param id Id of a toilet
+     * @return The toilet of the selected id
+     */
+    Toilet getToilet(int id);
+
+    /**
+     *
+     * @param context the context which will be set
+     */
+    void setContext(Context context);
 
     Toilet getToiletFromCache(int id);
 }

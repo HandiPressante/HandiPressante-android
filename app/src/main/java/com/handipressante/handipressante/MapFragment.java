@@ -182,7 +182,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
-    private TestDataModel testModel = new TestDataModel();
+    private IDataModel model = new TestDataModel();
     private POI poi_dest;
 
     public void setLoc(Location _loc) {
@@ -321,12 +321,12 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
         newMarker.setSnippet(poi.mDescription);
         //newMarker.setSubDescription("300 m");
         int i = R.drawable.star_zero;
-        if (testModel.getToilet(poi.mLocation) != null) {
-            Toilet t = testModel.getToilet(poi.mLocation);
+        if (model.getToilet(poi.mLocation) != null) {
+            Toilet t = model.getToilet(poi.mLocation);
             i = t.getRankIcon(t.getRankAverage());
         }
         newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
-        if (testModel.getToilet(poi.mLocation).isAdapted()) {
+        if (model.getToilet(poi.mLocation).isAdapted()) {
             newMarker.setIcon(getResources().getDrawable(R.drawable.pmr_pin));
         } else {
             newMarker.setIcon(getResources().getDrawable(R.drawable.not_pmr_pin));
@@ -398,8 +398,9 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             GeoPoint West = new GeoPoint(BB.getCenter().getLatitudeE6(), BB.getLonWestE6());
             //NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = new ArrayList<>();// = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
-            //List<Toilet> listToilets = testModel.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
-            List<Toilet> listToilets = testModel.getToiletsMap(new GeoPoint(0, 0), new GeoPoint(0, 0));
+            //List<Toilet> listToilets = model.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
+            model.setContext(mMapView.getContext());
+            List<Toilet> listToilets = model.getToiletsMap(new GeoPoint(0, 0), new GeoPoint(0, 0));
             Log.e("handipressante", ""+ West.getLongitude()+" "+ North.getLatitude()+" "+ East.getLongitude()+" "+ South.getLatitude());
 
 
@@ -424,7 +425,6 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             mMapView.getOverlays().add(poiMarkers);
             for (final POI poi : poi_list) {
                 final Marker poiMarker = createMarker(poi);
-
                 poiMarkers.add(poiMarker);
                 if (poi.mLocation.equals(poi_dest.mLocation)) {
                     poi_dest = poi;
@@ -451,7 +451,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
                     @Override
                     public void onClick(View v) {
 
-                        Integer idSheet = testModel.getToilet(poi.mLocation).getId();
+                        Integer idSheet = model.getToilet(poi.mLocation).getId();
                         if (idSheet != -1) // If it's not the default toilet
                         {
                             Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);

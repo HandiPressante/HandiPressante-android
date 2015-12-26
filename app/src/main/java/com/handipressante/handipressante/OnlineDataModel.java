@@ -33,7 +33,7 @@ public class OnlineDataModel implements IDataModel {
         mContext = context;
     }
 
-    private OnlineDataModel() {
+    public OnlineDataModel() {
         _toilets = new ArrayList<>();
     }
 
@@ -75,13 +75,14 @@ public class OnlineDataModel implements IDataModel {
     }
 
     public List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight) {
-        return _toilets;
-        //return new ArrayList<>();
+
+        return getToilets(bottomRight.getLongitude(), bottomRight.getLatitude(), topLeft.getLongitude(), topLeft.getLatitude());
     }
 
 
     public List<Toilet> getToilets(double long_min, double lat_max, double long_max, double lat_min){
         String strUrl = "http://handipressante.carbonkiwi.net/api.php/toilettescarte/" + long_min + "/" + lat_max + "/" + long_max + "/" + lat_min;
+
 
         ConnectivityManager connMgr = (ConnectivityManager)
                 mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -205,5 +206,23 @@ public class OnlineDataModel implements IDataModel {
         }
         System.out.println("downloadURL 12");
         return is;
+    }
+
+    public Toilet getToilet(GeoPoint geo) {
+        for (Toilet t : _toilets) {
+            if (t.getGeo().equals(geo)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public Toilet getToilet(int id){
+        for (Toilet t : _toilets) {
+            if (t.getId().equals(id)) {
+                return t;
+            }
+        }
+        return null;
     }
 }

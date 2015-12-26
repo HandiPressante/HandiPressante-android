@@ -1,16 +1,18 @@
 package com.handipressante.handipressante;
 
+import android.content.Context;
+
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Nico on 19/10/2015.
- */
+
 public class TestDataModel implements IDataModel {
     ArrayList<Toilet> _toilets;
+
+    Context mContext;
 
     public TestDataModel() {
         _toilets = new ArrayList<>();
@@ -33,6 +35,11 @@ public class TestDataModel implements IDataModel {
 
     }
 
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+
     public Toilet getToilet(GeoPoint geo) {
         for (Toilet t : _toilets) {
             if (t.getGeo().equals(geo)) {
@@ -54,7 +61,6 @@ public class TestDataModel implements IDataModel {
     public List<Toilet> getToiletsList(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
         return _toilets;
     }
-
     public List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight) {
         return _toilets;
     }
