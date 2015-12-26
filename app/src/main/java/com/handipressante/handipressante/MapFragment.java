@@ -182,6 +182,7 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
     boolean gps = false;
     MyLocationNewOverlay mMyLocationOverlay;
     private IMapController map_controller;
+    //A changer si on veut passer en données réelles (pour l'instant, bug au niveau de la récupération du code : dans downloadURL, conn.getResponseCode() fait crasher)
     private IDataModel model = new TestDataModel();
     private POI poi_dest;
 
