@@ -5,37 +5,32 @@ package com.handipressante.handipressante;
  * Created by Tom on 21/10/2015.
  */
 
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
-import java.util.ArrayList;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
 import org.osmdroid.util.GeoPoint;
 
-public class ListToiletsFragment extends ListFragment {
-
+public class ListToiletsFragment extends ListFragment implements PropertyChangeListener {
+    private IDataModel _model;
     private List<Toilet> listOfToilets = new ArrayList<Toilet>();
     private LocationManager _locationManager;
     private LocationListener _locationListener;
@@ -47,38 +42,61 @@ public class ListToiletsFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        /*
         System.out.println("Nico onActivityCreated");
 
-        _locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //_model = new TestDataModel();
+        try {
+            _model = OnlineDataModel.instance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        _model.addChangeListener(this);
+       /* _model = OnlineDataModel.instance();
+        _model.setContext(getContext());*/
+
+        System.out.println("Nico onActivityCreated");
+
+        _locationManager = (LocationManager) getActivity().getSystemService(getContext().LOCATION_SERVICE);
         Log.d("Nico", "onActivityCreated");
         if (_locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             System.out.println("Nico GPS Provider found");
             Log.d("Nico", "GPS Provider found");
             _locationListener = new MyLocationListener();
-            _locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, _locationListener);
-            _locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, _locationListener, null);
-            System.out.println("Nico GPS Updates requested");
-            Log.d("Nico", "GPS Updates requested");
+            try {
+                _locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, _locationListener);
+                _locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, _locationListener, null);
+                System.out.println("Nico GPS Updates requested");
+                Log.d("Nico", "GPS Updates requested");
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
 
-        } else {
+        } else if (_locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            System.out.println("Nico Network Provider found");
+            Log.d("Nico", "Network Provider found");
+            _locationListener = new MyLocationListener();
+            try {
+                _locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10, _locationListener);
+                _locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, _locationListener, null);
+                System.out.println("Nico Network Updates requested");
+                Log.d("Nico", "Network Updates requested");
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }  else {
             Log.e("Nico", "GPS Provider not found");
             System.out.println("Nico GPS Provider not found");
         }
-        */
 
         // GPSCoordinate of user ###### NEEDS TO BE DYNAMIC ########
         //GPSCoordinates myPlace = new GPSCoordinates(351861.03, 6789173.05);
-        GeoPoint myPlace = new GeoPoint(48.12079, -1.63440);
 
         listOfToilets = new ArrayList<>();
         // Default toilet in case of error
         listOfToilets.add(0, new Toilet(123456, false, "Pas de toilette", new GeoPoint(0, 0), 0.0));
         // Generation of view
         generateView();
-
-        // Download toilets
-        new DownloadToiletsTask().execute(myPlace);
 
         // Add ClickListener
         final ListView toiletList = this.getListView();
@@ -129,41 +147,20 @@ public class ListToiletsFragment extends ListFragment {
         setListAdapter(adapter);
     }
 
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
-    // URL string and uses it to create an HttpUrlConnection. Once the connection
-    // has been established, the AsyncTask downloads the contents of the webpage as
-    // an InputStream. Finally, the InputStream is converted into a string, which is
-    // displayed in the UI by the AsyncTask's onPostExecute method.
-    private class DownloadToiletsTask extends AsyncTask<GeoPoint, Void, List<Toilet>> {
-        @Override
-        protected List<Toilet> doInBackground(GeoPoint... params) {
-            //IDataModel model = new TestDataModel();
-            IDataModel model = OnlineDataModel.instance(getContext());
-            return model.getToiletsList(params[0], 5, 20, 100000);
-        }
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        if (event.getNewValue() == null) return;
 
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(List<Toilet> result) {
-
-            for (Toilet t : result) {
-                System.out.println("Toilette : " + t.getId());
-                Log.d("Debug", "########################");
-                Log.d("Debug", "Toilette " + t.getId());
-                Log.d("Debug", "Adresse : " + t.getAddress());
-                Log.d("Debug", "PMR : " + t.isAdapted());
-                Log.d("Debug", "Lat : " + t.getCoordinates().getLatitude());
-                Log.d("Debug", "Long : " + t.getCoordinates().getLongitude());
-                Log.d("Debug", "########################");
-            }
-
-            listOfToilets = result;
+        System.out.println("Nico property changed");
+        if (event.getPropertyName().equals("NearbyToilets")) {
+            System.out.println("Nico update toilet list");
+            listOfToilets = (List<Toilet>) event.getNewValue();
+            System.out.println("Nico generate view");
             generateView();
-            //textView.setText(result);
         }
-
-
     }
+
+
 
     private class MyLocationListener implements LocationListener {
 
@@ -173,16 +170,26 @@ public class ListToiletsFragment extends ListFragment {
             System.out.println("Nico : " + longitude);
             String latitude = "Latitude: " + loc.getLatitude();
             System.out.println("Nico : " + latitude);
+
+            GeoPoint myPlace = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+            // Download toilets
+            _model.requestNearbyToilets(myPlace, 5, 20, 100000);
         }
 
         @Override
-        public void onProviderDisabled(String provider) {}
+        public void onProviderDisabled(String provider) {
+            System.out.println("Nico : onProviderDisabled");
+        }
 
         @Override
-        public void onProviderEnabled(String provider) {}
+        public void onProviderEnabled(String provider) {
+            System.out.println("Nico : onProviderEnabled");
+        }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            System.out.println("Nico : onStatusChanged");
+        }
     }
 }
 

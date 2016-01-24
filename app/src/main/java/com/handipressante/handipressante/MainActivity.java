@@ -48,6 +48,9 @@ public class MainActivity extends FragmentActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OnlineDataModel.instance(getApplicationContext());
+
         setContentView(R.layout.activity_main);
         getActionBar().setIcon(R.drawable.menu_icon);
 

@@ -400,8 +400,10 @@ public class MapFragment extends Fragment implements MapEventsReceiver {
             //NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
             ArrayList<POI> poi_list = new ArrayList<>();// = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
             //List<Toilet> listToilets = model.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
-            model.setContext(mMapView.getContext());
-            List<Toilet> listToilets = model.getToiletsMap(new GeoPoint(0, 0), new GeoPoint(0, 0));
+
+            // TODO : request / listener / ui update
+            //List<Toilet> listToilets = model.getToiletsMap(new GeoPoint(0, 0), new GeoPoint(0, 0));
+            List<Toilet> listToilets = model.getMapToilets();
             Log.e("handipressante", ""+ West.getLongitude()+" "+ North.getLatitude()+" "+ East.getLongitude()+" "+ South.getLatitude());
 
 

@@ -1,22 +1,22 @@
 package com.handipressante.handipressante;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class TestDataModel implements IDataModel {
-    ArrayList<Toilet> _toilets;
-
-    Context mContext;
+    private List<PropertyChangeListener> _listeners = new ArrayList<>();
+    private List<Toilet> _toilets = new ArrayList<>();
 
     public TestDataModel() {
-        _toilets = new ArrayList<>();
-
         GeoPoint loc = new GeoPoint(48.1157242, -1.6443362);
         GeoPoint loc_bis = new GeoPoint(loc);
         loc_bis.setLatitudeE6(loc_bis.getLatitudeE6() + 10000);
@@ -35,11 +35,16 @@ public class TestDataModel implements IDataModel {
 
     }
 
-    public void setContext(Context context) {
-        mContext = context;
+    @Override
+    public boolean containsToilet(int id) {
+        for (Toilet t : _toilets) {
+            if (t.getId().equals(id)) return true;
+        }
+
+        return false;
     }
 
-
+    // TODO : Remove
     public Toilet getToilet(GeoPoint geo) {
         for (Toilet t : _toilets) {
             if (t.getGeo().equals(geo)) {
@@ -49,6 +54,33 @@ public class TestDataModel implements IDataModel {
         return null;
     }
 
+    @Override
+    public void requestNearbyToilets(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
+        System.out.println("Nico requestNearbyToilets");
+        notifyListeners(this, "NearbyToilets", null, _toilets);
+    }
+
+    @Override
+    public void requestMapToilets(GeoPoint topLeft, GeoPoint bottomRight) {
+        notifyListeners(this, "MapToilets", null, null);
+    }
+
+    @Override
+    public void requestToilet(int id) {
+        notifyListeners(this, "Toilets", null, null);
+    }
+
+    @Override
+    public List<Toilet> getNearbyToilets() {
+        return _toilets;
+    }
+
+    @Override
+    public List<Toilet> getMapToilets() {
+        return _toilets;
+    }
+
+    @Override
     public Toilet getToilet(int id){
         for (Toilet t : _toilets) {
             if (t.getId().equals(id)) {
@@ -58,18 +90,14 @@ public class TestDataModel implements IDataModel {
         return null;
     }
 
-    public List<Toilet> getToiletsList(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
-        return _toilets;
-    }
-    public List<Toilet> getToiletsMap(GeoPoint topLeft, GeoPoint bottomRight) {
-        return _toilets;
+    @Override
+    public void addChangeListener(PropertyChangeListener listener) {
+        _listeners.add(listener);
     }
 
-    public Toilet getToiletFromCache(int id) {
-        for (Toilet t : _toilets) {
-            if (t.getId().equals(id)) return t;
+    private void notifyListeners(Object o, String property, Object oldValue, Object newValue) {
+        for (PropertyChangeListener listener : _listeners) {
+            listener.propertyChange(new PropertyChangeEvent(o, property, oldValue, newValue));
         }
-
-        return new Toilet();
     }
 }

@@ -50,13 +50,13 @@ public class ToiletSheetActivity extends FragmentActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
 
-        _model = OnlineDataModel.instance(getBaseContext());
+        _model = new TestDataModel();
         //new DownloadSheetTask().execute(id);
 
         //Sheet s = new Sheet();
         System.out.println("Nico - id " + _id);
 
-        Toilet t2 = _model.getToiletFromCache(_id);
+        Toilet t2 = _model.getToilet(_id);
         System.out.println("Nico - from cache" + t2.getAddress());
 
         Toilet t = new Toilet();

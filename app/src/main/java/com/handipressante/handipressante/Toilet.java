@@ -52,6 +52,20 @@ public class Toilet implements IMarker {
         _rankAccessibility = 0;
     }
 
+    public  void updateData(Toilet t) {
+        if (_id != t._id) return;
+
+        _adapted = t._adapted;
+        _address = t._address;
+        _coord = t._coord;
+        _distance = t._distance;
+        _description = t._description;
+        _rankAverage = t._rankAverage;
+        _rankCleanliness = t._rankCleanliness;
+        _rankFacilities = t._rankFacilities;
+        _rankAccessibility = t._rankAccessibility;
+    }
+
     public GeoPoint getGeo() {
         return _coord;
     }
