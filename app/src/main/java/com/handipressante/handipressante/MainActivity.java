@@ -18,6 +18,7 @@ import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,15 +42,18 @@ public class MainActivity extends FragmentActivity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private MainFragment mMainFragment = new MainFragment();
+    private SettingsFragment mSettingsFragment = new SettingsFragment();
+
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
     private String[] mTitles;
     private Integer[] mIcon;
 
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        Log.i("MainActivity", "onCreate");
 
-        OnlineDataModel.instance(getApplicationContext());
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         getActionBar().setIcon(R.drawable.menu_icon);
@@ -134,16 +138,13 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void selectItem(int position) {
-
         if (position == 0) {
-            MainFragment fragment = new MainFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit();
+                    .replace(R.id.content_frame, mMainFragment).commit();
 
         } else if (position == 1) {
-            SettingsFragment fragment = new SettingsFragment();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, fragment).commit();
+                    .replace(R.id.content_frame, mSettingsFragment).commit();
         }
 
         // update selected item and title, then close the drawer

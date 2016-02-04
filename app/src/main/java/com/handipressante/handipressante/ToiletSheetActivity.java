@@ -1,38 +1,24 @@
 package com.handipressante.handipressante;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import android.widget.LinearLayout.LayoutParams;
-
 import org.osmdroid.util.GeoPoint;
 
-import java.util.List;
-
 public class ToiletSheetActivity extends FragmentActivity {
-
-    private IDataModel _model;
-    private Integer _id;
+    private Toilet mToilet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +27,10 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // get info from parent view
         Intent intent = getIntent();
-        Integer id  = intent.getIntExtra("idSheet", -1);
-        _id = id;
+        Integer id  = intent.getIntExtra("toiletId", -1);
+
+        DataModel dataModel = DataModel.instance();
+        mToilet = dataModel.getToilet(id);
 
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Retour");
@@ -50,25 +38,13 @@ public class ToiletSheetActivity extends FragmentActivity {
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
 
-        _model = new TestDataModel();
-        //new DownloadSheetTask().execute(id);
-
-        //Sheet s = new Sheet();
-        System.out.println("Nico - id " + _id);
-
-        Toilet t2 = _model.getToilet(_id);
-        System.out.println("Nico - from cache" + t2.getAddress());
-
-        Toilet t = new Toilet();
-        fillToiletSheet(t2);
+        fillToiletSheet(mToilet);
     }
 
     public void onStart(){
         super.onStart();
-        //Toilet toilet = testModel.getToilet(_id);
-        Toilet toilet = new Toilet(1, true, "adresse", new GeoPoint(48.3, -1.1), 0.0);
-        toilet.setRankAverage(3);
-        GeoPoint geo = toilet.getGeo();
+
+        GeoPoint geo = mToilet.getCoordinates();
         final Uri mUri = Uri.parse("geo:" + geo.getLatitude() + "," + geo.getLongitude() + "?q=" + geo.getLatitude() + "," + geo.getLongitude());
         //Listener that opens Maps when tou click on Itinerary button
         findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
@@ -107,13 +83,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         return true;
     }
 
-    public void getSheet(int id){
-        //methode existant dans le datamodel peut servir
-        Log.d("Test", "test");
-    }
-
-    public void fillToiletSheet(Toilet toilet){
-
+    public void fillToiletSheet(Toilet toilet) {
         // Set icon whether adapted toilet or not
         ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
         if (toilet.isAdapted()) {
@@ -129,118 +99,27 @@ public class ToiletSheetActivity extends FragmentActivity {
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
         if(toilet.getDescription().isEmpty()){
-            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !");
+            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !"); // TODO : String res
             description.setTypeface(null, Typeface.ITALIC);
         }else{
             description.setText(toilet.getDescription());
         }
 
         // Set general rate
-        ImageView global_rate= (ImageView) findViewById(R.id.global_rate);
-        switch (toilet.getRankAverage()){
-            case 0 :
-                global_rate.setImageResource(R.drawable.star_zero);
-                break;
-            case 1 :
-                global_rate.setImageResource(R.drawable.star_one);
-                break;
-            case 2 :
-                global_rate.setImageResource(R.drawable.star_two);
-                break;
-            case 3 :
-                global_rate.setImageResource(R.drawable.star_three);
-                break;
-            case 4 :
-                global_rate.setImageResource(R.drawable.star_four);
-                break;
-            case 5 :
-                global_rate.setImageResource(R.drawable.star_five);
-                break;
-            default:
-                global_rate.setImageResource(R.drawable.no_rate_stars);
-                break;
-        }
-
+        ImageView global_rate = (ImageView) findViewById(R.id.global_rate);
+        global_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAverage()));
 
         // Set cleanliness rate
-        ImageView cleanliness_rate= (ImageView) findViewById(R.id.cleanliness_rate);
-        switch (toilet.getRankCleanliness()){
-            case 0 :
-                cleanliness_rate.setImageResource(R.drawable.star_zero);
-                break;
-            case 1 :
-                cleanliness_rate.setImageResource(R.drawable.star_one);
-                break;
-            case 2 :
-                cleanliness_rate.setImageResource(R.drawable.star_two);
-                break;
-            case 3 :
-                cleanliness_rate.setImageResource(R.drawable.star_three);
-                break;
-            case 4 :
-                cleanliness_rate.setImageResource(R.drawable.star_four);
-                break;
-            case 5 :
-                cleanliness_rate.setImageResource(R.drawable.star_five);
-                break;
-            default:
-                cleanliness_rate.setImageResource(R.drawable.no_rate_stars);
-                break;
-        }
-
+        ImageView cleanliness_rate = (ImageView) findViewById(R.id.cleanliness_rate);
+        cleanliness_rate.setImageResource(Converters.rankFromInteger(toilet.getRankCleanliness()));
 
         // Set facilities rate
-        ImageView facilities_rate= (ImageView) findViewById(R.id.facilities_rate);
-        switch (toilet.getRankFacilities()){
-            case 0 :
-                facilities_rate.setImageResource(R.drawable.star_zero);
-                break;
-            case 1 :
-                facilities_rate.setImageResource(R.drawable.star_one);
-                break;
-            case 2 :
-                facilities_rate.setImageResource(R.drawable.star_two);
-                break;
-            case 3 :
-                facilities_rate.setImageResource(R.drawable.star_three);
-                break;
-            case 4 :
-                facilities_rate.setImageResource(R.drawable.star_four);
-                break;
-            case 5 :
-                facilities_rate.setImageResource(R.drawable.star_five);
-                break;
-            default:
-                facilities_rate.setImageResource(R.drawable.no_rate_stars);
-                break;
-        }
-
+        ImageView facilities_rate = (ImageView) findViewById(R.id.facilities_rate);
+        facilities_rate.setImageResource(Converters.rankFromInteger(toilet.getRankFacilities()));
 
         // Set accessibility rate
-        ImageView accessibility_rate= (ImageView) findViewById(R.id.accessibility_rate);
-        switch (toilet.getRankAccessibility()){
-            case 0 :
-                accessibility_rate.setImageResource(R.drawable.star_zero);
-                break;
-            case 1 :
-                accessibility_rate.setImageResource(R.drawable.star_one);
-                break;
-            case 2 :
-                accessibility_rate.setImageResource(R.drawable.star_two);
-                break;
-            case 3 :
-                accessibility_rate.setImageResource(R.drawable.star_three);
-                break;
-            case 4 :
-                accessibility_rate.setImageResource(R.drawable.star_four);
-                break;
-            case 5 :
-                accessibility_rate.setImageResource(R.drawable.star_five);
-                break;
-            default:
-                accessibility_rate.setImageResource(R.drawable.no_rate_stars);
-                break;
-        }
+        ImageView accessibility_rate = (ImageView) findViewById(R.id.accessibility_rate);
+        accessibility_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAccessibility()));
 
         addComment(toilet);
 
@@ -297,37 +176,6 @@ public class ToiletSheetActivity extends FragmentActivity {
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
-
-    }
-
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a
-    // URL string and uses it to create an HttpUrlConnection. Once the connection
-    // has been established, the AsyncTask downloads the contents of the webpage as
-    // an InputStream. Finally, the InputStream is converted into a string, which is
-    // displayed in the UI by the AsyncTask's onPostExecute method.
-    private class DownloadSheetTask extends AsyncTask<Integer, Void, Sheet> {
-        @Override
-        protected Sheet doInBackground(Integer... params) {
-            //IDataModel model = new OnlineDataModel(getBaseContext());
-            IDataModel model = new TestDataModel();
-            return new Sheet();
-            //return model.getSheet(params[0]);
-        }
-
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(Sheet result) {
-            System.out.println("Sheet : " + result.get_id());
-            Log.d("Debug", "########################");
-            Log.d("Debug", "Toilette " + result.get_id());
-            Log.d("Debug", "Name : " + result.get_name());
-            Log.d("Debug", "PMR : " + result.get_isAdapted());
-            Log.d("Debug", "Rank : " + result.get_rankGeneral());
-            Log.d("Debug", "########################");
-
-            //fillToiletSheet(result);
-        }
-
 
     }
 }

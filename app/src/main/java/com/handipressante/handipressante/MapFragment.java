@@ -1,484 +1,362 @@
 package com.handipressante.handipressante;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.NinePatchDrawable;
-import android.media.Image;
-import android.support.annotation.MainThread;
-import android.view.MotionEvent;
-import android.view.View.OnClickListener;
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.EventLogTags;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.SubMenu;
-
-import java.util.LinkedList;
-
-import microsoft.mappoint.TileSystem;
-
-import org.osmdroid.DefaultResourceProxyImpl;
-import org.osmdroid.ResourceProxy;
-import org.osmdroid.api.IMapController;
-import org.osmdroid.api.IMapView;
-import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
-import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
-import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
-import org.osmdroid.util.BoundingBoxE6;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.IOverlayMenuProvider;
-import org.osmdroid.views.overlay.Overlay.Snappable;
-import org.osmdroid.views.util.constants.MapViewConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Paint.Style;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.location.Location;
-import android.util.FloatMath;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-
-
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.graphics.Canvas;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.location.GpsStatus;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
 import android.location.LocationListener;
-import android.location.LocationProvider;
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.location.Location;
 import android.location.LocationManager;
-import android.support.v4.app.FragmentManager;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.SubMenu;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+
+
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.ZoomButtonsController;
+import android.widget.Toast;
 
 import org.osmdroid.ResourceProxy;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.bonuspack.location.NominatimPOIProvider;
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.bonuspack.overlays.FolderOverlay;
 import org.osmdroid.bonuspack.overlays.InfoWindow;
+import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
+import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
 import org.osmdroid.bonuspack.overlays.Marker;
-import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
-import org.osmdroid.bonuspack.overlays.Polyline;
-import org.osmdroid.bonuspack.routing.OSRMRoadManager;
-import org.osmdroid.bonuspack.routing.RoadManager;
-import org.osmdroid.events.MapListener;
-import org.osmdroid.events.ScrollEvent;
-import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.tileprovider.tilesource.XYTileSource;
+import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.osmdroid.bonuspack.routing.Road;
-import org.osmdroid.bonuspack.kml.ColorStyle;
-import org.osmdroid.tileprovider.tilesource.ITileSource;
-import org.osmdroid.views.overlay.MinimapOverlay;
-import org.osmdroid.views.overlay.Overlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.ScaleBarOverlay;
-import org.osmdroid.views.overlay.compass.CompassOverlay;
-import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedIconOverlay.OnItemGestureListener;
-import org.osmdroid.views.overlay.MyLocationOverlay;
-import org.osmdroid.views.overlay.OverlayItem;
-import org.osmdroid.views.overlay.PathOverlay;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Handler;
-import java.util.ArrayList;
-import java.util.LinkedList;
+public class MapFragment extends Fragment implements LocationListener, DataModel.MapToiletsListener, MapEventsReceiver {
+    private final static int ZOOM = 14;
+    private final static int DATA_UPDATE_TIME = 2000;
+    private static IGeoPoint LAST_MAP_CENTER;
 
-//creation of the Fragment
-public class MapFragment extends Fragment implements MapEventsReceiver {
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
-    private List<Toilet> liste;
-    private final static int ZOOM = 14;
-    private Location loc;
-    boolean gps = false;
-    MyLocationNewOverlay mMyLocationOverlay;
-    private IMapController map_controller;
-    //A changer si on veut passer en données réelles (pour l'instant, bug au niveau de la récupération du code : dans downloadURL, conn.getResponseCode() fait crasher)
-    private IDataModel model = new TestDataModel();
-    private POI poi_dest;
+    private IMapController mMapController;
+    private MyLocationNewOverlay mLocationOverlay;
+    private RadiusMarkerClusterer mPoiMarkers;
 
-    public void setLoc(Location _loc) {
-        loc = _loc;
-    }
+    private LocationManager mLocationManager;
 
-    public void setDestination(GeoPoint geo) {
-        poi_dest = new POI(0);
-        poi_dest.mLocation = geo;
-    }
-
-    @Override
-    public boolean singleTapConfirmedHelper(GeoPoint p) {
-        InfoWindow.closeAllInfoWindowsOn(mMapView);
-        return true;
-    }
-
-    @Override
-    public boolean longPressHelper(GeoPoint p) {
-        //DO NOTHING FOR NOW:
-        return false;
-    }
+    private GeoPoint mTopLeft;
+    private GeoPoint mBottomRight;
+    private Timer mDataUpdateTimer;
+    private TimerTask mDataUpdateTask;
+    private Handler mDataUpdateHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i("MapFragment", "onCreate");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("MapFragment", "onCreateView");
+
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
         mMapView = new MapView(inflater.getContext(), 512, mResourceProxy);
-        IMapController mapController = mMapView.getController();
 
-        //newoverlay to listen when you click on the map
+        mMapController = mMapView.getController();
+
+        // activates the + and - (zoom)
+        mMapView.setBuiltInZoomControls(true);
+
+        // activates the multitouch control
+        mMapView.setMultiTouchControls(true);
+
+        // changes the map's style
+        mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
+        mMapView.setTilesScaledToDpi(true);
+
+        // choose the zoom lvl
+        mMapController.setZoom(ZOOM);
+
+        if (LAST_MAP_CENTER == null) {
+            // TODO : Load last known location
+            LAST_MAP_CENTER = new GeoPoint(48.11005, -1.67930);
+        }
+
+        mLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
+        mLocationOverlay.enableMyLocation();
+        mLocationOverlay.enableFollowLocation();
+        mLocationOverlay.setDrawAccuracyEnabled(false);
+        mMapView.getOverlays().add(mLocationOverlay);
+
+        //new overlay to listen when you click on the map
         MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(mMapView.getContext(), this);
         mMapView.getOverlays().add(0, mapEventsOverlay);
         InfoWindow.closeAllInfoWindowsOn(mMapView);
 
-        //activate the + and - (zoom)
-        mMapView.setBuiltInZoomControls(true);
-
-        //activate the multitouch control
-        mMapView.setMultiTouchControls(true);
-        //change the map's style
-
-        mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
-        mMapView.setTilesScaledToDpi(true);
-
-        //choose the zoom lvl
-        mMapView.setMaxZoomLevel(20);
-        mapController.setZoom(ZOOM);
-
-
-        MyLocation mloc = new MyLocation();
-        mloc.locationResult.setMap(this);
-        mloc.searchLocation(getContext(), mloc.locationResult);
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (loc != null) {
-            gps = true;
-        }
-        final GeoPoint startPoint = gps_enabled();
-
-
-        mapController.setCenter(startPoint);
-        //mark creation
-    /*    Marker startMarker = new Marker(mMapView);
-        //use custom bubble info
-        startMarker.setInfoWindow(new CustomInfoWindow(mMapView));
-        //selection of the mark's coordinates
-        startMarker.setPosition(startPoint);
-        //display
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER);
-        //text which pop-up when you select the mark
-        startMarker.setTitle("Pole Saint-Helier");
-        startMarker.setSubDescription("Point de départ");
-        //to change the icon
-        startMarker.setIcon(getResources().getDrawable(R.drawable.yourmarker));
-        //new end point
-    */
-        mMyLocationOverlay = new MyLocationNewOverlay(getActivity().getBaseContext(), mMapView);
-        mMapView.invalidate();
-
-
-        map_controller = mapController;
         return mMapView;
     }
 
-    public void newRoad(final POI poi) {
-        //new thread for navigation
-        new Thread(new Runnable() {
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i("MapFragment", "onActivityCreated");
+
+        // Get the location manager
+        mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            Location location = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (location == null) {
+                location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                if (location != null)
+                    Toast.makeText(getContext(), "Provider nework has a last known location.",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Provider gps has a last known location.",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            mLocationOverlay.setEnabled(false); // Default
+            if (location != null) {
+                onLocationChanged(location);
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mMapController.setCenter(LAST_MAP_CENTER);
+
+        DataModel.instance().addMapToiletListener(this);
+        //requestDataUpdate();
+        startDataUpdateTimer();
+
+        try {
+            boolean isOneProviderEnabled = startLocationUpdates();
+            mLocationOverlay.setEnabled(isOneProviderEnabled);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startDataUpdateTimer() {
+        mDataUpdateTimer = new Timer();
+        initDataUpdateTask();
+        mDataUpdateTimer.schedule(mDataUpdateTask, DATA_UPDATE_TIME, DATA_UPDATE_TIME);
+    }
+
+    private void stopDataUpdateTimer() {
+        if (mDataUpdateTimer != null) {
+            mDataUpdateTimer.cancel();
+            mDataUpdateTimer = null;
+        }
+    }
+
+    private void initDataUpdateTask() {
+        mDataUpdateTask = new TimerTask() {
+            @Override
             public void run() {
-
-                final GeoPoint startPoint = gps_enabled();
-                RoadManager roadManager = new OSRMRoadManager();
-                ArrayList<GeoPoint> waypoints = new ArrayList<GeoPoint>();
-                waypoints.add(startPoint);
-                waypoints.add(poi.mLocation);
-
-                Road road = roadManager.getRoad(waypoints);
-                try {
-                    road = roadManager.getRoad(waypoints);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                final Road finalRoad = road;
-                getActivity().runOnUiThread(new Runnable() {
+                mDataUpdateHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (finalRoad.mStatus != Road.STATUS_OK) {
-                            //handle error... warn the user, etc.
-                        }
+                        if (mTopLeft == null || mBottomRight == null) {
+                            requestDataUpdate();
+                        } else {
+                            // Get the bounds of the map viewed
+                            BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
+                            GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
+                            GeoPoint bottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
 
-                        Polyline roadOverlay = RoadManager.buildRoadOverlay(finalRoad, Color.BLUE, 8, getContext());
-                        mMapView.getOverlays().add(roadOverlay);
+                            if (mTopLeft.getLatitude() != topLeft.getLatitude() || mTopLeft.getLongitude() != topLeft.getLongitude()
+                                    || mBottomRight.getLatitude() != bottomRight.getLatitude() || mBottomRight.getLongitude() != bottomRight.getLongitude()) {
+                                requestDataUpdate();
+                            }
+                        }
                     }
                 });
             }
-        }).start();
+        };
     }
 
-    //create a new marker
-    public Marker createMarker(POI poi) {
+    private void requestDataUpdate() {
+
+        Toast.makeText(getContext(), "requestDataUpdate",
+                Toast.LENGTH_SHORT).show();
+
+        // Get the bounds of the map viewed
+        BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
+        mTopLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
+        mBottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
+
+        DataManager.instance(getActivity().getApplicationContext()).requestMapToilets(mTopLeft, mBottomRight);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        LAST_MAP_CENTER = mMapView.getMapCenter();
+
+        DataModel.instance().removeMapToiletListener(this);
+
+        stopDataUpdateTimer();
+
+        try {
+            mLocationManager.removeUpdates(this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean startLocationUpdates() throws SecurityException {
+        boolean result = false;
+        for (final String provider : mLocationManager.getProviders(true)) {
+            mLocationManager.requestLocationUpdates(provider, 2*1000, 1.0f, this);
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public void onDataChanged() {
+        //ArrayList<POI> poiList = new ArrayList<>();
+
+        List<Toilet> toiletList = DataModel.instance().getMapToilets();
+        if (toiletList.isEmpty()) return;
+
+        if (mPoiMarkers != null) mMapView.getOverlays().remove(mPoiMarkers);
+
+
+        mPoiMarkers = new RadiusMarkerClusterer(getContext());
+        mPoiMarkers.getTextPaint().setTextSize(70.0f);
+        mMapView.getOverlays().add(mPoiMarkers);
+
+        for (final Toilet t : toiletList) {
+            final Marker poiMarker = createMarker(t);
+            mPoiMarkers.add(poiMarker);
+
+            // parse Uri with coordinates of the poi.
+            final Uri mUri = Uri.parse("geo:" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude() + "?q=" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude());
+            //Listener that opens Maps when tou click on Itinerary button
+            poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Uri geoLocation = mUri;
+
+                    //intent to start a new activity
+                    Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
+                    intent.setData(geoLocation);
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+
+            poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_moreinfo).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt("toiletId", t.getId());
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_full_mini);
+        //clusterIconD.
+        Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
+        mPoiMarkers.setIcon(clusterIcon);
+
+
+        mMapView.invalidate();
+    }
+
+    // create a new marker
+    public Marker createMarker(final Toilet t) {
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
-        newMarker.setPosition(poi.mLocation);
+        newMarker.setPosition(t.getCoordinates());
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        //newMarker.setTitle("Parlement de Bretagne");
-        newMarker.setTitle(poi.mType);
-        newMarker.setSnippet(poi.mDescription);
+        newMarker.setTitle(t.getAddress());
+        newMarker.setSnippet("snippet");
         //newMarker.setSubDescription("300 m");
-        int i = R.drawable.star_zero;
-        if (model.getToilet(poi.mLocation) != null) {
-            Toilet t = model.getToilet(poi.mLocation);
-            i = t.getRankIcon(t.getRankAverage());
-        }
-        newMarker.setImage(getResources().getDrawable(i));//getResources().getDrawable(R.drawable.star_five)
-        if (model.getToilet(poi.mLocation).isAdapted()) {
-            newMarker.setIcon(getResources().getDrawable(R.drawable.pmr_pin));
-        } else {
-            newMarker.setIcon(getResources().getDrawable(R.drawable.not_pmr_pin));
-        }
+        newMarker.setImage(getResources().getDrawable(Converters.rankFromInteger(t.getRankAverage()))); //getResources().getDrawable(R.drawable.star_five)
+        newMarker.setIcon(getResources().getDrawable(Converters.pmrPinFromBoolean(t.isAdapted())));
         return newMarker;
     }
 
-    public Marker startMarker(GeoPoint geo)
-    {
-        Marker startM = new Marker(mMapView);
-        startM.setIcon(getResources().getDrawable(R.drawable.map_start));
-        startM.setPosition(geo);
-        return startM;
-    }
+    @Override
+    public void onLocationChanged(Location location) {
 
-    public GeoPoint gps_enabled() {
-        if (gps) {
-            GeoPoint startPoint = new GeoPoint(loc);
+        Toast.makeText(getContext(), "Location changed",
+                Toast.LENGTH_SHORT).show();
 
-            return startPoint;
-        } else {
-            //startpoint if gps not enabled (Pole Saint Helier- Rennes)
-            GeoPoint startPoint = new GeoPoint(
-                    48.106681, -1.669463);
 
-            return startPoint;
+        GeoPoint newLocation = new GeoPoint(location);
+        if (!mLocationOverlay.isEnabled()){
+            // we get the location for the first time
+            mLocationOverlay.setEnabled(true);
+            mMapController.setCenter(newLocation);
+            mMapController.animateTo(newLocation);
         }
 
+        /*
+        Toast.makeText(getContext(), "New Location (" + location.getLatitude() + "," + location.getLongitude() + ", provider : " + location.getProvider() + ", accuracy : " + location.getAccuracy(),
+                Toast.LENGTH_SHORT).show();
+                */
     }
 
-    public void onStart() {
-        super.onStart();
-        MyLocation mloc = new MyLocation();
-        mloc.locationResult.setMap(this);
-        if (!gps) {
-            new AlertDialog.Builder(mMapView.getContext())
-                    .setTitle("Erreur")
-                    .setMessage("Vous n'avez pas de GPS activé, merci de l'activer pour accéder à la carte")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent i = getActivity().getBaseContext().getPackageManager()
-                                    .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(i);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        } else {
-            mMyLocationOverlay.runOnFirstFix(new Runnable() {
-                public void run() {
-                    GeoPoint loc = mMyLocationOverlay.getMyLocation();
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
-                    if (loc != null) {
-                        mMapView.getController().animateTo(mMyLocationOverlay.getMyLocation());
-                    } else {
-                        loc = new GeoPoint(48.120624199999995, 1.6344577);
-                    }
+    }
 
-                }
-            });
-            // Get the bounds of the map viewed
-            BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
-            Log.e("handipressante",BB.getCenter().toString());
-            GeoPoint South = new GeoPoint(BB.getLatSouthE6(), BB.getCenter().getLongitudeE6());
-            Log.e("handipressante",South.toString());
-            GeoPoint North = new GeoPoint(BB.getLatNorthE6(), BB.getCenter().getLongitudeE6());
-            GeoPoint East = new GeoPoint(BB.getCenter().getLatitudeE6(), BB.getLonEastE6());
-            GeoPoint West = new GeoPoint(BB.getCenter().getLatitudeE6(), BB.getLonWestE6());
-            //NominatimPOIProvider poiProvider = new NominatimPOIProvider("http://nominatim.openstreetmap.org/");
-            ArrayList<POI> poi_list = new ArrayList<>();// = poiProvider.getPOICloseTo(new GeoPoint(loc), "Toilet", 50, 0.1);
-            //List<Toilet> listToilets = model.getToilets(West.getLongitude(), North.getLatitude(), East.getLongitude(), South.getLatitude());
+    @Override
+    public void onProviderEnabled(String provider) {
 
-            // TODO : request / listener / ui update
-            //List<Toilet> listToilets = model.getToiletsMap(new GeoPoint(0, 0), new GeoPoint(0, 0));
-            List<Toilet> listToilets = model.getMapToilets();
-            Log.e("handipressante", ""+ West.getLongitude()+" "+ North.getLatitude()+" "+ East.getLongitude()+" "+ South.getLatitude());
+    }
 
+    @Override
+    public void onProviderDisabled(String provider) {
 
-           /* if (poi_list == null) {
-                poi_list = new ArrayList<>();
-            }*/
-            for (Toilet t : listToilets) {
-                POI toilet = new POI(0);
-                toilet.mCategory = "Toilet";
-                toilet.mType = t.getAddress();
-                toilet.mLocation = t.getGeo();
-                poi_list.add(toilet);
-            }
+    }
 
-            if (poi_dest == null) {
-                poi_dest = new POI(0);
-                poi_dest.mLocation = new GeoPoint(48.1157242, -1.6443362);
-            }
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint geoPoint) {
+        InfoWindow.closeAllInfoWindowsOn(mMapView);
+        return true;
+    }
 
-            RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getActivity().getBaseContext());
-            poiMarkers.getTextPaint().setTextSize(100.0f);
-            mMapView.getOverlays().add(poiMarkers);
-            for (final POI poi : poi_list) {
-                final Marker poiMarker = createMarker(poi);
-                poiMarkers.add(poiMarker);
-                if (poi.mLocation.equals(poi_dest.mLocation)) {
-                    poi_dest = poi;
-                }
-                //parse Uri with coordinates of the poi.
-                final Uri mUri = Uri.parse("geo:" + poi.mLocation.getLatitude() + "," + poi.mLocation.getLongitude() + "?q=" + poi.mLocation.getLatitude() + "," + poi.mLocation.getLongitude());
-                //Listener that opens Maps when tou click on Itinerary button
-                poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Uri geoLocation = mUri;
-
-                        //intent to start a new activity
-                        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
-                        intent.setData(geoLocation);
-                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                            startActivity(intent);
-                        }
-                    }
-                });
-
-                poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_moreinfo).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Integer idSheet = model.getToilet(poi.mLocation).getId();
-                        if (idSheet != -1) // If it's not the default toilet
-                        {
-                            Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
-                            Bundle b = new Bundle();
-                            Log.d("Id send to the sheet", String.valueOf(idSheet));
-                            b.putInt("idSheet", idSheet);
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-                    }
-                });
-
-            }
-            Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_full);
-            //clusterIconD.
-            Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
-            poiMarkers.setIcon(clusterIcon);
-
-            mMyLocationOverlay.enableMyLocation();
-            mMyLocationOverlay.setDrawAccuracyEnabled(false);
-            mMyLocationOverlay.enableFollowLocation();
-            mMapView.getOverlays().add(mMyLocationOverlay);
-            mMapView.invalidate();
-
-        }
+    @Override
+    public boolean longPressHelper(GeoPoint geoPoint) {
+        //DO NOTHING FOR NOW:
+        return false;
     }
 }
