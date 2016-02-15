@@ -25,6 +25,7 @@
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow"
             android:orientation="horizontal"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
 
             <LinearLayout

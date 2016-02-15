@@ -28,19 +28,20 @@
                 android:layout_gravity="right"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
-                android:src="@drawable/icon_info"
+                android:src="@drawable/fiche"
                 />
 
             <ImageButton
                 android:id="@+id/bubble_itinerary"
-                android:layout_width="50dp"
-                android:layout_height="62dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="right"
                 android:scaleType="fitCenter"
                 android:background="@android:color/transparent"
-                android:src="@drawable/navigation_icon"
+                android:src="@drawable/itineraire"
 
-                />
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
         </LinearLayout>
 
         <TextView android:id="@+id/bubble_title"
