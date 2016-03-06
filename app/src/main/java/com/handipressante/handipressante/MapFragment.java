@@ -299,7 +299,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
     }
 
     // create a new marker
-    public Marker createMarker(final Toilet t) {
+    private Marker createMarker(final Toilet t) {
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
         newMarker.setPosition(t.getCoordinates());

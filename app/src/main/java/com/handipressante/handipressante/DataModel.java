@@ -71,12 +71,12 @@ public class DataModel {
 
     private List<NearbyToiletsListener> mNearbyToiletsListeners = new ArrayList<>();
 
-    public void addNearbyToiletListener(NearbyToiletsListener listener) {
+    public void addNearbyToiletsListener(NearbyToiletsListener listener) {
         mNearbyToiletsListeners.add(listener);
     }
 
     // TODO : Really needed ?
-    public void removeNearbyToiletListener(NearbyToiletsListener listener) {
+    public void removeNearbyToiletsListener(NearbyToiletsListener listener) {
         mNearbyToiletsListeners.remove(listener);
     }
 

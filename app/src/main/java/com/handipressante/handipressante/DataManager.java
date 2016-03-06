@@ -37,7 +37,7 @@ public class DataManager {
      * @param maxcount Max count of toilets in the result
      * @param distanceMax Max searching distance (in meters)
      */
-    void requestNearbyToilets(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
+    public void requestNearbyToilets(GeoPoint ref, int mincount, int maxcount, int distanceMax) {
         Log.i("DataManager", "requestNearbyToilets");
         String url = "http://handipressante.carbonkiwi.net/api.php/toilettesliste/" + ref.getLongitude() + "/" + ref.getLatitude() + "/" + mincount + "/" + maxcount + "/" + distanceMax;
 
@@ -81,7 +81,7 @@ public class DataManager {
      * @param topLeft Top left corner coordinates
      * @param bottomRight Bottom right corner coordinates
      */
-    void requestMapToilets(GeoPoint topLeft, GeoPoint bottomRight) {
+    public void requestMapToilets(GeoPoint topLeft, GeoPoint bottomRight) {
         Log.i("DataManager", "requestMapToilets");
         String url = "http://handipressante.carbonkiwi.net/api.php/toilettescarte/" + topLeft.getLongitude() + "/" + topLeft.getLatitude() + "/" + bottomRight.getLongitude() + "/" + bottomRight.getLatitude();
 

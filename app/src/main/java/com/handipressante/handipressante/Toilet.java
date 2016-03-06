@@ -15,7 +15,7 @@ public class Toilet {
 
     private String _description;
 
-    private Integer _rankAverage;
+    private Integer _rankAverage; // TODO : Move to a method ..
     private Integer _rankCleanliness;
     private Integer _rankFacilities;
     private Integer _rankAccessibility;

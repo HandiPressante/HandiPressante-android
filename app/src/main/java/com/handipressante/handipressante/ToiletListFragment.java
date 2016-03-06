@@ -34,7 +34,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Log.i("ToiletListFragment", "onActivityCreated");
 
         ToiletListAdapter adapter = new ToiletListAdapter(getActivity(), DataModel.instance().getNearbyToilets());
-        DataModel.instance().addNearbyToiletListener(adapter);
+        DataModel.instance().addNearbyToiletsListener(adapter);
         setListAdapter(adapter);
 
         // Get the location manager
