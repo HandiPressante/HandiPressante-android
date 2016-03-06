@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity {
 
     private MainFragment mMainFragment = new MainFragment();
     private SettingsFragment mSettingsFragment = new SettingsFragment();
+    private MemoListFragment mMemoListFragment = new MemoListFragment();
 
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
@@ -145,6 +146,10 @@ public class MainActivity extends FragmentActivity {
         } else if (position == 1) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mSettingsFragment).commit();
+
+        } else if (position == 2) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, mMemoListFragment).commit();
         }
 
         // update selected item and title, then close the drawer
