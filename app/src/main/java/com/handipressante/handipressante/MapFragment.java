@@ -129,7 +129,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
                 location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
                 if (location != null)
-                    Toast.makeText(getContext(), "Provider nework has a last known location.",
+                    Toast.makeText(getContext(), "Provider network has a last known location.",
                         Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Provider gps has a last known location.",
@@ -261,7 +261,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
 
             // parse Uri with coordinates of the poi.
             final Uri mUri = Uri.parse("geo:" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude() + "?q=" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude());
-            //Listener that opens Maps when tou click on Itinerary button
+            //Listener that opens Maps when you click on Itinerary button
             poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_itinerary).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

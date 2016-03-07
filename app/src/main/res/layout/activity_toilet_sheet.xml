@@ -69,6 +69,15 @@
                     android:gravity="right">
 
                     <ImageButton
+                        android:layout_width="70dip"
+                        android:layout_height="70dip"
+                        android:id="@+id/photo_button"
+                        android:src="@drawable/icon_addpic"
+                        android:layout_gravity="right"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitCenter" />
+
+                    <ImageButton
                         android:id="@+id/comment_button"
                         android:layout_width="70dip"
                         android:layout_height="70dip"
@@ -98,21 +107,75 @@
 
         <!-- Toilet pictures block-->
         <LinearLayout
-            android:id="@+id/picture_block"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/pics_block"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/presentation_block"
+            android:background="@drawable/background_shadow"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+            <!--ajout tests -->
+            <LinearLayout
+                android:gravity="top"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/previous"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="left"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true" />
+
+                        <ImageView
+                            android:id="@+id/next"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/viewpager"
+                android:layout_width="wrap_content"
+                android:layout_height="230dp" />
+            <!--
+            <ImageView
+                android:id="@+id/picture_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:gravity="bottom"/>
+                -->
         </LinearLayout>
 
 
 
         <!-- Toilet description block-->
+
         <LinearLayout
             android:id="@+id/description_block"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/presentation_block"
+            android:layout_below="@+id/pics_block"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_horizontal_margin"
