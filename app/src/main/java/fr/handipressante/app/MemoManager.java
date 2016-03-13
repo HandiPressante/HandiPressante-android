@@ -7,6 +7,7 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +15,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Nico on 06/03/2016.
@@ -24,6 +27,7 @@ public class MemoManager {
 
     private Context mCtx;
     private List<Memo> mMemoList;
+    private Queue<Memo> mToDownload = new LinkedList<>();
 
     private MemoManager(Context context) {
         mCtx = context;
@@ -63,13 +67,23 @@ public class MemoManager {
     }
 
     public void update() {
-        final DownloadTask downloadTask = new DownloadTask(mCtx);
-
         Memo m1 = new Memo(1, "Spécifications Fonctionnelles", "SpecificationsFonctionnelles.pdf", "http://handipressante.carbonkiwi.net/memo/SpecificationsFonctionnelles.pdf");
-        Memo m2 = new Memo(2, "Conception", "RapportConception.pdf", "http://handipressante.carbonkiwi.net/memo/RapportConception.pdf");
+        Memo m2 = new Memo(2, "Plaque Urinaire (Aidant)", "PlaqueUrinaire_AIDANT.pdf", "http://handipressante.carbonkiwi.net/memo/Plaqu_urinaire_AIDANT.pdf");
+        Memo m3 = new Memo(2, "Plaque Urinaire (Usager)", "PlaqueUrinaire_USAGER.pdf", "http://handipressante.carbonkiwi.net/memo/Plaqu_urinaire_USAGER.pdf");
 
-        downloadTask.execute(m1);
-        //downloadTask.execute(m2);
+        mToDownload.add(m1);
+        mToDownload.add(m2);
+        mToDownload.add(m3);
+
+        nextDownload();
+    }
+
+    public void nextDownload() {
+        Memo m = mToDownload.poll();
+        if (m != null) {
+            final DownloadTask downloadTask = new DownloadTask(mCtx);
+            downloadTask.execute(m);
+        }
     }
 
     // usually, subclasses of AsyncTask are declared inside the activity class.
@@ -91,7 +105,7 @@ public class MemoManager {
             HttpURLConnection connection = null;
             try {
                 mMemo = m[0];
-                URL url = new URL(mMemo.getRemotePath());
+                URL url = new URL(mMemo.getRemoteUrl());
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
@@ -108,7 +122,17 @@ public class MemoManager {
 
                 // download the file
                 input = connection.getInputStream();
-                output = context.openFileOutput(mMemo.getLocalPath(), Context.MODE_PRIVATE);
+
+                File memoDir = new File(context.getFilesDir(), mMemo.getFolder());
+                if (!memoDir.exists()) memoDir.mkdir();
+
+                File file = new File(context.getFilesDir(), mMemo.getLocalPath());
+                file.setExecutable(false);
+                file.setReadable(true, false);
+                file.setWritable(true);
+
+                //output = context.openFileOutput(mMemo.getLocalPath(), Context.MODE_PRIVATE);
+                output = new FileOutputStream(file);
 
                 byte data[] = new byte[4096];
                 long total = 0;
@@ -156,13 +180,17 @@ public class MemoManager {
         @Override
         protected void onPostExecute(String result) {
             mWakeLock.release();
-            if (result != null)
+            if (result != null) {
+                Log.i("MemoManager", "Download error: " + result);
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
+            }
             else {
                 Toast.makeText(context, "File downloaded", Toast.LENGTH_SHORT).show();
                 mMemoList.add(mMemo);
                 notifyMemoListListeners();
             }
+
+            nextDownload();
         }
     }
 }

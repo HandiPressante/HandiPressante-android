@@ -7,8 +7,11 @@ package fr.handipressante.app;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.List;
 
 
 public class MemoListFragment extends ListFragment {
@@ -57,13 +61,14 @@ public class MemoListFragment extends ListFragment {
         if (m != null) {
             // TODO : Load pdf
 
-            Log.i("MemoListFragment", getContext().getFilesDir() + "/" + m.getLocalPath());
             File file = new File(getContext().getFilesDir(), m.getLocalPath());
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(Uri.fromFile(file), "application/pdf");
-            target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            Log.i("MemoListFragment", file.getAbsolutePath());
+            Uri contentUri = FileProvider.getUriForFile(getContext(), "fr.handipressante.app", file);
+            Log.i("MemoListFragment", "Content uri : " + contentUri.toString());
 
-            Intent intent = Intent.createChooser(target, "Open File");
+            Intent intent = new Intent(Intent.ACTION_VIEW, contentUri);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {

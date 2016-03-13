@@ -6,29 +6,29 @@ package fr.handipressante.app;
 public class Memo {
     private Integer mId;
     private String mTitle;
-    private String mLocalPath;
-    private String mRemotePath;
+    private String mFilename;
+    private String mRemoteUrl;
 
     Memo() {
         mId = 0;
         mTitle = "Undefined";
-        mLocalPath = "Undefined";
-        mRemotePath = "Undefined";
+        mFilename = "Undefined";
+        mRemoteUrl = "Undefined";
     }
 
     Memo(Integer id, String title, String localPath, String remotePath) {
         mId = id;
         mTitle = title;
-        mLocalPath = localPath;
-        mRemotePath = remotePath;
+        mFilename = localPath;
+        mRemoteUrl = remotePath;
     }
 
     public  void updateData(Memo m) {
         if (!mId.equals(m.mId)) return;
 
         mTitle = m.mTitle;
-        mLocalPath = m.mLocalPath;
-        mRemotePath = m.mRemotePath;
+        mFilename = m.mFilename;
+        mRemoteUrl = m.mRemoteUrl;
     }
 
     public Integer getId() {
@@ -43,16 +43,24 @@ public class Memo {
         mTitle = title;
     }
 
+    public String getFilename() {
+        return mFilename;
+    }
+
+    public void setFilename(String filename) {
+        mFilename = filename;
+    }
+
+    public String getFolder() {
+        return "memos";
+    }
+
     public String getLocalPath() {
-        return mLocalPath;
+        return getFolder() + "/" + mFilename;
     }
 
-    public void setLocalPath(String localPath) {
-        mLocalPath = localPath;
-    }
-
-    public String getRemotePath() {
-        return mRemotePath;
+    public String getRemoteUrl() {
+        return mRemoteUrl;
     }
 
     @Override
