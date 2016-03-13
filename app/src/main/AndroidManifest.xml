@@ -20,6 +20,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- TODO : Should be false ? App is usable without camera -->
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
@@ -28,9 +29,10 @@
         android:icon="@mipmap/icone_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomActionBarTheme" >
+
         <activity
-            android:name=".SplashScreen"
-            android:label="@string/app_name" >
+            android:name=".SplashScreen">
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,13 +47,13 @@
             </intent-filter>-->
 
         </activity>
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".MainActivity">
         </activity>
+
         <activity
-            android:name=".ToiletSheetActivity"
-            android:label="@string/title_activity_toilet_sheet">
+            android:name=".ToiletSheetActivity">
             <!--android:theme="@style/Base.Theme.AppCompat"-->
         </activity>
 
