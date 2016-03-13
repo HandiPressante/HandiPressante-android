@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;

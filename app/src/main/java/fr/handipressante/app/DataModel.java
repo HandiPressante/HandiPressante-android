@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 import java.util.ArrayList;
 import java.util.List;

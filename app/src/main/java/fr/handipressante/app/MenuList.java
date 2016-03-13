@@ -1,4 +1,4 @@
-package com.handipressante.handipressante; /**
+package fr.handipressante.app; /**
  * Created by juliettegonzalez on 23/10/2015.
  */
 
@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.handipressante.handipressante.R;
+import fr.handipressante.app.R;
 
 public class MenuList extends ArrayAdapter<String>{
 

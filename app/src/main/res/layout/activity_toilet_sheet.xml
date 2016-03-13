@@ -12,7 +12,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:background="#eaeaea"
-        tools:context="com.handipressante.handipressante.ToiletSheetActivity">
+        tools:context="fr.handipressante.app.ToiletSheetActivity">
 
         <!-- Toilet presentation block-->
         <LinearLayout

@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 import org.json.JSONException;
 import org.json.JSONObject;

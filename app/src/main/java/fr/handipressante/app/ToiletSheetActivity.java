@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 import android.app.ActionBar;
 import android.content.Intent;

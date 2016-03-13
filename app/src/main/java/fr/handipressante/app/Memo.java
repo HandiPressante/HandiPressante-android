@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 /**
  * Created by Nico on 06/03/2016.

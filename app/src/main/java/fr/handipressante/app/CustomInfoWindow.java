@@ -1,4 +1,4 @@
-package com.handipressante.handipressante;
+package fr.handipressante.app;
 
 import org.osmdroid.bonuspack.overlays.MarkerInfoWindow;
 import org.osmdroid.views.MapView;
