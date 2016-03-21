@@ -4,6 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
+import fr.handipressante.app.Data.Memo;
+
 /**
  * Created by Nico on 23/10/2015.
  */
@@ -36,5 +38,14 @@ public class DataFactory {
         t.setRankAverage((int) Math.round(t_rankAverage));
 
         return t;
+    }
+
+    public Memo createMemo(JSONObject jsonObject) throws JSONException {
+        int id = jsonObject.getInt("id");
+        String title = jsonObject.getString("title");
+        String filename = jsonObject.getString("filename");
+
+        Memo m = new Memo(id, title, filename);
+        return m;
     }
 }

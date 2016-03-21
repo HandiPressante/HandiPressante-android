@@ -1,4 +1,6 @@
-package fr.handipressante.app;
+package fr.handipressante.app.Data;
+
+import fr.handipressante.app.MyConstants;
 
 /**
  * Created by Nico on 06/03/2016.
@@ -7,32 +9,32 @@ public class Memo {
     private Integer mId;
     private String mTitle;
     private String mFilename;
-    private String mRemoteUrl;
 
-    Memo() {
+    public Memo() {
         mId = 0;
         mTitle = "Undefined";
         mFilename = "Undefined";
-        mRemoteUrl = "Undefined";
     }
 
-    Memo(Integer id, String title, String localPath, String remotePath) {
+    public Memo(Integer id, String title, String filename) {
         mId = id;
         mTitle = title;
-        mFilename = localPath;
-        mRemoteUrl = remotePath;
+        mFilename = filename;
     }
 
-    public  void updateData(Memo m) {
+    public void updateData(Memo m) {
         if (!mId.equals(m.mId)) return;
 
         mTitle = m.mTitle;
         mFilename = m.mFilename;
-        mRemoteUrl = m.mRemoteUrl;
     }
 
     public Integer getId() {
         return mId;
+    }
+
+    public void setId(Integer id) {
+        mId = id;
     }
 
     public String getTitle() {
@@ -56,11 +58,11 @@ public class Memo {
     }
 
     public String getLocalPath() {
-        return getFolder() + "/" + mFilename;
+        return getFolder() + "/" + getFilename();
     }
 
     public String getRemoteUrl() {
-        return mRemoteUrl;
+        return MyConstants.BASE_URL + "memos/" + getFilename();
     }
 
     @Override

@@ -1,11 +1,17 @@
-package fr.handipressante.app;
+package fr.handipressante.app.Data;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +24,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
+import fr.handipressante.app.DataFactory;
+import fr.handipressante.app.MyConstants;
+import fr.handipressante.app.RequestManager;
 
 /**
  * Created by Nico on 06/03/2016.
@@ -67,15 +77,62 @@ public class MemoManager {
     }
 
     public void update() {
-        Memo m1 = new Memo(1, "Spécifications Fonctionnelles", "SpecificationsFonctionnelles.pdf", "http://handipressante.carbonkiwi.net/memo/SpecificationsFonctionnelles.pdf");
-        Memo m2 = new Memo(2, "Plaque Urinaire (Aidant)", "PlaqueUrinaire_AIDANT.pdf", "http://handipressante.carbonkiwi.net/memo/Plaqu_urinaire_AIDANT.pdf");
-        Memo m3 = new Memo(2, "Plaque Urinaire (Usager)", "PlaqueUrinaire_USAGER.pdf", "http://handipressante.carbonkiwi.net/memo/Plaqu_urinaire_USAGER.pdf");
+        Memo m1 = new Memo(1, "Spécifications Fonctionnelles", "SpecificationsFonctionnelles.pdf");
+        Memo m2 = new Memo(2, "Plaque Urinaire (Aidant)", "Plaque_urinaire_AIDANT.pdf");
+        Memo m3 = new Memo(2, "Plaque Urinaire (Usager)", "Plaque_urinaire_USAGER.pdf");
 
         mToDownload.add(m1);
         mToDownload.add(m2);
         mToDownload.add(m3);
 
         nextDownload();
+    }
+
+    public void requestMemosUpdate() {
+        Log.i("MemoManager", "requestMemoUpdate");
+
+        DataVersionDAO dataVersion = new DataVersionDAO(mCtx);
+        dataVersion.open();
+
+        String url = MyConstants.API_URL + "memos-update/" + dataVersion.getLastUpdate("memos");
+
+        dataVersion.close();
+
+        JsonArrayRequest jsObjRequest = new JsonArrayRequest
+                (url, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("DataManager", "Memos arrived !");
+                        DataFactory facto = new DataFactory();
+                        List<Memo> memos = new ArrayList<>();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                Memo m = facto.createMemo(response.getJSONObject(i));
+                                if (m != null) {
+                                    memos.add(m);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        MemoDAO memoDAO = new MemoDAO(mCtx);
+                        memoDAO.open();
+                        memoDAO.save(memos);
+                        memoDAO.close();
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+                        error.printStackTrace();
+                    }
+                });
+
+        RequestManager.instance(mCtx).addToRequestQueue(jsObjRequest);
     }
 
     public void nextDownload() {
