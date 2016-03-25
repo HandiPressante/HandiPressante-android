@@ -33,7 +33,6 @@ public class ToiletSheetActivity extends FragmentActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
 
-
     //enum for Viewpager slider
     public enum CustomPagerEnum {
 
@@ -163,6 +162,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         }else{
             description.setText(toilet.getDescription());
         }
+
 
         //Set pictures
         //Previous arrow
