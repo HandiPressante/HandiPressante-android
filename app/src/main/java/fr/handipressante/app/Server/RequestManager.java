@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.Server;
 
 import android.content.Context;
 
@@ -7,28 +7,30 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
- * Created by Nico on 02/02/2016.
+ * Created by Nico on 27/03/2016.
  */
 public class RequestManager {
-    private static RequestManager INSTANCE;
-    public static synchronized RequestManager instance(Context ctx) {
-        if (INSTANCE == null) INSTANCE = new RequestManager(ctx);
-        return INSTANCE;
-    }
-
+    private static RequestManager mInstance;
+    private static Context mContext;
     private RequestQueue mRequestQueue;
-    private Context mCtx;
 
     private RequestManager(Context context) {
-        mCtx = context;
+        mContext = context;
         mRequestQueue = getRequestQueue();
+    }
+
+    public static synchronized RequestManager getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new RequestManager(context);
+        }
+        return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
             // getApplicationContext() is key, it keeps you from leaking the
             // Activity or BroadcastReceiver if someone passes one in.
-            mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
         return mRequestQueue;
     }

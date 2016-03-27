@@ -14,16 +14,11 @@ public class AbstractDAO {
         mHandler = new DatabaseHandler(context);
     }
 
-    public SQLiteDatabase open() {
+    public void open() {
         mDatabase = mHandler.getWritableDatabase();
-        return mDatabase;
     }
 
     public void close() {
         mDatabase.close();
-    }
-
-    public SQLiteDatabase getDatabase() {
-        return mDatabase;
     }
 }

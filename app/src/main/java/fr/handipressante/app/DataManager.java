@@ -14,6 +14,8 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.handipressante.app.Server.RequestManager;
+
 /**
  * Created by Nico on 02/02/2016.
  */
@@ -71,7 +73,7 @@ public class DataManager {
                     }
                 });
 
-        RequestManager.instance(mCtx).addToRequestQueue(jsObjRequest);
+        RequestManager.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
 
 
@@ -116,6 +118,6 @@ public class DataManager {
                     }
                 });
 
-        RequestManager.instance(mCtx).addToRequestQueue(jsObjRequest);
+        RequestManager.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
 }

@@ -44,8 +44,9 @@ public class DataFactory {
         int id = jsonObject.getInt("id");
         String title = jsonObject.getString("title");
         String filename = jsonObject.getString("filename");
+        String salt = jsonObject.getString("salt");
 
-        Memo m = new Memo(id, title, filename);
+        Memo m = new Memo(id, title, filename, salt);
         return m;
     }
 }

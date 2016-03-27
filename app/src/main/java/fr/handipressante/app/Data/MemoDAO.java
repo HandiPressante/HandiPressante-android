@@ -13,23 +13,18 @@ import java.util.List;
  */
 public class MemoDAO extends AbstractDAO {
     public static final String TABLE_NAME = "memos";
-    public static final String KEY = "_id";
-    public static final String COL_TITLE = "title";
-    public static final String COL_FILENAME = "filename";
+    public static final String FIELD_KEY = "_id";
+    public static final String FIELD_TITLE = "title";
+    public static final String FIELD_FILENAME = "filename";
+    public static final String FIELD_SALT = "salt";
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
-            KEY + " INTEGER PRIMARY KEY, " +
-            COL_TITLE + " TEXT, " +
-            COL_FILENAME + " TEXT);";
+            FIELD_KEY + " INTEGER PRIMARY KEY, " +
+            FIELD_TITLE + " TEXT, " +
+            FIELD_FILENAME + " TEXT, " +
+            FIELD_SALT + " TEXT);";
 
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
-
-    public static final String DATA1 = "INSERT INTO " + TABLE_NAME +
-            " (" + KEY + ", " + COL_TITLE + ", " + COL_FILENAME + ")" +
-            " VALUES (1, 'Spécifications Fonctionnelles', 'SpecificationsFonctionnelles.pdf');";
-    public static final String DATA2 = "INSERT INTO " + TABLE_NAME +
-            " (" + KEY + ", " + COL_TITLE + ", " + COL_FILENAME + ")" +
-            " VALUES (2, 'Plaque Urinaire (Aidant)', 'Plaque_urinaire_AIDANT.pdf');";
 
     public MemoDAO(Context context) {
         super(context);
@@ -37,9 +32,10 @@ public class MemoDAO extends AbstractDAO {
 
     public void add(Memo m) {
         ContentValues value = new ContentValues();
-        value.put(KEY, m.getId());
-        value.put(COL_TITLE, m.getTitle());
-        value.put(COL_FILENAME, m.getFilename());
+        value.put(FIELD_KEY, m.getId());
+        value.put(FIELD_TITLE, m.getTitle());
+        value.put(FIELD_FILENAME, m.getFilename());
+        value.put(FIELD_SALT, m.getSalt());
 
         try {
             mDatabase.insertOrThrow(TABLE_NAME, null, value);
@@ -49,27 +45,31 @@ public class MemoDAO extends AbstractDAO {
     }
 
     public void remove(int id) {
-        mDatabase.delete(TABLE_NAME, KEY + " = ?", new String[]{String.valueOf(id)});
+        mDatabase.delete(TABLE_NAME, FIELD_KEY + " = ?", new String[]{String.valueOf(id)});
     }
 
     public void update(Memo m) {
         ContentValues value = new ContentValues();
-        value.put(COL_TITLE, m.getTitle());
-        value.put(COL_FILENAME, m.getFilename());
+        value.put(FIELD_TITLE, m.getTitle());
+        value.put(FIELD_FILENAME, m.getFilename());
+        value.put(FIELD_SALT, m.getSalt());
 
-        mDatabase.update(TABLE_NAME, value, KEY + " = ?", new String[]{String.valueOf(m.getId())});
+        mDatabase.update(TABLE_NAME, value, FIELD_KEY + " = ?", new String[]{String.valueOf(m.getId())});
     }
 
     public List<Memo> selectAll() {
         List<Memo> results = new ArrayList<>();
 
-        Cursor c = mDatabase.rawQuery("SELECT " + KEY + ", " + COL_TITLE + ", " + COL_FILENAME +
-                " FROM " + TABLE_NAME + " ORDER BY " + COL_TITLE + ";", new String[] {});
+        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TITLE + ", " +
+                FIELD_FILENAME + ", " + FIELD_SALT + " FROM " + TABLE_NAME + " ORDER BY " +
+                FIELD_TITLE + ";", new String[] {});
+
         while (c.moveToNext()) {
             Memo m = new Memo();
             m.setId(c.getInt(0));
             m.setTitle(c.getString(1));
             m.setFilename(c.getString(2));
+            m.setSalt(c.getString(3));
             results.add(m);
         }
         c.close();
@@ -80,7 +80,7 @@ public class MemoDAO extends AbstractDAO {
     public void save(List<Memo> memos) {
         List<Integer> existingMemos = new ArrayList<>();
 
-        Cursor c = mDatabase.rawQuery("SELECT " + KEY + " FROM " + TABLE_NAME +  ";", new String[]{});
+        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + " FROM " + TABLE_NAME +  ";", new String[]{});
         while (c.moveToNext()) {
             existingMemos.add(c.getInt(0));
         }

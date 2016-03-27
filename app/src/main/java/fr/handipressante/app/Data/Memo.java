@@ -9,17 +9,20 @@ public class Memo {
     private Integer mId;
     private String mTitle;
     private String mFilename;
+    private String mSalt;
 
     public Memo() {
         mId = 0;
         mTitle = "Undefined";
         mFilename = "Undefined";
+        mSalt = "Undefined";
     }
 
-    public Memo(Integer id, String title, String filename) {
+    public Memo(Integer id, String title, String filename, String salt) {
         mId = id;
         mTitle = title;
         mFilename = filename;
+        mSalt = salt;
     }
 
     public void updateData(Memo m) {
@@ -27,6 +30,7 @@ public class Memo {
 
         mTitle = m.mTitle;
         mFilename = m.mFilename;
+        mSalt = m.mSalt;
     }
 
     public Integer getId() {
@@ -53,6 +57,16 @@ public class Memo {
         mFilename = filename;
     }
 
+    public String getSalt() {
+        return mSalt;
+    }
+
+    public void setSalt(String salt) {
+        mSalt = salt;
+    }
+
+
+
     public String getFolder() {
         return "memos";
     }
@@ -65,6 +79,7 @@ public class Memo {
         return MyConstants.BASE_URL + "memos/" + getFilename();
     }
 
+    /*
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
@@ -72,6 +87,20 @@ public class Memo {
         if (o instanceof Memo) {
             Memo m = (Memo) o;
             return this.mId.equals(m.mId);
+        }
+
+        return false;
+    }
+    */
+    public boolean equals(Object o) {
+        if (o == this) return true;
+
+        if (o instanceof Memo) {
+            Memo m = (Memo) o;
+            return mId.equals(m.mId) &&
+                    mTitle.equals(m.mTitle) &&
+                    mFilename.equals(m.mFilename) &&
+                    mSalt.equals(m.mSalt);
         }
 
         return false;

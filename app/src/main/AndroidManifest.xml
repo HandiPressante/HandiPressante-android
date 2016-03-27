@@ -58,13 +58,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <provider
-            android:name=".Data.MemoProvider"
-            android:authorities="fr.handipressante.app.Data.MemoProvider"
-            android:multiprocess="true" />
-
-        <service
-            android:name=".Service.MemoDownloaderService"></service>
     </application>
 
 </manifest>

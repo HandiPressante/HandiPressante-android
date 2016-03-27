@@ -1,44 +1,56 @@
 package fr.handipressante.app;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import fr.handipressante.app.Data.MemoDAO;
+import java.util.List;
+
+import fr.handipressante.app.Data.Memo;
 
 
 /**
  * Created by Nico on 06/03/2016.
  */
-public class MemoListAdapter extends CursorAdapter {
+public class MemoListAdapter extends ArrayAdapter<Memo> {
     static class ViewHolder {
         TextView title;
     }
 
-    public MemoListAdapter(Context context, Cursor cursor, int flags) {
-        super(context, cursor, flags);
+    public MemoListAdapter(Context context, List<Memo> memoList) {
+        super(context, -1, memoList);
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.item_fragment_memolist, parent, false);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        ViewHolder holder;
 
-        ViewHolder holder = new ViewHolder();
-        holder.title = (TextView) row.findViewById(R.id.title);
+        if (row == null) {
+            LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(R.layout.item_fragment_memolist, parent, false);
 
-        row.setTag(holder);
+            holder = new ViewHolder();
+            holder.title = (TextView) row.findViewById(R.id.title);
+
+            row.setTag(holder);
+        } else {
+            holder = (ViewHolder) row.getTag();
+        }
+
+        final Memo memo = getItem(position);
+        holder.title.setText(memo.getTitle());
+
         return row;
     }
 
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.title.setText(cursor.getString(cursor.getColumnIndex(MemoDAO.COL_TITLE)));
+    public void swapItems(List<Memo> memoList) {
+        clear();
+        addAll(memoList);
     }
 }
+
 
