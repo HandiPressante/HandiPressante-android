@@ -40,9 +40,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.Server.ToiletDownloader;
 
 
-public class MapFragment extends Fragment implements LocationListener, DataModel.MapToiletsListener, MapEventsReceiver {
+public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
     private final static int DATA_UPDATE_TIME = 2000;
     private static IGeoPoint LAST_MAP_CENTER;
@@ -145,7 +147,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
 
         mMapController.setCenter(LAST_MAP_CENTER);
 
-        DataModel.instance().addMapToiletListener(this);
+        //DataModel.instance().addMapToiletListener(this);
         //requestDataUpdate();
         startDataUpdateTimer();
 
@@ -206,7 +208,14 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
         mTopLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
         mBottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
 
-        DataManager.instance(getActivity().getApplicationContext()).requestMapToilets(mTopLeft, mBottomRight);
+        //DataManager.instance(getActivity().getApplicationContext()).requestMapToilets(mTopLeft, mBottomRight);
+        new ToiletDownloader(getContext()).requestMapToilets(mTopLeft, mBottomRight,
+                new Downloader.Listener<List<Toilet>>() {
+                    @Override
+                    public void onResponse(List<Toilet> response) {
+                        onDataChanged(response);
+                    }
+                });
     }
 
     @Override
@@ -215,7 +224,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
 
         LAST_MAP_CENTER = mMapView.getMapCenter();
 
-        DataModel.instance().removeMapToiletListener(this);
+        //DataModel.instance().removeMapToiletListener(this);
 
         stopDataUpdateTimer();
 
@@ -235,11 +244,9 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
         return result;
     }
 
-    @Override
-    public void onDataChanged() {
+    public void onDataChanged(List<Toilet> toiletList) {
         //ArrayList<POI> poiList = new ArrayList<>();
 
-        List<Toilet> toiletList = DataModel.instance().getMapToilets();
         if (toiletList.isEmpty()) return;
 
         if (mPoiMarkers != null) mMapView.getOverlays().remove(mPoiMarkers);
@@ -275,9 +282,7 @@ public class MapFragment extends Fragment implements LocationListener, DataModel
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
-                    Bundle b = new Bundle();
-                    b.putInt("toiletId", t.getId());
-                    intent.putExtras(b);
+                    intent.putExtra("toilet", t);
                     startActivity(intent);
                 }
             });
