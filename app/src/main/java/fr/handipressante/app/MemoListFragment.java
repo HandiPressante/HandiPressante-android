@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,9 +1,6 @@
 package fr.handipressante.app.Server;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -13,19 +10,16 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.handipressante.app.Data.Memo;
-import fr.handipressante.app.DataFactory;
+import fr.handipressante.app.Data.DataFactory;
 import fr.handipressante.app.MyConstants;
 
 public class MemoDownloader extends Downloader {
-    private Context mContext;
-
     public MemoDownloader(Context context) {
-        mContext = context;
+        super(context);
     }
 
     public void downloadMemoList(final Listener<List<Memo>> listener) {

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -22,11 +21,7 @@ import android.widget.TextView;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import fr.handipressante.app.Data.Toilet;
 
 public class ToiletSheetActivity extends FragmentActivity {
     private Toilet mToilet;
@@ -65,10 +60,7 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // get info from parent view
         Intent intent = getIntent();
-        Integer id  = intent.getIntExtra("toiletId", -1);
-
-        DataModel dataModel = DataModel.instance();
-        mToilet = dataModel.getToilet(id);
+        mToilet = intent.getParcelableExtra("toilet");
 
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Retour");

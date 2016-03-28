@@ -13,6 +13,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -23,19 +24,32 @@ import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.handipressante.app.Data.NearbyToiletDAO;
+import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.Server.ToiletDownloader;
+
 
 public class ToiletListFragment extends ListFragment implements LocationListener {
     private LocationManager mLocationManager;
     private String mProvider;
+    private GeoPoint mCurrentGeopoint;
+
+    private ToiletListAdapter mAdapter;
+    private List<Toilet> mToiletCache;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("ToiletListFragment", "onActivityCreated");
 
-        ToiletListAdapter adapter = new ToiletListAdapter(getActivity(), DataModel.instance().getNearbyToilets());
-        DataModel.instance().addNearbyToiletsListener(adapter);
-        setListAdapter(adapter);
+        mToiletCache = new ArrayList<>();
+        mAdapter = new ToiletListAdapter(getActivity(), mToiletCache);
+        //mAdapter = new ToiletListAdapter(getActivity(), DataModel.instance().getNearbyToilets());
+        //DataModel.instance().addNearbyToiletsListener(adapter);
 
         // Get the location manager
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -46,6 +60,9 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Log.i("ToiletListFragment", "Provider selected : " + mProvider);
         Toast.makeText(getContext(), "Provider selected : " + mProvider,
                 Toast.LENGTH_SHORT).show();
+
+        // TODO : get current geopoint from saved state ?
+        mCurrentGeopoint = null;
     }
 
     /* Request updates at startup */
@@ -54,12 +71,14 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         super.onResume();
         Log.i("ToiletListFragment", "onResume");
 
+        new LoadDatabaseTask().execute();
+
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        if (DataModel.instance().getNearbyToilets().size() == 0) {
+        //if (DataModel.instance().getNearbyToilets().size() == 0) {
             Location location = mLocationManager.getLastKnownLocation(mProvider);
 
             if (location != null) {
@@ -72,7 +91,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
                 mLocationManager.requestSingleUpdate(mProvider, this, null);
                 Log.i("ToiletListFragment", "requestSingleUpdate");
             }
-        }
+        //}
 
         try {
             // TODO : Do something with the return value
@@ -93,6 +112,14 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+
+        if (!mToiletCache.isEmpty()) {
+            NearbyToiletDAO dao = new NearbyToiletDAO(getContext());
+            dao.open();
+            dao.truncate();
+            dao.addAll(mToiletCache);
+            dao.close();
+        }
     }
 
     private boolean startLocationUpdates() throws SecurityException {
@@ -110,9 +137,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Toilet t = (Toilet) getListAdapter().getItem(position);
         if (t != null) {
             Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
-            Bundle b = new Bundle();
-            b.putInt("toiletId", t.getId());
-            intent.putExtras(b);
+            intent.putExtra("toilet", t);
             startActivity(intent);
         }
     }
@@ -120,6 +145,10 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public void onLocationChanged(Location location) {
         Log.i("ToiletListFragment", "onLocationChanged");
+        mCurrentGeopoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+        if (!mToiletCache.isEmpty()) {
+            updateToiletList(mToiletCache, false);
+        }
 
         /*
         Toast.makeText(getContext(), "New Location (" + location.getLatitude() + "," + location.getLongitude() + ", provider : " + location.getProvider() + ", accuracy : " + location.getAccuracy(),
@@ -129,7 +158,15 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         // currentLocation : new GeoPoint(48.12063, -1.63447);
         // TODO : Memorize location
         // TODO : Compare prev and new location and decide if network request really needed
-        DataManager.instance(getActivity().getApplicationContext()).requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()), 5, 20, 2000);
+        //DataManager.instance(getActivity().getApplicationContext()).requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()), 5, 20, 2000);
+        ToiletDownloader downloader = new ToiletDownloader(getContext());
+        downloader.requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()),
+                5, 20, 2000, new Downloader.Listener<List<Toilet>>() {
+                    @Override
+                    public void onResponse(List<Toilet> response) {
+                        updateToiletList(response, false);
+                    }
+                });
     }
 
     @Override
@@ -149,7 +186,42 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     public void onProviderDisabled(String provider) {
         Toast.makeText(getContext(), "Disabled provider " + provider,
                 Toast.LENGTH_SHORT).show();
-        DataModel.instance().clearNearbyToilets();
+        //DataModel.instance().clearNearbyToilets();
+    }
+
+    synchronized private void updateToiletList(List<Toilet> toiletList, boolean firstOnly) {
+        if (!firstOnly || getListAdapter() == null) {
+            for (Toilet t : toiletList) {
+                t.setDistanceWith(mCurrentGeopoint);
+            }
+            Toilet.sortListByDistance(toiletList);
+
+            mAdapter.swapItems(toiletList);
+            mToiletCache = toiletList;
+
+            if (mCurrentGeopoint != null) {
+                setListAdapter(mAdapter);
+            }
+        }
+    }
+
+    private class LoadDatabaseTask extends AsyncTask<Void, Void, List<Toilet>> {
+        @Override
+        protected List<Toilet> doInBackground(Void... params) {
+            NearbyToiletDAO dao = new NearbyToiletDAO(getContext());
+            dao.open();
+            List<Toilet> result = dao.selectAll();
+            dao.close();
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(List<Toilet> toiletList) {
+            if (!toiletList.isEmpty()) {
+                updateToiletList(toiletList, true);
+            }
+        }
     }
 }
 

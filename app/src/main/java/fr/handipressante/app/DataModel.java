@@ -3,6 +3,8 @@ package fr.handipressante.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.handipressante.app.Data.Toilet;
+
 /**
  * Created by Nico on 02/02/2016.
  */
