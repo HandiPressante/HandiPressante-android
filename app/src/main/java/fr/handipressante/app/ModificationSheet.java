@@ -2,68 +2,34 @@ package fr.handipressante.app;
 
 import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
 import fr.handipressante.app.Data.Toilet;
 
-public class ToiletSheetActivity extends FragmentActivity {
-    private Toilet mToilet;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+/**
+ * Created by marc on 26/03/2016.
+ */
+public class ModificationSheet extends FragmentActivity    {
+        private Toilet mToilet;
 
-    //TODO:finir de changer l'enum en liste
-   /* public static ArrayList<ImageView> imgList = new ArrayList<>();
 
-    public static ArrayList<ImageView> getImgList() {
-        return imgList;
-    }
-*/
-    //enum for Viewpager slider
-    public enum CustomPagerEnum {
-
-        RED(0, R.layout.pics_test),
-        BLUE(1, R.layout.pics_test2),
-        ORANGE(2, R.layout.pics_test);
-
-        private int mTitleResId;
-        private int mLayoutResId;
-
-        CustomPagerEnum(int titleResId, int layoutResId) {
-            mTitleResId = titleResId;
-            mLayoutResId = layoutResId;
-        }
-
-        public int getTitleResId() {
-            return mTitleResId;
-        }
-
-        public int getLayoutResId() {
-            return mLayoutResId;
-        }
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_toilet_sheet);
+        setContentView(R.layout.mod_sheet);
 
         // get info from parent view
         Intent intent = getIntent();
@@ -72,8 +38,11 @@ public class ToiletSheetActivity extends FragmentActivity {
         getActionBar().setLogo(R.drawable.back_icon);
         getActionBar().setTitle("Retour");
 
+
         ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
+
+
 
         fillToiletSheet(mToilet);
     }
@@ -81,49 +50,20 @@ public class ToiletSheetActivity extends FragmentActivity {
     public void onStart() {
         super.onStart();
 
-        GeoPoint geo = mToilet.getCoordinates();
-        final Uri mUri = Uri.parse("geo:" + geo.getLatitude() + "," + geo.getLongitude() + "?q=" + geo.getLatitude() + "," + geo.getLongitude());
-        //Listener that opens Maps when you click on Itinerary button
-        findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Uri geoLocation = mUri;
-
-                //intent to start a new activity
-                Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
-                intent.setData(geoLocation);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-            }
-        });
         //opens camera app
         //TODO: Save thumbnail in carousel(viewpager)
-        findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (intent.resolveActivity(getPackageManager()) != null) {
-                    Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(intent, 0);
                 }
             }
-        });
-
-        findViewById(R.id.comment_button).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(),ModificationSheet.class);
-                Bundle b = new Bundle();
-                b.putInt("toiletId", mToilet.getId());
-                intent.putExtras(b);
-                Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT ).show();
-                startActivity(intent);
-            }
-        });
+        });*/
     }
-
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -132,7 +72,7 @@ public class ToiletSheetActivity extends FragmentActivity {
             ImageView pics= (ImageView) findViewById(R.id.picture_block2);
             pics.setImageBitmap(imageBitmap);
         }
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -164,52 +104,19 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText(toilet.getAddress());
+        name.setHint(toilet.getAddress());
 
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
+
         if(toilet.getDescription().isEmpty()){
-            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !"); // TODO : String res
+            description.setHint("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !"); // TODO : String res
             description.setTypeface(null, Typeface.ITALIC);
         }else{
             description.setText(toilet.getDescription());
         }
 
 
-        //Set pictures
-        //Previous arrow
-        ImageView previous= (ImageView) findViewById(R.id.previous);
-        previous.setImageResource(R.drawable.precedent);
-
-        //next arrow
-        ImageView next= (ImageView) findViewById(R.id.next);
-        next.setImageResource(R.drawable.suivant);
-        //picture slider
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CustomPagerAdapter(this));
-
-
-        //changes the visible photo in the carousel to the previous one
-        previous.setOnClickListener(new View.OnClickListener() {
-            private int getItem(int i) {
-                return viewPager.getCurrentItem() + i;
-            }
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(getItem(-1), true);
-            }
-        });
-
-        //changes the visible photo in the carousel to the next one
-        next.setOnClickListener(new View.OnClickListener() {
-            private int getItem(int i) {
-                return viewPager.getCurrentItem() + i;
-            }
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(getItem(+1), true);
-            }
-        });
 
         // Set general rate
         ImageView global_rate = (ImageView) findViewById(R.id.global_rate);
@@ -276,8 +183,8 @@ public class ToiletSheetActivity extends FragmentActivity {
 
 
             // Create TextView for name
-            TextView no_comment = new TextView(this);
-            no_comment.setText(" Il n'y a pas encore de commentaires pour ces toilettes !");
+            EditText no_comment = new EditText(this);
+            no_comment.setHint(" Ajoutez vos commentaires ici !");
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
@@ -286,3 +193,4 @@ public class ToiletSheetActivity extends FragmentActivity {
 
 
 }
+
