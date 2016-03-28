@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
+
+import java.io.Serializable;
 
 import fr.handipressante.app.Data.Toilet;
 
@@ -114,10 +117,9 @@ public class ToiletSheetActivity extends FragmentActivity {
         findViewById(R.id.comment_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getApplicationContext(),ModificationSheet.class);
-                Bundle b = new Bundle();
-                b.putInt("toiletId", mToilet.getId());
-                intent.putExtras(b);
+
+                Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
+                intent.putExtra("toilet", mToilet);
                 Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT ).show();
                 startActivity(intent);
             }

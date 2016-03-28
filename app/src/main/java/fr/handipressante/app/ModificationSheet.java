@@ -32,14 +32,14 @@ public class ModificationSheet extends FragmentActivity    {
         setContentView(R.layout.mod_sheet);
 
         // get info from parent view
-        Intent intent = getIntent();
-        mToilet = intent.getParcelableExtra("toilet");
+            Intent intent = getIntent();
+            mToilet = intent.getParcelableExtra("toilet");
 
         getActionBar().setLogo(R.drawable.back_icon);
-        getActionBar().setTitle("Retour");
+            getActionBar().setTitle("Retour");
 
 
-        ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getActionBar();
         actionBar.setHomeButtonEnabled(true);
 
 
