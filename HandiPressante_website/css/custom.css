@@ -1,0 +1,35 @@
+.brand-holder {
+	margin-top: 60px;
+}
+
+.lang {
+	position: absolute;
+	top: 30px;
+	right: 100px;
+}
+
+.lang a {
+	display: inline-block;
+	width: 48px;
+	height: 48px;
+
+	background: transparent;
+	background-position: right;
+	background-size: 96px 48px;
+}
+
+.lang a.activated {
+	background-position: left;
+}
+
+.lang a:hover {
+	background-position: left;
+}
+
+.lang .french {
+	background-image: url('../img/flags-fr.png');
+}
+
+.lang .english {
+	background-image: url('../img/flags-en.png');
+}
