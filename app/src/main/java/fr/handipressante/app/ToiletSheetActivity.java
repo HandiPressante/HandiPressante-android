@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.View;
@@ -20,16 +22,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import fr.handipressante.app.Data.Toilet;
 
 public class ToiletSheetActivity extends FragmentActivity {
     private Toilet mToilet;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     //TODO:finir de changer l'enum en liste
    /* public static ArrayList<ImageView> imgList = new ArrayList<>();
@@ -43,7 +53,8 @@ public class ToiletSheetActivity extends FragmentActivity {
 
         RED(0, R.layout.pics_test),
         BLUE(1, R.layout.pics_test2),
-        ORANGE(2, R.layout.pics_test);
+        ORANGE(2, R.layout.pics_test),
+        GREEN(3,R.layout.pics_test);
 
         private int mTitleResId;
         private int mLayoutResId;
@@ -62,6 +73,8 @@ public class ToiletSheetActivity extends FragmentActivity {
         }
 
     }
+
+    public static ArrayList<ImageView> listPics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,24 +119,16 @@ public class ToiletSheetActivity extends FragmentActivity {
         findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+
+            }
             }
         });
 
-        findViewById(R.id.comment_button).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
 
-                Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
-                intent.putExtra("toilet", mToilet);
-                Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT ).show();
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -141,6 +146,12 @@ public class ToiletSheetActivity extends FragmentActivity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.modification:
+                Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
+                intent.putExtra("toilet", mToilet);
+                Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            break;
             // Something else
             default:
                 break;
@@ -151,8 +162,10 @@ public class ToiletSheetActivity extends FragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_toilet_sheet, menu);
-        return true;
+        MenuItem item_mod = menu.add(Menu.NONE, R.id.modification,1,R.string.modification);
+        item_mod.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void fillToiletSheet(Toilet toilet) {
@@ -187,6 +200,7 @@ public class ToiletSheetActivity extends FragmentActivity {
         ImageView next= (ImageView) findViewById(R.id.next);
         next.setImageResource(R.drawable.suivant);
         //picture slider
+        listPics.add((ImageView)findViewById(R.id.picture_block1));
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
 

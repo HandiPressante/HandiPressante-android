@@ -1,8 +1,11 @@
 package fr.handipressante.app;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -12,12 +15,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.osmdroid.ResourceProxy;
@@ -74,7 +80,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Log.i("MapFragment", "onCreateView");
 
         mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
-        mMapView = new MapView(inflater.getContext(), 512, mResourceProxy);
+        mMapView = new MapView(inflater.getContext(), mResourceProxy);
 
         mMapController = mMapView.getController();
 
@@ -355,7 +361,9 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public boolean longPressHelper(GeoPoint geoPoint) {
-        //DO NOTHING FOR NOW:
+        Toast.makeText(getContext(), "Tap on ("+geoPoint.getLatitude()+","+geoPoint.getLongitude()+")", Toast.LENGTH_SHORT).show();
+        AddToiletDialog addToiletDialog = new AddToiletDialog();
+        addToiletDialog.show(getFragmentManager(), "adding toilets");
         return false;
     }
 }

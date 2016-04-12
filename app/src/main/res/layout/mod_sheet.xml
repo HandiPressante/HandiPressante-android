@@ -33,40 +33,60 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/handicapped"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start" />
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/global_rate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="75dip"
-                    android:adjustViewBounds="true"
-                    android:layout_gravity="start" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Le logo est-il présent?"
+                        android:id="@+id/textView5" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_gravity="right">
-
-                <EditText
-                    android:id="@+id/toilet_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="18dp"/>
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/switchlogo"
+                        android:textOff="NON"
+                        android:textOn="OUI" />
+                </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
                     android:orientation="horizontal"
-                    android:gravity="right">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/handicapped"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"/>
+
+                        <ImageView
+                            android:id="@+id/global_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="75dip"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="start" />
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/toilet_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="18dp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -103,9 +123,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="13dp"/>
-
         </LinearLayout>
-
 
         <!-- Toilet rate block-->
         <LinearLayout
@@ -136,30 +154,55 @@
                 <!-- First category -->
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Propreté"
-                        android:textColor="#be3733"
-                        android:enabled="false" />
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Propreté"
+                            android:textColor="#be3733"
+                            android:enabled="false" />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right">
+
+                            <Spinner
+                                android:layout_width="50dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/cleanliness_spinner"
+                                android:layout_gravity="right" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <!-- Image (stars) of the category-->
+
                     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:layout_weight="60">
                         <ImageView
                             android:id="@+id/cleanliness_rate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
+                            android:layout_marginRight="20dp"
                             android:layout_alignParentRight="true"
                             android:maxWidth="75dip"
                             android:adjustViewBounds="true" />
@@ -167,32 +210,56 @@
 
                 </LinearLayout>
 
-
                 <!-- Second category -->
                 <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Equipement"
-                        android:textColor="#be3733"/>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Equipement"
+                            android:textColor="#be3733"/>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right">
+
+                            <Spinner
+                                android:layout_width="50dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/equipement_spinner" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <!-- Image (stars) of the category-->
+
                     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:layout_weight="60">
                         <ImageView
                             android:id="@+id/facilities_rate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
+                            android:layout_marginRight="20dp"
                             android:layout_alignParentRight="true"
                             android:maxWidth="75dip"
                             android:adjustViewBounds="true" />
@@ -207,24 +274,49 @@
                     android:orientation="horizontal">
 
                     <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Accessibilité du lieu"
-                        android:textColor="#be3733"/>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="40"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/activity_horizontal_margin"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Accessibilité du lieu"
+                            android:textColor="#be3733"/>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right">
+
+                            <Spinner
+                                android:layout_width="50dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/accessibility_spinner"
+                                android:gravity="right" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <!-- Image (stars) of the category-->
+
                     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|right"
+                        android:layout_weight="60">
                         <ImageView
                             android:id="@+id/accessibility_rate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
+                            android:layout_marginRight="20dp"
                             android:layout_alignParentRight="true"
                             android:maxWidth="75dip"
                             android:adjustViewBounds="true" />
@@ -237,78 +329,6 @@
 
 
         <!-- Toilet comment block-->
-        <LinearLayout
-            android:id="@+id/comment_block"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/rate_block"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:background="@drawable/background_shadow">
-
-            <!-- NAME of toilet comment block-->
-            <ImageView
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:src="@drawable/comment_title" />
-
-            <LinearLayout
-                android:id="@+id/comment_bubble"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- IMPORTANT : LOOK OF THE COMMENT BUBBLE -->
-                <!--<LinearLayout
-                    android:id="@+id/one_comment_block"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_vertical_margin"
-                    android:layout_marginRight="@dimen/activity_vertical_margin"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/name_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Marie Babel"/>
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Ceci est mon commentaire pour ces toilettes bla bla bla bla bla bla bla bla"/>
-
-                    <TextView
-                        android:id="@+id/date_comment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="italic"
-                        android:textColor="#7b7b7b"
-                        android:fontFamily="sans-serif-medium"
-                        android:textSize="12dp"
-                        android:text="17/12/15"/>
-
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="1dp"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                        android:background="#dfdfdf" />
-
-                </LinearLayout>-->
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </RelativeLayout>
 </ScrollView>

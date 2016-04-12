@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +38,8 @@ import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.util.prefs.Preferences;
+
 public class MainActivity extends FragmentActivity {
 
     private DrawerLayout mDrawerLayout;
@@ -50,6 +54,8 @@ public class MainActivity extends FragmentActivity {
     private CharSequence mDrawerTitle;
     private String[] mTitles;
     private Integer[] mIcon;
+
+
 
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
@@ -140,14 +146,20 @@ public class MainActivity extends FragmentActivity {
 
     private void selectItem(int position) {
         if (position == 0) {
+            //removes frag Fragment if created before, because not compatible TODO: improve selectItem ?
+            getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mMainFragment).commit();
 
         } else if (position == 1) {
-            getSupportFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction().remove(mMainFragment).commit();
+            getSupportFragmentManager().beginTransaction().remove(mMemoListFragment).commit();
+            getFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mSettingsFragment).commit();
+            PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
 
         } else if (position == 2) {
+            getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_frame, mMemoListFragment).commit();
         }

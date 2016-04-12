@@ -21,6 +21,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
         ToiletSheetActivity.CustomPagerEnum customPagerEnum = ToiletSheetActivity.CustomPagerEnum.values()[position];
+
         LayoutInflater inflater = LayoutInflater.from(mContext);
         ViewGroup layout = (ViewGroup) inflater.inflate(customPagerEnum.getLayoutResId(), collection, false);
         collection.addView(layout);

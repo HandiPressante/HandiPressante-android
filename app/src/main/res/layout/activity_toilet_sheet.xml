@@ -78,16 +78,6 @@
                         android:scaleType="fitCenter" />
 
                     <ImageButton
-                        android:id="@+id/comment_button"
-                        android:layout_width="70dip"
-                        android:layout_height="70dip"
-                        android:layout_gravity="right"
-                        android:scaleType="fitCenter"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/icon_addrate"
-                        android:baselineAlignBottom="false" />
-
-                    <ImageButton
                         android:id="@+id/map_button"
                         android:layout_width="60dip"
                         android:layout_height="55dip"
@@ -342,11 +332,25 @@
             android:background="@drawable/background_shadow">
 
             <!-- NAME of toilet comment block-->
-            <ImageView
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:src="@drawable/comment_title" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:src="@drawable/comment_title"
+                    android:layout_gravity="left" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/add_comment"
+                    android:src="@drawable/icon_addrate"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/comment_bubble"

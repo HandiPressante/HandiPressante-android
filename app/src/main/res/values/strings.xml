@@ -18,4 +18,30 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_toilet_sheet">ToiletSheetActivity</string>
+
+    <string name="modification">Modifier fiche</string>
+    <string name="save">Sauvegarder</string>
+
+    <string name="dialog_add_toilets">Ajouter un emplacement?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+
+    <string name="button_size_value">Cliquer pour accéder aux modifications</string>
+
+
+    <string-array name="array_settings_size_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="array_settings_size_entries">
+        <item> Très Petit</item>
+        <item> Petit</item>
+        <item> Moyen</item>
+        <item> Grand</item>
+        <item> Très grand</item>
+    </string-array>
 </resources>
