@@ -48,7 +48,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 public boolean onPreferenceChange(Preference preference, Object value) {
                     int data = Integer.parseInt(value.toString());
                     //getting selected List item.
-                    String text    = getActivity().getResources().getStringArray(R.array.array_settings_size_entries)[data];
+                    String text = getActivity().getResources().getStringArray(R.array.array_settings_size_entries)[data];
                     buttonSize.setSummary(text);
                     return true;
                 }

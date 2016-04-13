@@ -1,9 +1,9 @@
 package fr.handipressante.app;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,21 +14,22 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.api.IMapView;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
@@ -38,6 +39,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
+import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -69,6 +71,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     private TimerTask mDataUpdateTask;
     private Handler mDataUpdateHandler = new Handler();
 
+    SharedPreferences sharedPrefs;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MapFragment", "onCreate");
@@ -79,16 +83,17 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i("MapFragment", "onCreateView");
 
-        mResourceProxy = new ResourceProxyImpl(inflater.getContext().getApplicationContext());
-        mMapView = new MapView(inflater.getContext(), mResourceProxy);
+        mResourceProxy = new ResourceProxyImpl(getContext().getApplicationContext());
+        //mMapView = new MapView(getContext(), mResourceProxy);
+
+        //add layout with map and Arrows (by default)
+        RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_map, container, false);
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        mMapView = (MapView)rl.findViewById(R.id.map);
 
         mMapController = mMapView.getController();
-
-        // activates the + and - (zoom)
-        mMapView.setBuiltInZoomControls(true);
-
-        // activates the multitouch control
-        mMapView.setMultiTouchControls(true);
 
         // changes the map's style
         mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
@@ -113,9 +118,23 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         mMapView.getOverlays().add(0, mapEventsOverlay);
         InfoWindow.closeAllInfoWindowsOn(mMapView);
 
-        return mMapView;
-    }
+        //removes the arrows according the SharedPreferences "slide"
+        boolean test = sharedPrefs.getBoolean("slide",false);
+        if(test) {
+            rl.removeView(rl.findViewById(R.id.maparrow));
+            // activates the + and - (zoom)
+            mMapView.setBuiltInZoomControls(true);
 
+            // activates the multitouch control
+            mMapView.setMultiTouchControls(true);
+        }
+        else{
+            useArrows(mMapController, rl);
+        }
+
+        return rl;
+
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -365,5 +384,57 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         AddToiletDialog addToiletDialog = new AddToiletDialog();
         addToiletDialog.show(getFragmentManager(), "adding toilets");
         return false;
+    }
+
+    public void useArrows(final IMapController mapController, RelativeLayout rl){
+        ImageView buttonZoomPlus = (ImageView)rl.findViewById(R.id.zoom_plus);
+        buttonZoomPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"click on zoom +", Toast.LENGTH_SHORT).show();
+                mapController.zoomIn();
+            }
+        });
+
+        ImageView buttonZoomLess = (ImageView)rl.findViewById(R.id.zoom_less);
+        buttonZoomLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapController.zoomOut();
+            }
+        });
+
+        ImageView buttonMoveDown = (ImageView)rl.findViewById(R.id.down);
+        buttonMoveDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mapController.scrollBy(0, 100);
+            }
+        });
+
+        final ImageView buttonMoveUp = (ImageView)rl.findViewById(R.id.top);
+        buttonMoveUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapController.scrollBy(0, -200);
+            }
+        });
+
+
+        ImageView buttonMoveRight = (ImageView)rl.findViewById(R.id.right);
+        buttonMoveRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapController.scrollBy(200, 0);
+            }
+        });
+
+        ImageView buttonMoveLeft = (ImageView)rl.findViewById(R.id.left);
+        buttonMoveLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapController.scrollBy(-200, 0);
+            }
+        });
     }
 }
