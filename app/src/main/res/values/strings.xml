@@ -44,4 +44,12 @@
         <item> Grand</item>
         <item> Très grand</item>
     </string-array>
+
+    <string-array name="button_map_size_values">
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+    </string-array>
 </resources>

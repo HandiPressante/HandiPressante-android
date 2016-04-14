@@ -6,6 +6,8 @@ import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,12 +16,15 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+
 import android.support.v4.view.ViewPager;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +45,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.prefs.Preferences;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -60,10 +65,15 @@ public class MainActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
 
+        checkFirstRun();
+
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_main);
-        getActionBar().setIcon(R.drawable.menu_icon);
+
+        setToolBar();
+
 
         mTitle = mDrawerTitle = getTitle();
         mTitles = new String[]{"Home", "Réglages", "Mémos"};
@@ -78,6 +88,26 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    /* The click listener for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void setToolBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+
     private DrawerListener createDrawerToggle() {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
@@ -87,12 +117,12 @@ public class MainActivity extends FragmentActivity {
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -118,13 +148,8 @@ public class MainActivity extends FragmentActivity {
                 R.layout.drawer_list_item, mTitles));
                 */
 
-
-
-
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setHomeButtonEnabled(true);
 
         createDrawerToggle();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -132,36 +157,67 @@ public class MainActivity extends FragmentActivity {
 
     //method used with a button to send coords to external map app. Don't touch at the moment!!
 
-
-
-
-
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // synchroniser le drawerToggle après la restauration via onRestoreInstanceState
+        mDrawerToggle.syncState();
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private void selectItem(int position) {
         if (position == 0) {
             //removes frag Fragment if created before, because not compatible TODO: improve selectItem ?
-            getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, mMainFragment).commit();
+            getFragmentManager()
+                    .beginTransaction()
+                    .remove(mSettingsFragment)
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, mMainFragment)
+                    .commit();
 
         } else if (position == 1) {
-            getSupportFragmentManager().beginTransaction().remove(mMainFragment).commit();
-            getSupportFragmentManager().beginTransaction().remove(mMemoListFragment).commit();
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, mSettingsFragment).commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(mMainFragment)
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(mMemoListFragment)
+                    .commit();
+            getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, mSettingsFragment)
+                    .commit();
             PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
 
         } else if (position == 2) {
-            getFragmentManager().beginTransaction().remove(mSettingsFragment).commit();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, mMemoListFragment).commit();
+            getFragmentManager().beginTransaction()
+                    .remove(mSettingsFragment)
+                    .commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, mMemoListFragment)
+                    .commit();
         }
 
         // update selected item and title, then close the drawer
@@ -173,7 +229,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        getSupportActionBar().setTitle(mTitle);
     }
 
     @Override
@@ -183,16 +239,36 @@ public class MainActivity extends FragmentActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
+    public void checkFirstRun(){
+        //  Declare a new thread to do a preference check
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //  Initialize SharedPreferences
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
 
-        return super.onOptionsItemSelected(item);
+                //  Create a new boolean and preference and set it to true
+                boolean isFirstStart = getPrefs.getBoolean("first_run", true);
 
+                //  If the activity has never started before...
+                if (isFirstStart) {
+
+                    //  Launch first run app
+                    Intent i = new Intent(MainActivity.this, FirstRun.class);
+                    startActivity(i);
+
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+                    //  Edit preference to make it false because we don't want this to run again
+                    e.putBoolean("first_run", false);
+
+                    //  Apply changes
+                    e.apply();
+                }
+            }
+        }).start();
     }
 
 }

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -29,7 +29,6 @@ import android.widget.Toast;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
-import org.osmdroid.api.IMapView;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
 import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
@@ -39,7 +38,6 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.util.ResourceProxyImpl;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -98,6 +96,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         // changes the map's style
         mMapView.setTileSource(TileSourceFactory.MAPQUESTOSM);
         mMapView.setTilesScaledToDpi(true);
+
 
         // choose the zoom lvl
         mMapController.setZoom(ZOOM);
@@ -341,12 +340,15 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         Toast.makeText(getContext(), "Location changed",
                 Toast.LENGTH_SHORT).show();
+        Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
+                R.drawable.my_location);
 
 
         GeoPoint newLocation = new GeoPoint(location);
         if (!mLocationOverlay.isEnabled()){
             // we get the location for the first time
             mLocationOverlay.setEnabled(true);
+            mLocationOverlay.setPersonIcon(icon);
             mMapController.setCenter(newLocation);
             mMapController.animateTo(newLocation);
         }

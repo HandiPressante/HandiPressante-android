@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import android.support.v7.widget.Toolbar;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -36,7 +37,7 @@ import java.util.Locale;
 
 import fr.handipressante.app.Data.Toilet;
 
-public class ToiletSheetActivity extends FragmentActivity {
+public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
     final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -85,11 +86,17 @@ public class ToiletSheetActivity extends FragmentActivity {
         Intent intent = getIntent();
         mToilet = intent.getParcelableExtra("toilet");
 
-        getActionBar().setLogo(R.drawable.back_icon);
-        getActionBar().setTitle("Retour");
+        Toolbar toolbar =   (Toolbar) findViewById(R.id.toolbar_sheet);
+        setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setTitle("Retour");
+
+
 
         fillToiletSheet(mToilet);
     }

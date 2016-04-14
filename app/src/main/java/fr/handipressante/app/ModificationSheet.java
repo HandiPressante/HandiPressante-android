@@ -7,6 +7,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,12 +35,10 @@ import fr.handipressante.app.Data.Toilet;
 /**
  * Created by marc on 26/03/2016.
  */
-public class ModificationSheet extends FragmentActivity {
+public class ModificationSheet extends AppCompatActivity {
     private Toilet mToilet;
-    private RatingBar rb;
     private boolean isHandi;
 
-    private ImageView stars;
 
 
     @Override
@@ -50,11 +50,14 @@ public class ModificationSheet extends FragmentActivity {
         Intent intent = getIntent();
         mToilet = intent.getParcelableExtra("toilet");
 
-        getActionBar().setLogo(R.drawable.back_icon);
-        getActionBar().setTitle("Retour");
+        Toolbar toolbar =   (Toolbar) findViewById(R.id.toolbar_mod_sheet);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setTitle("Retour");
 
         fillToiletSheet(mToilet);
     }
@@ -62,32 +65,8 @@ public class ModificationSheet extends FragmentActivity {
     public void onStart() {
         super.onStart();
 
-
-
-        //opens camera app
-        //TODO: Save thumbnail in carousel(viewpager)
-        /*findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(intent, 0);
-                }
-            }
-        });*/
-
     }
 
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView pics= (ImageView) findViewById(R.id.picture_block2);
-            pics.setImageBitmap(imageBitmap);
-        }
-    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -203,7 +182,6 @@ public class ModificationSheet extends FragmentActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
                 cleanliness_rate.setImageResource(Converters.rankFromInteger(toilet.getRankCleanliness()));
             }
         });
@@ -299,7 +277,6 @@ public class ModificationSheet extends FragmentActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
                 accessibility_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAccessibility()));
             }
         });
