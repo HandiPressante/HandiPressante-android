@@ -9,6 +9,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
@@ -73,7 +74,10 @@ public class ToiletDownloader extends Downloader {
 
                         for (int i = 0; i < response.length(); i++) {
                             try {
-                                Toilet t = facto.createToilet(response.getJSONObject(i));
+                                JSONObject jsonObject = response.optJSONObject(i);
+                                if (jsonObject == null) continue;
+
+                                Toilet t = facto.createToilet(jsonObject);
                                 if (t != null) {
                                     toiletList.add(t);
                                 }
