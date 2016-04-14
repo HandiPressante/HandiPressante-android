@@ -5,7 +5,7 @@
         android:title="Ergonomie"
         android:key="acessibility">
         <SwitchPreference
-            android:key="tutorial_on_start"
+            android:key="first_run"
             android:title="Aide au démarrage"
             android:summary="active le tutoriel à chaque démarrage"
             android:defaultValue="@string/yes"
@@ -14,11 +14,12 @@
         <CheckBoxPreference
             android:key="slide"
             android:title="Active le glissement avec les doigts"
-            android:summary="Si désactivé, remplacé par des boutons de navigation" />
+            android:summary="Si désactivé, remplacé par des boutons de navigation"
+            android:defaultValue="true"/>
         <Preference
             android:key="font_size"
             android:title="Taille de la police"
-            android:summary="Cliquer pour accéder aux modifications"
+            android:summary="Cliquer pour accéder aux paramètres généraux"
             android:defaultValue="false">
 
         </Preference>/>

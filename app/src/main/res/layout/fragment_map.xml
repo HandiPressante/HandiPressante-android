@@ -92,6 +92,8 @@ android:layout_height="wrap_content"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:gravity="fill_horizontal"
             android:layout_gravity="center_horizontal">
 
@@ -109,7 +111,7 @@ android:layout_height="wrap_content"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/zoom_less"
-                    android:src="@drawable/arrow_down_transp" />
+                    android:src="@drawable/zoom_less" />
             </LinearLayout>
 
             <LinearLayout
@@ -141,7 +143,7 @@ android:layout_height="wrap_content"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:id="@+id/zoom_plus"
-                    android:src="@drawable/arrow_top_transp" />
+                    android:src="@drawable/zoom_plus" />
             </LinearLayout>
         </RelativeLayout>
 

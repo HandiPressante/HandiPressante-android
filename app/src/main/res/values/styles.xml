@@ -19,6 +19,26 @@
         <item name="android:background">@drawable/tab_indicator_ab_stylingactionbar</item>
     </style>
 
+
+    <style name="AppBlankTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- colorPrimary is used for coloring the Toolbar -->
+        <item name="colorPrimary">#E53935</item>
+        <item name="colorPrimaryDark">#D32F2F</item>
+        <item name="colorAccent">@color/common_signin_btn_default_background</item>
+    </style>
+
+    <!--Both themes below are those accepted to make the ToolBar works-->
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppBlankTheme">
+        <!-- Customize your theme here. -->
+        <!-- Base application theme. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="spinnerDropDownItemStyle">@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar</item>
+    </style>
+
+
+
     <string-array name="number_of_stars">
         <item>0</item>
         <item>1</item>
