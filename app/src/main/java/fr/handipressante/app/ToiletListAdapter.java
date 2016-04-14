@@ -15,7 +15,7 @@ import fr.handipressante.app.Data.Toilet;
 /**
  * Created by Nico on 02/02/2016.
  */
-public class ToiletListAdapter extends ArrayAdapter<Toilet> implements DataModel.NearbyToiletsListener {
+public class ToiletListAdapter extends ArrayAdapter<Toilet> {
     static class ViewHolder {
         ImageView pmr;
         TextView address;
@@ -54,12 +54,6 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> implements DataModel
         holder.distance.setText(Converters.formattedDistanceFromDouble(toilet.getDistance()));
 
         return row;
-    }
-
-    // TODO : remove ?
-    @Override
-    public void onDataChanged() {
-        notifyDataSetChanged();
     }
 
     public void swapItems(List<Toilet> toiletList) {

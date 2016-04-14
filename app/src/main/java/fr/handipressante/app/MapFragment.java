@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -30,6 +31,7 @@ import org.osmdroid.ResourceProxy;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
+import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
 import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
@@ -41,6 +43,7 @@ import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,10 +56,11 @@ import fr.handipressante.app.Server.ToiletDownloader;
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
     private final static int DATA_UPDATE_TIME = 2000;
-    private static IGeoPoint LAST_MAP_CENTER;
 
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
+    private GeoPoint mMapCenter;
+    private int mMapZoom;
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
     private RadiusMarkerClusterer mPoiMarkers;
@@ -101,9 +105,10 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         // choose the zoom lvl
         mMapController.setZoom(ZOOM);
 
-        if (LAST_MAP_CENTER == null) {
-            // TODO : Load last known location
-            LAST_MAP_CENTER = new GeoPoint(48.11005, -1.67930);
+        if (savedInstanceState != null) {
+            mMapCenter = (GeoPoint) savedInstanceState.getParcelable("map_center");
+            mMapZoom = savedInstanceState.getInt("map_zoom");
+            Log.i("MapFragment", "Instance state loaded");
         }
 
         mLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
@@ -150,7 +155,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
                 if (location != null)
                     Toast.makeText(getContext(), "Provider network has a last known location.",
-                        Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Provider gps has a last known location.",
                         Toast.LENGTH_SHORT).show();
@@ -167,12 +172,20 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public void onResume() {
+        Log.i("MapFragment", "OnResume");
         super.onResume();
 
-        mMapController.setCenter(LAST_MAP_CENTER);
+        if (mMapCenter != null) {
+            Log.i("MapFragment", "Set map center");
+            mMapController.setCenter(mMapCenter);
+        }
+
+        if (mMapZoom > 0) {
+            mMapController.setZoom(mMapZoom);
+        }
 
         //DataModel.instance().addMapToiletListener(this);
-        //requestDataUpdate();
+        requestDataUpdate();
         startDataUpdateTimer();
 
         try {
@@ -203,18 +216,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                 mDataUpdateHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mTopLeft == null || mBottomRight == null) {
-                            requestDataUpdate();
-                        } else {
-                            // Get the bounds of the map viewed
-                            BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
-                            GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
-                            GeoPoint bottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
+                        // Get the bounds of the map viewed
+                        BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
+                        GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
+                        GeoPoint bottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
 
-                            if (mTopLeft.getLatitude() != topLeft.getLatitude() || mTopLeft.getLongitude() != topLeft.getLongitude()
-                                    || mBottomRight.getLatitude() != bottomRight.getLatitude() || mBottomRight.getLongitude() != bottomRight.getLongitude()) {
-                                requestDataUpdate();
-                            }
+                        if (isDataUpdateRequired(topLeft, bottomRight)) {
+                            requestDataUpdate();
                         }
                     }
                 });
@@ -222,17 +230,31 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         };
     }
 
+    private boolean isDataUpdateRequired(GeoPoint topLeft, GeoPoint bottomRight) {
+        if (mTopLeft == null || mBottomRight == null) return true;
+
+        boolean outNorth = topLeft.getLatitudeE6() > mTopLeft.getLatitudeE6();
+        boolean outSouth = bottomRight.getLatitudeE6() < mBottomRight.getLatitudeE6();
+        boolean outWest = topLeft.getLongitudeE6() < mTopLeft.getLongitudeE6();
+        boolean outEast = bottomRight.getLongitudeE6() > mBottomRight.getLongitudeE6();
+        return outNorth || outSouth || outWest || outEast;
+    }
+
     private void requestDataUpdate() {
 
         Toast.makeText(getContext(), "requestDataUpdate",
                 Toast.LENGTH_SHORT).show();
 
-        // Get the bounds of the map viewed
         BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
-        mTopLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
-        mBottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
+        GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
+        GeoPoint bottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
 
-        //DataManager.instance(getActivity().getApplicationContext()).requestMapToilets(mTopLeft, mBottomRight);
+        int latitudeDelta = topLeft.getLatitudeE6() - bottomRight.getLatitudeE6();
+        int longitudeDelta = bottomRight.getLongitudeE6() - topLeft.getLongitudeE6();
+
+        mTopLeft = new GeoPoint(BB.getLatNorthE6() + latitudeDelta, BB.getLonWestE6() - longitudeDelta);
+        mBottomRight = new GeoPoint(BB.getLatSouthE6() - latitudeDelta, BB.getLonEastE6() + longitudeDelta);
+
         new ToiletDownloader(getContext()).requestMapToilets(mTopLeft, mBottomRight,
                 new Downloader.Listener<List<Toilet>>() {
                     @Override
@@ -244,11 +266,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public void onPause() {
+        Log.i("MapFragment", "OnPause");
+
         super.onPause();
 
-        LAST_MAP_CENTER = mMapView.getMapCenter();
-
-        //DataModel.instance().removeMapToiletListener(this);
+        mMapCenter = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(), mMapView.getMapCenter().getLongitudeE6());
+        mMapZoom = mMapView.getZoomLevel();
 
         stopDataUpdateTimer();
 
@@ -257,6 +280,17 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState){
+        mMapCenter = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(), mMapView.getMapCenter().getLongitudeE6());
+        mMapZoom = mMapView.getZoomLevel();
+
+        outState.putParcelable("map_center", mMapCenter);
+        outState.putInt("map_zoom", mMapZoom);
+
+        Log.i("MapFragment", "Instance state saved");
     }
 
     private boolean startLocationUpdates() throws SecurityException {
@@ -273,16 +307,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         if (toiletList.isEmpty()) return;
 
-        if (mPoiMarkers != null) mMapView.getOverlays().remove(mPoiMarkers);
+        RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getContext());
 
-
-        mPoiMarkers = new RadiusMarkerClusterer(getContext());
-        mPoiMarkers.getTextPaint().setTextSize(70.0f);
-        mMapView.getOverlays().add(mPoiMarkers);
+        poiMarkers.getTextPaint().setTextSize(70.0f);
 
         for (final Toilet t : toiletList) {
             final Marker poiMarker = createMarker(t);
-            mPoiMarkers.add(poiMarker);
+            poiMarkers.add(poiMarker);
 
             // parse Uri with coordinates of the poi.
             final Uri mUri = Uri.parse("geo:" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude() + "?q=" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude());
@@ -315,10 +346,15 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_full_mini);
         //clusterIconD.
         Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
-        mPoiMarkers.setIcon(clusterIcon);
+        poiMarkers.setIcon(clusterIcon);
 
+        if (mPoiMarkers != null) {
+            mMapView.getOverlays().remove(mPoiMarkers);
+            mMapView.invalidate();
+        }
 
-        mMapView.invalidate();
+        mPoiMarkers = poiMarkers;
+        mMapView.getOverlays().add(mPoiMarkers);
     }
 
     // create a new marker
@@ -349,8 +385,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
             // we get the location for the first time
             mLocationOverlay.setEnabled(true);
             mLocationOverlay.setPersonIcon(icon);
-            mMapController.setCenter(newLocation);
-            mMapController.animateTo(newLocation);
+
+            /*if (mMapCenter == null) {
+                Log.i("MapFragment", "Map center was null");
+                mMapController.setCenter(newLocation);
+                mMapController.animateTo(newLocation);
+            }*/
+
         }
 
         /*

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MainActivity", "onCreate");
 
-        checkFirstRun();
+        //checkFirstRun();
 
         super.onCreate(savedInstanceState);
 

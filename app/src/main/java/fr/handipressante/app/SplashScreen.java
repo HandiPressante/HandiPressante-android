@@ -2,8 +2,10 @@ package fr.handipressante.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
@@ -32,16 +34,49 @@ public class SplashScreen extends Activity {
         anim2.setFillAfter(true);
         animset.addAnimation(anim2);
 
+        animset.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
+
+                //  Create a new boolean and preference and set it to true
+                final boolean isFirstStart = getPrefs.getBoolean("first_run", true);
+
+                //  If the activity has never started before...
+                if (isFirstStart) {
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+                    //  Edit preference to make it false because we don't want this to run again
+                    e.putBoolean("first_run", false);
+
+                    //  Apply changes
+                    e.apply();
+
+                    startActivity(new Intent(SplashScreen.this, FirstRun.class));
+                } else {
+                    startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                }
+
+                finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
 //Start animation
         view.startAnimation(animset);
 //Later on, use view.setAnimation(null) to stop it.
 
-        int secondsDelayed = 2;
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                startActivity(new Intent(SplashScreen.this, MainActivity.class));
-                finish();
-            }
-        }, secondsDelayed * 1000);
     }
 }
