@@ -175,10 +175,11 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Log.i("MapFragment", "OnResume");
         super.onResume();
 
-        if (mMapCenter != null) {
-            Log.i("MapFragment", "Set map center");
-            mMapController.setCenter(mMapCenter);
-        }
+        if (mMapCenter == null)
+            mMapCenter = new GeoPoint(48.11005, -1.67930);
+
+        Log.i("MapFragment", "Set map center");
+        mMapController.setCenter(mMapCenter);
 
         if (mMapZoom > 0) {
             mMapController.setZoom(mMapZoom);
@@ -373,6 +374,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public void onLocationChanged(Location location) {
+        if (mMapCenter == null)
+            mMapCenter = new GeoPoint(location);
 
         Toast.makeText(getContext(), "Location changed",
                 Toast.LENGTH_SHORT).show();
