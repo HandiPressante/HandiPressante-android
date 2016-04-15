@@ -43,6 +43,7 @@ import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.util.UUID;
 import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,12 +64,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Log.i("MainActivity", "onCreate");
 
-        //checkFirstRun();
 
-        super.onCreate(savedInstanceState);
+        if (!hasUuid())
+            generateUuid();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
+        Log.i("MainActivity", "UUID : " + uuid);
 
         setContentView(R.layout.activity_main);
 
@@ -86,6 +91,21 @@ public class MainActivity extends AppCompatActivity {
             selectItem(0);
         }
 
+    }
+
+    private boolean hasUuid() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPref.getString(getString(R.string.saved_uuid), "");
+        return !uuid.isEmpty();
+    }
+
+    private void generateUuid() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String uuid = UUID.randomUUID().toString();
+        editor.putString(getString(R.string.saved_uuid), uuid);
+        editor.apply();
     }
 
     /* The click listener for ListView in the navigation drawer */
@@ -237,38 +257,6 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
-    }
-
-    public void checkFirstRun(){
-        //  Declare a new thread to do a preference check
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //  Initialize SharedPreferences
-                SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
-
-                //  Create a new boolean and preference and set it to true
-                boolean isFirstStart = getPrefs.getBoolean("first_run", true);
-
-                //  If the activity has never started before...
-                if (isFirstStart) {
-
-                    //  Launch first run app
-                    Intent i = new Intent(MainActivity.this, FirstRun.class);
-                    startActivity(i);
-
-                    //  Make a new preferences editor
-                    SharedPreferences.Editor e = getPrefs.edit();
-
-                    //  Edit preference to make it false because we don't want this to run again
-                    e.putBoolean("first_run", false);
-
-                    //  Apply changes
-                    e.apply();
-                }
-            }
-        }).start();
     }
 
 }

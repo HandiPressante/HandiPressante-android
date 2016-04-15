@@ -1,7 +1,9 @@
 package fr.handipressante.app;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +47,13 @@ public class ModificationSheet extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("ModificationSheet", "onCreate");
+
         setContentView(R.layout.mod_sheet);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
+        Log.i("ModificationSheet", "UUID : " + uuid);
 
         // get info from parent view
         Intent intent = getIntent();
