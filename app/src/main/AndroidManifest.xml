@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- TODO : Should be false ? App is usable without camera -->
@@ -29,11 +29,15 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashScreen">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
+
 
             <!-- TODO : Is this really needed ? -->
             <!--
@@ -44,13 +48,22 @@
             -->
 
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".ToiletSheetActivity"/>
+        <activity android:name=".MainActivity">
+
+            <!--  -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!--  -->
+        </activity>
+        <activity android:name=".ToiletSheetActivity" />
         <activity android:name=".ModificationSheet">
 
             <!-- android:theme="@style/Base.Theme.AppCompat" -->
         </activity>
-        <activity android:name=".FirstRun"></activity>
+        <activity android:name=".FirstRun" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -60,11 +73,19 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        </provider>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".ToiletEdition.NameActivity" />
+        <activity android:name=".ToiletEdition.AccessibleActivity" />
+        <activity android:name=".ToiletEdition.DescriptionActivity" />
+        <activity android:name=".ToiletEdition.RatingActivity"></activity>
     </application>
 
 </manifest>

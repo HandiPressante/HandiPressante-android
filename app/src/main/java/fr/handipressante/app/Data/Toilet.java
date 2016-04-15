@@ -27,7 +27,7 @@ public class Toilet implements Parcelable {
     GeoPoint mLastRef = null;
     double mDistance = -1;
 
-    Toilet() {
+    public Toilet() {
         _id = 0;
         _adapted = false;
         _address = "Undefined";
@@ -39,7 +39,7 @@ public class Toilet implements Parcelable {
         _rankAccessibility = -1;
     }
 
-    Toilet(Integer id, Boolean adapted, String address, GeoPoint coord) {
+    public Toilet(Integer id, Boolean adapted, String address, GeoPoint coord) {
         _id = id;
         _adapted = adapted;
         _address = address;
@@ -51,7 +51,7 @@ public class Toilet implements Parcelable {
         _rankAccessibility = -1;
     }
 
-    Toilet(Parcel in) {
+    public Toilet(Parcel in) {
         _id = in.readInt();
         _adapted = in.readByte() != 0;
         _address = in.readString();

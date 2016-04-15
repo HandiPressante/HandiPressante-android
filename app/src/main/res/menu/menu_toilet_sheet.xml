@@ -1,7 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="fr.handipressante.app.ToiletSheetActivity">
+    tools:context="fr.handipressante.app.ToiletSheetActivity"
+    >
     <item
         android:id="@+id/modification"
         android:icon="@drawable/fiche"

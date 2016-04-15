@@ -15,14 +15,14 @@
 
     <string name="hello_world">Hello world!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_toilet_sheet">ToiletSheetActivity</string>
 
     <string name="modification">Modifier fiche</string>
-    <string name="save">Sauvegarder</string>
+    <string name="save">Enregistrer</string>
 
-    <string name="dialog_add_toilets">Ajouter un emplacement?</string>
+    <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
 
@@ -55,4 +55,60 @@
 
     <string name="preference_file_key">fr.handipressante.app.PREFERENCE_FILE_KEY</string>
     <string name="saved_uuid">uuid</string>
+    <string name="title_activity_title">Titre</string>
+
+    <string name="edittoilet_new">Ajout de toilettes</string>
+    <string name="edittoilet_edit">Édition de la fiche</string>
+
+    <string name="toiletname_explanation_1">
+            Afin de permettre aux autres utilisateurs d\'identifier ces toilettes dans la liste ou sur la carte, il vous faut donner leur donner un nom.
+    </string>
+
+    <string name="toiletname_explanation_2">
+            Essayez de choisir un nom court et représentatif, par exemple \"Cinéma Gaumont\". Inutile de préciser la ville.
+    </string>
+
+    <string name="toiletname_explanation_3">
+        Voici quelques idées pour trouver un nom représentatif :\n
+        - Nom de l\'enseigne pour les toilettes des commerces.\n
+        - Nom de l\'endroit s\'il en a un (\"Parc des Gayeulles\").\n
+        - Nom de l\'arrêt de transport en commun à proximité.\n
+        - À défaut, le nom de la rue.
+    </string>
+
+    <string name="required_field">Le champs est requis.</string>
+
+    <plurals name="maxchars">
+        <item quantity="one">%d caractère maximum.</item>
+        <item quantity="other">%d caractères maximum.</item>
+    </plurals>
+
+    <string name="toiletaccessible_explanation">
+        Veuillez indiquer si les toilettes sont accessibles aux personnes à mobilité réduite.
+    </string>
+
+    <string name="toiletdescription_explanation">
+        Vous pouvez ajouter ici toute information complémentaire à propos de ces toilettes, par exemple :\n
+        - État intérieur\n
+        - Équipements (lavabo, poubelle, ...)\n
+        - Indications pour accéder aux toilettes
+    </string>
+
+    <string name="cleanliness">Propreté</string>
+    <string name="facilities">Équipement</string>
+    <string name="place_accessibility">Accessibilité du lieu</string>
+
+    <string-array name="array_rating_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string name="toiletrating_explanation">
+        Veuillez attribuer une note pour chaque critère.
+    </string>
+
 </resources>

@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -28,10 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.osmdroid.ResourceProxy;
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer;
-import org.osmdroid.bonuspack.location.POI;
 import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
 import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
@@ -43,7 +40,6 @@ import org.osmdroid.util.ResourceProxyImpl;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,11 +47,12 @@ import java.util.TimerTask;
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
+import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 
 
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
-    private final static int DATA_UPDATE_TIME = 2000;
+    private final static int DATA_UPDATE_TIME = 1000;
 
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
@@ -69,6 +66,9 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     private GeoPoint mTopLeft;
     private GeoPoint mBottomRight;
+    private GeoPoint mExtTopLeft;
+    private GeoPoint mExtBottomRight;
+
     private Timer mDataUpdateTimer;
     private TimerTask mDataUpdateTask;
     private Handler mDataUpdateHandler = new Handler();
@@ -222,8 +222,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                         GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
                         GeoPoint bottomRight = new GeoPoint(BB.getLatSouthE6(), BB.getLonEastE6());
 
-                        if (isDataUpdateRequired(topLeft, bottomRight)) {
-                            requestDataUpdate();
+                        if (topLeft.equals(mTopLeft) && bottomRight.equals(mBottomRight)) {
+                            if (isDataUpdateRequired(topLeft, bottomRight)) {
+                                requestDataUpdate();
+                            }
+                        } else {
+                            mTopLeft = topLeft;
+                            mBottomRight = bottomRight;
                         }
                     }
                 });
@@ -232,12 +237,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     }
 
     private boolean isDataUpdateRequired(GeoPoint topLeft, GeoPoint bottomRight) {
-        if (mTopLeft == null || mBottomRight == null) return true;
+        if (mExtTopLeft == null || mExtBottomRight == null) return true;
 
-        boolean outNorth = topLeft.getLatitudeE6() > mTopLeft.getLatitudeE6();
-        boolean outSouth = bottomRight.getLatitudeE6() < mBottomRight.getLatitudeE6();
-        boolean outWest = topLeft.getLongitudeE6() < mTopLeft.getLongitudeE6();
-        boolean outEast = bottomRight.getLongitudeE6() > mBottomRight.getLongitudeE6();
+        boolean outNorth = topLeft.getLatitudeE6() > mExtTopLeft.getLatitudeE6();
+        boolean outSouth = bottomRight.getLatitudeE6() < mExtBottomRight.getLatitudeE6();
+        boolean outWest = topLeft.getLongitudeE6() < mExtTopLeft.getLongitudeE6();
+        boolean outEast = bottomRight.getLongitudeE6() > mExtBottomRight.getLongitudeE6();
         return outNorth || outSouth || outWest || outEast;
     }
 
@@ -253,10 +258,10 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         int latitudeDelta = topLeft.getLatitudeE6() - bottomRight.getLatitudeE6();
         int longitudeDelta = bottomRight.getLongitudeE6() - topLeft.getLongitudeE6();
 
-        mTopLeft = new GeoPoint(BB.getLatNorthE6() + latitudeDelta, BB.getLonWestE6() - longitudeDelta);
-        mBottomRight = new GeoPoint(BB.getLatSouthE6() - latitudeDelta, BB.getLonEastE6() + longitudeDelta);
+        mExtTopLeft = new GeoPoint(BB.getLatNorthE6() + latitudeDelta, BB.getLonWestE6() - longitudeDelta);
+        mExtBottomRight = new GeoPoint(BB.getLatSouthE6() - latitudeDelta, BB.getLonEastE6() + longitudeDelta);
 
-        new ToiletDownloader(getContext()).requestMapToilets(mTopLeft, mBottomRight,
+        new ToiletDownloader(getContext()).requestMapToilets(mExtTopLeft, mExtBottomRight,
                 new Downloader.Listener<List<Toilet>>() {
                     @Override
                     public void onResponse(List<Toilet> response) {
@@ -356,6 +361,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         mPoiMarkers = poiMarkers;
         mMapView.getOverlays().add(mPoiMarkers);
+        mMapView.invalidate();
     }
 
     // create a new marker
@@ -427,7 +433,15 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     @Override
     public boolean longPressHelper(GeoPoint geoPoint) {
         Toast.makeText(getContext(), "Tap on ("+geoPoint.getLatitude()+","+geoPoint.getLongitude()+")", Toast.LENGTH_SHORT).show();
+
+        Toilet toilet = new Toilet();
+        toilet.setCoordinates(geoPoint);
+
         AddToiletDialog addToiletDialog = new AddToiletDialog();
+        Bundle args = new Bundle();
+        args.putParcelable("toilet", toilet);
+        addToiletDialog.setArguments(args);
+
         addToiletDialog.show(getFragmentManager(), "adding toilets");
         return false;
     }

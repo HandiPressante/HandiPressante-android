@@ -25,6 +25,9 @@
         <item name="colorPrimary">#E53935</item>
         <item name="colorPrimaryDark">#D32F2F</item>
         <item name="colorAccent">@color/common_signin_btn_default_background</item>
+        <item name="titleTextColor">#ffffff</item>
+        <item name="subtitleTextColor">#ffffff</item>
+        <item name="android:actionMenuTextColor">#ffffff</item>
     </style>
 
     <!--Both themes below are those accepted to make the ToolBar works-->
@@ -34,9 +37,10 @@
         <!-- Base application theme. -->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="spinnerDropDownItemStyle">@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar</item>
+        <item name="spinnerDropDownItemStyle">
+            @style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar
+        </item>
     </style>
-
 
 
     <string-array name="number_of_stars">
@@ -47,6 +51,10 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

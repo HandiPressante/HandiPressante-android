@@ -1,21 +1,16 @@
 package fr.handipressante.app;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.View;
@@ -27,15 +22,10 @@ import android.support.v7.widget.Toolbar;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.ToiletEdition.NameActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
@@ -154,8 +144,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.modification:
-                Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
+                //Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
+                Intent intent = new Intent(getApplicationContext(), NameActivity.class);
                 intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
                 Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             break;
