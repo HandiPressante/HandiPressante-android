@@ -15,7 +15,7 @@ import fr.handipressante.app.R;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 
-public class DescriptionActivity extends AppCompatActivity {
+public class DescriptionActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
     private Toilet mToilet;
     private boolean mNewToilet;
     private ProgressDialog mMemoDownloadDialog;
@@ -53,20 +53,25 @@ public class DescriptionActivity extends AppCompatActivity {
     }
 
     private void save() {
+        EditText toiletDescriptionField = (EditText) findViewById(R.id.toilet_description);
+        toiletDescriptionField.setEnabled(false);
+        Button validate = (Button) findViewById(R.id.validate);
+        validate.setEnabled(false);
+
         mMemoDownloadDialog = new ProgressDialog(this);
         mMemoDownloadDialog.setTitle("Veuillez patienter");
         mMemoDownloadDialog.setMessage("Enregistrement en cours ...");
         mMemoDownloadDialog.setIndeterminate(true);
         mMemoDownloadDialog.show();
 
-        new ToiletDownloader(this).postToilet(mToilet, mNewToilet, new Downloader.Listener<Boolean>() {
-            @Override
-            public void onResponse(Boolean response) {
-                mMemoDownloadDialog.dismiss();
-                Log.i("DescriptionActivity", "Response : " + response);
+        new ToiletDownloader(this).postToilet(mToilet, mNewToilet, this);
+    }
 
-                //getParent().finish();
-            }
-        });
+    @Override
+    public void onResponse(Boolean response) {
+        mMemoDownloadDialog.dismiss();
+        Log.i("DescriptionActivity", "Response : " + response);
+
+        finish();
     }
 }

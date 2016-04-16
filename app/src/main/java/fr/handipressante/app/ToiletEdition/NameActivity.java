@@ -68,7 +68,7 @@ public class NameActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
                     intent.putExtra("toilet", mToilet);
                     intent.putExtra("new", mNewToilet);
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
             }
         });
@@ -95,5 +95,11 @@ public class NameActivity extends AppCompatActivity {
         validate.setEnabled(valid);
 
         return valid;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
     }
 }

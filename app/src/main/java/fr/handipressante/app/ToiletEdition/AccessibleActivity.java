@@ -59,8 +59,14 @@ public class AccessibleActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), DescriptionActivity.class);
                 intent.putExtra("toilet", mToilet);
                 intent.putExtra("new", mNewToilet);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        finish();
     }
 }
