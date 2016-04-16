@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -108,24 +109,28 @@ public class ToiletDownloader extends Downloader {
     public void postToilet(Toilet toilet, boolean newToilet, final Listener<Boolean> listener) {
         Log.i("ToiletDownloader", "postToilet");
         String url;
-        Map<String, String> params = new HashMap<>();
+        JSONObject data = new JSONObject();
 
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
-        params.put("uuid", uuid);
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+            data.put("uuid", uuid);
 
-        if (!newToilet)
-            params.put("toilet_id", toilet.getId().toString());
+            if (!newToilet)
+                data.put("toilet_id", toilet.getId().toString());
 
-        params.put("toilet_name", toilet.getAddress());
-        params.put("toilet_accessible", toilet.isAdapted().toString());
-        params.put("toilet_description", toilet.getDescription());
+            data.put("toilet_name", toilet.getAddress());
+            data.put("toilet_accessible", toilet.isAdapted());
+            data.put("toilet_description", toilet.getDescription());
 
-        if (newToilet) {
-            Double latitude = toilet.getCoordinates().getLatitude();
-            Double longitude = toilet.getCoordinates().getLongitude();
-            params.put("toilet_latitude", latitude.toString());
-            params.put("toilet_longitude", longitude.toString());
+            if (newToilet) {
+                data.put("toilet_latitude", toilet.getCoordinates().getLatitude());
+                data.put("toilet_longitude", toilet.getCoordinates().getLongitude());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(false);
+            return;
         }
 
         if (newToilet) {
@@ -134,11 +139,11 @@ public class ToiletDownloader extends Downloader {
             url = MyConstants.API_URL + "toilet-edit";
         }
 
-        postJson(url, params, listener);
+        postJson(url, data, listener);
     }
 
-    private void postJson(String url, final Map<String, String> params, final Listener<Boolean> listener) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url,
+    private void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>() {
 
             @Override
@@ -167,16 +172,18 @@ public class ToiletDownloader extends Downloader {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                // TODO Auto-generated method stub
                 error.printStackTrace();
                 listener.onResponse(false);
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                return params;
+        });
+
+        String key = jsonObjectRequest.getCacheKey();
+        Cache cache = RequestManager.getInstance(mContext).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
             }
-        };
+        }
 
         RequestManager.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
     }
