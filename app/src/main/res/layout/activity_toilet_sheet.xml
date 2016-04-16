@@ -76,6 +76,15 @@
                     android:gravity="right">
 
                     <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/edit_toilet"
+                        android:src="@drawable/edit_text"
+                        android:layout_marginTop="10dp"
+                        android:scaleType="fitCenter"
+                        android:background="@android:color/transparent" />
+
+                    <ImageButton
                         android:layout_width="70dip"
                         android:layout_height="70dip"
                         android:id="@+id/photo_button"
@@ -179,12 +188,27 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <ImageView
-                android:layout_width="170dp"
-                android:layout_height="fill_parent"
-                android:gravity="top"
-                android:src="@drawable/description_title" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+                <ImageView
+                    android:layout_width="170dp"
+                    android:layout_height="fill_parent"
+                    android:gravity="top"
+                    android:src="@drawable/description_title" />
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/edit_description"
+                    android:src="@drawable/edit_text"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="fitXY"
+                    android:background="@android:color/transparent" />
+            </RelativeLayout>
             <TextView
                 android:id="@+id/toilet_description"
                 android:layout_width="fill_parent"
@@ -209,12 +233,28 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <!-- NAME of toilet rate block-->
-            <ImageView
-                android:layout_width="210dp"
-                android:layout_height="fill_parent"
-                android:gravity="top"
-                android:src="@drawable/rate_title" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- NAME of toilet rate block-->
+                <ImageView
+                    android:layout_width="210dp"
+                    android:layout_height="fill_parent"
+                    android:gravity="top"
+                    android:src="@drawable/rate_title" />
+
+                <ImageButton
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/edit_rate"
+                    android:src="@drawable/edit_rate"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="fitCenter"
+                    android:background="@android:color/transparent" />
+            </RelativeLayout>
 
             <!-- -->
             <LinearLayout
@@ -223,6 +263,39 @@
                 android:orientation="vertical">
 
                 <!-- First category -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Name of the category-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Accessibilité du lieu"
+                        android:textColor="#be3733"/>
+
+                    <!-- Image (stars) of the category-->
+                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/accessibility_rate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="50dp"
+                            android:layout_alignParentRight="true"
+                            android:maxWidth="75dip"
+                            android:adjustViewBounds="true" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+                <!-- Second category -->
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -253,11 +326,10 @@
                             android:maxWidth="75dip"
                             android:adjustViewBounds="true" />
                     </RelativeLayout>
-
                 </LinearLayout>
 
 
-                <!-- Second category -->
+                <!-- Third category -->
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -278,38 +350,6 @@
                         android:layout_height="match_parent">
                         <ImageView
                             android:id="@+id/facilities_rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
-                            android:layout_alignParentRight="true"
-                            android:maxWidth="75dip"
-                            android:adjustViewBounds="true" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-
-                <!-- Third category -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Accessibilité du lieu"
-                        android:textColor="#be3733"/>
-
-                    <!-- Image (stars) of the category-->
-                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:id="@+id/accessibility_rate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

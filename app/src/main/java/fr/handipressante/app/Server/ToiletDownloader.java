@@ -2,6 +2,7 @@ package fr.handipressante.app.Server;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Cache;
@@ -18,6 +19,7 @@ import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +116,7 @@ public class ToiletDownloader extends Downloader {
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    public void postToilet(Toilet toilet, boolean newToilet, final Listener<Boolean> listener) {
+    public void postToilet(Toilet toilet, boolean newToilet, final Listener<JSONObject> listener) {
         Log.i("ToiletDownloader", "postToilet");
         String url;
         JSONObject data = new JSONObject();
@@ -131,13 +133,11 @@ public class ToiletDownloader extends Downloader {
             data.put("toilet_accessible", toilet.isAdapted());
             data.put("toilet_description", toilet.getDescription());
 
-            if (newToilet) {
-                data.put("toilet_latitude", toilet.getCoordinates().getLatitude());
-                data.put("toilet_longitude", toilet.getCoordinates().getLongitude());
-            }
+            data.put("toilet_latitude", toilet.getCoordinates().getLatitude());
+            data.put("toilet_longitude", toilet.getCoordinates().getLongitude());
         } catch (JSONException e) {
             e.printStackTrace();
-            listener.onResponse(false);
+            listener.onResponse(null);
             return;
         }
 
@@ -150,7 +150,33 @@ public class ToiletDownloader extends Downloader {
         postJson(url, data, listener);
     }
 
-    private void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
+    public void postToiletRate(Toilet toilet, int cleanliness, int facilities, int accessibility, final Listener<JSONObject> listener) {
+        Log.i("ToiletDownloader", "postToiletRate");
+        String url;
+        JSONObject data = new JSONObject();
+
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+            data.put("uuid", uuid);
+            data.put("toilet_id", toilet.getId().toString());
+
+            data.put("toilet_cleanliness", cleanliness);
+            data.put("toilet_facilities", facilities);
+            data.put("toilet_accessibility", accessibility);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(null);
+            return;
+        }
+
+        url = MyConstants.API_URL + "toilet-rate";
+
+        postJson(url, data, listener);
+    }
+
+    private void postJson(String url, JSONObject data, final Listener<JSONObject> listener) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>() {
 
@@ -158,30 +184,29 @@ public class ToiletDownloader extends Downloader {
             public void onResponse(JSONObject response) {
                 if (response != null) {
                     try {
-                        if (response.has("success"))
+                        if (response.has("success")) {
                             Log.i("ToiletDownloader", "success : " + response.getBoolean("success"));
-                        if (response.has("error"))
-                            Log.i("ToiletDownloader", "error : " + response.getString("error"));
-                        if (response.has("data"))
-                            Log.i("ToiletDownloader", "data : " + response.getString("data"));
-
-                        if (response.has("success") && response.getBoolean("success")) {
-                            listener.onResponse(true);
-                            return;
                         }
+
+                        if (response.has("error")) {
+                            Log.i("ToiletDownloader", "error : " + response.getString("error"));
+                        }
+
+                        listener.onResponse(response);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
-                listener.onResponse(false);
+                listener.onResponse(null);
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                listener.onResponse(false);
+                listener.onResponse(null);
             }
         });
 

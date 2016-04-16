@@ -61,8 +61,9 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Toast.makeText(getContext(), "Provider selected : " + mProvider,
                 Toast.LENGTH_SHORT).show();
 
-        // TODO : get current geopoint from saved state ?
-        mCurrentGeopoint = null;
+        if (savedInstanceState != null) {
+            mCurrentGeopoint = savedInstanceState.getParcelable("current_location");
+        }
     }
 
     /* Request updates at startup */
@@ -78,23 +79,20 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             return;
         }
 
-        //if (DataModel.instance().getNearbyToilets().size() == 0) {
-            Location location = mLocationManager.getLastKnownLocation(mProvider);
+        Location location = mLocationManager.getLastKnownLocation(mProvider);
 
-            if (location != null) {
-                Toast.makeText(getContext(), "Provider " + mProvider + " has a last known location.",
-                        Toast.LENGTH_SHORT).show();
-                onLocationChanged(location);
-            } else {
-                Toast.makeText(getContext(), "Location not available",
-                        Toast.LENGTH_SHORT).show();
-                mLocationManager.requestSingleUpdate(mProvider, this, null);
-                Log.i("ToiletListFragment", "requestSingleUpdate");
-            }
-        //}
+        if (location != null) {
+            Toast.makeText(getContext(), "Provider " + mProvider + " has a last known location.",
+                    Toast.LENGTH_SHORT).show();
+            onLocationChanged(location);
+        } else {
+            Toast.makeText(getContext(), "Location not available",
+                    Toast.LENGTH_SHORT).show();
+            mLocationManager.requestSingleUpdate(mProvider, this, null);
+            Log.i("ToiletListFragment", "requestSingleUpdate");
+        }
 
         try {
-            // TODO : Do something with the return value
             startLocationUpdates();
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -120,6 +118,16 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             dao.addAll(mToiletCache);
             dao.close();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState){
+        super.onSaveInstanceState(outState);
+
+        if (mCurrentGeopoint != null)
+            outState.putParcelable("current_location", mCurrentGeopoint);
+
+        Log.i("ToiletListFragment", "Instance state saved");
     }
 
     private boolean startLocationUpdates() throws SecurityException {
@@ -150,15 +158,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             updateToiletList(mToiletCache, false);
         }
 
-        /*
-        Toast.makeText(getContext(), "New Location (" + location.getLatitude() + "," + location.getLongitude() + ", provider : " + location.getProvider() + ", accuracy : " + location.getAccuracy(),
-                Toast.LENGTH_SHORT).show();
-                */
-
-        // currentLocation : new GeoPoint(48.12063, -1.63447);
-        // TODO : Memorize location
-        // TODO : Compare prev and new location and decide if network request really needed
-        //DataManager.instance(getActivity().getApplicationContext()).requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()), 5, 20, 2000);
         ToiletDownloader downloader = new ToiletDownloader(getContext());
         downloader.requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()),
                 5, 20, 2000, new Downloader.Listener<List<Toilet>>() {

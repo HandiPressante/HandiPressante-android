@@ -10,15 +10,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 
-public class DescriptionActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
+public class DescriptionActivity extends AppCompatActivity implements Downloader.Listener<JSONObject> {
     private Toilet mToilet;
     private boolean mNewToilet;
-    private ProgressDialog mMemoDownloadDialog;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +61,33 @@ public class DescriptionActivity extends AppCompatActivity implements Downloader
         Button validate = (Button) findViewById(R.id.validate);
         validate.setEnabled(false);
 
-        mMemoDownloadDialog = new ProgressDialog(this);
-        mMemoDownloadDialog.setTitle("Veuillez patienter");
-        mMemoDownloadDialog.setMessage("Enregistrement en cours ...");
-        mMemoDownloadDialog.setIndeterminate(true);
-        mMemoDownloadDialog.show();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Veuillez patienter");
+        mProgressDialog.setMessage("Enregistrement en cours ...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.show();
 
         new ToiletDownloader(this).postToilet(mToilet, mNewToilet, this);
     }
 
     @Override
-    public void onResponse(Boolean response) {
-        mMemoDownloadDialog.dismiss();
-        Log.i("DescriptionActivity", "Response : " + response);
+    public void onResponse(JSONObject response) {
+        mProgressDialog.dismiss();
 
+        try {
+            if (response != null && response.has("success") && response.getBoolean("success")) {
+                Intent result = new Intent();
+                result.putExtra("toilet", mToilet);
+
+                setResult(0, result);
+                finish();
+                return;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        setResult(-1, null);
         finish();
     }
 }

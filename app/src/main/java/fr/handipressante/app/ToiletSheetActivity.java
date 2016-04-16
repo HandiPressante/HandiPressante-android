@@ -25,11 +25,14 @@ import org.osmdroid.util.GeoPoint;
 import java.util.ArrayList;
 
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
+import fr.handipressante.app.ToiletEdition.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
     final int REQUEST_IMAGE_CAPTURE = 1;
+    final int REQUEST_TOILET_EDIT = 2;
 
 
     //TODO:finir de changer l'enum en liste
@@ -89,6 +92,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
 
         fillToiletSheet(mToilet);
+        addComment(mToilet);
     }
 
     public void onStart() {
@@ -126,6 +130,34 @@ public class ToiletSheetActivity extends AppCompatActivity {
         });
 
 
+        findViewById(R.id.edit_toilet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), NameActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        findViewById(R.id.edit_description).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DescriptionActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        findViewById(R.id.edit_rate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RatingActivity.class);
+                intent.putExtra("toilet", mToilet);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
     }
 
     @Override
@@ -135,6 +167,12 @@ public class ToiletSheetActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ImageView pics= (ImageView) findViewById(R.id.picture_block2);
             pics.setImageBitmap(imageBitmap);
+        } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
+            Toilet toilet = data.getParcelableExtra("toilet");
+            if (toilet != null) {
+                mToilet = toilet;
+                fillToiletSheet(mToilet);
+            }
         }
     }
     @Override
@@ -241,8 +279,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
         // Set accessibility rate
         ImageView accessibility_rate = (ImageView) findViewById(R.id.accessibility_rate);
         accessibility_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAccessibility()));
-
-        addComment(toilet);
 
     }
 

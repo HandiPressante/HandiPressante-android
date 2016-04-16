@@ -33,9 +33,46 @@
                 android:background="@drawable/background_shadow">
 
                 <TextView
+                    android:id="@+id/placeAccessibilityLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/place_accessibility"
+                    android:textSize="18sp" />
+
+                <RelativeLayout
+                    android:id="@+id/placeAccessibilityLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/placeAccessibilityLabel"
+                    android:layout_marginBottom="10dp">
+
+                    <ImageView
+                        android:id="@+id/placeAccessibilityView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/star_zero"/>
+
+                    <Spinner
+                        android:id="@+id/placeAccessibilitySpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:spinnerMode="dialog" />
+
+                </RelativeLayout>
+
+                <TextView
                     android:id="@+id/cleanlinessLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/placeAccessibilityLayout"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:text="@string/cleanliness"
@@ -105,49 +142,13 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/placeAccessibilityLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/facilitiesLayout"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/place_accessibility"
-                    android:textSize="18sp" />
-
-                <RelativeLayout
-                    android:id="@+id/placeAccessibilityLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/placeAccessibilityLabel"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:id="@+id/placeAccessibilityView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/star_zero"/>
-
-                    <Spinner
-                        android:id="@+id/placeAccessibilitySpinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:spinnerMode="dialog" />
-
-                </RelativeLayout>
-
                 <Button
                     android:id="@+id/validate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/placeAccessibilityLayout"
-                    android:layout_alignRight="@+id/placeAccessibilityLayout"
+                    android:layout_below="@+id/facilitiesLayout"
+                    android:layout_alignEnd="@+id/facilitiesLayout"
+                    android:layout_alignRight="@+id/facilitiesLayout"
                     android:text="Ok"/>
 
             </RelativeLayout>

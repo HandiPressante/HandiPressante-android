@@ -290,6 +290,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public void onSaveInstanceState (Bundle outState){
+        super.onSaveInstanceState(outState);
+
         mMapCenter = new GeoPoint(mMapView.getMapCenter().getLatitudeE6(), mMapView.getMapCenter().getLongitudeE6());
         mMapZoom = mMapView.getZoomLevel();
 
