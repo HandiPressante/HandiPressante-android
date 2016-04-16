@@ -103,6 +103,14 @@ public class ToiletDownloader extends Downloader {
                     }
                 });
 
+        String key = jsObjRequest.getCacheKey();
+        Cache cache = RequestManager.getInstance(mContext).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
+            }
+        }
+
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
