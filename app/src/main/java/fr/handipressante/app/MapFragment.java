@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -113,7 +114,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         mLocationOverlay = new MyLocationNewOverlay(getContext(), mMapView);
         mLocationOverlay.enableMyLocation();
-        mLocationOverlay.enableFollowLocation();
+        // If activated : break the arrow controls ...
+        // mLocationOverlay.enableFollowLocation();
         mLocationOverlay.setDrawAccuracyEnabled(false);
         mMapView.getOverlays().add(mLocationOverlay);
 
@@ -123,17 +125,24 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         InfoWindow.closeAllInfoWindowsOn(mMapView);
 
         //removes the arrows according the SharedPreferences "slide"
-        boolean test = sharedPrefs.getBoolean("slide",false);
-        if(test) {
-            rl.removeView(rl.findViewById(R.id.maparrow));
-            // activates the + and - (zoom)
-            mMapView.setBuiltInZoomControls(true);
+        boolean slide = sharedPrefs.getBoolean("slide",false);
 
-            // activates the multitouch control
-            mMapView.setMultiTouchControls(true);
+        //mMapView.setBuiltInZoomControls(slide);
+        mMapView.setMultiTouchControls(slide);
+
+        if(slide) {
+            rl.removeView(rl.findViewById(R.id.maparrow));
         }
         else{
             useArrows(mMapController, rl);
+
+            // Disable dragging
+            mMapView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
         }
 
         return rl;
