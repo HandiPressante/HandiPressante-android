@@ -34,6 +34,9 @@ import org.osmdroid.bonuspack.overlays.InfoWindow;
 import org.osmdroid.bonuspack.overlays.MapEventsOverlay;
 import org.osmdroid.bonuspack.overlays.MapEventsReceiver;
 import org.osmdroid.bonuspack.overlays.Marker;
+import org.osmdroid.events.MapListener;
+import org.osmdroid.events.ScrollEvent;
+import org.osmdroid.events.ZoomEvent;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.BoundingBoxE6;
 import org.osmdroid.util.GeoPoint;
@@ -54,6 +57,7 @@ import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
     private final static int DATA_UPDATE_TIME = 1000;
+    private final static int MIN_ZOOM_SHOW = 10;
 
     private ResourceProxy mResourceProxy;
     private MapView mMapView;
@@ -87,7 +91,6 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Log.i("MapFragment", "onCreateView");
 
         mResourceProxy = new ResourceProxyImpl(getContext().getApplicationContext());
-        //mMapView = new MapView(getContext(), mResourceProxy);
 
         //add layout with map and Arrows (by default)
         RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_map, container, false);
@@ -145,9 +148,25 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
             });
         }
 
+        mMapView.setMapListener(new MapListener() {
+            @Override
+            public boolean onScroll(ScrollEvent event) {
+                return false;
+            }
+
+            @Override
+            public boolean onZoom(ZoomEvent event) {
+                if (mPoiMarkers != null) {
+                    mPoiMarkers.setEnabled(event.getZoomLevel() >= MIN_ZOOM_SHOW);
+                }
+                return false;
+            }
+        });
+
         return rl;
 
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -256,6 +275,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     }
 
     private void requestDataUpdate() {
+        if (mMapView.getZoomLevel() < MIN_ZOOM_SHOW) return;
 
         Toast.makeText(getContext(), "requestDataUpdate",
                 Toast.LENGTH_SHORT).show();
@@ -507,5 +527,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                 mapController.scrollBy(-200, 0);
             }
         });
+    }
+
+    private void updateMarkersVisibility() {
+        int zoom = mMapView.getZoomLevel();
+
+        if (mPoiMarkers != null) {
+            mPoiMarkers.setEnabled(zoom > 15);
+        }
     }
 }
