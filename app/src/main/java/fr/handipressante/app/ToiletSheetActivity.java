@@ -23,8 +23,11 @@ import android.support.v7.widget.Toolbar;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
 import fr.handipressante.app.ToiletEdition.RatingActivity;
@@ -89,10 +92,20 @@ public class ToiletSheetActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setTitle("Retour");
 
-
-
         fillToiletSheet(mToilet);
         addComment(mToilet);
+
+        ToiletDownloader downloader = new ToiletDownloader(this);
+        downloader.requestToilet(mToilet.getId(), new Downloader.Listener<List<Toilet>>() {
+            @Override
+            public void onResponse(List<Toilet> response) {
+                if (response != null && response.size() == 1) {
+                    mToilet = response.get(0);
+                    fillToiletSheet(mToilet);
+                    enableEdition();
+                }
+            }
+        });
     }
 
     public void onStart() {
@@ -282,6 +295,13 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     }
 
+    private void enableEdition() {
+        findViewById(R.id.edit_toilet).setEnabled(true);
+        findViewById(R.id.photo_button).setEnabled(true);
+        findViewById(R.id.edit_description).setEnabled(true);
+        findViewById(R.id.edit_rate).setEnabled(true);
+        findViewById(R.id.add_comment).setEnabled(true);
+    }
 
     public void addComment(Toilet toilet){
         LinearLayout container = (LinearLayout) findViewById(R.id.comment_bubble);

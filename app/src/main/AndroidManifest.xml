@@ -85,7 +85,7 @@
         <activity android:name=".ToiletEdition.NameActivity" />
         <activity android:name=".ToiletEdition.AccessibleActivity" />
         <activity android:name=".ToiletEdition.DescriptionActivity" />
-        <activity android:name=".ToiletEdition.RatingActivity"></activity>
+        <activity android:name=".ToiletEdition.RatingActivity" />
     </application>
 
 </manifest>

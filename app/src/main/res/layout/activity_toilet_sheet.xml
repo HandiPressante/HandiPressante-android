@@ -75,16 +75,16 @@
                     android:orientation="horizontal"
                     android:gravity="right">
 
-                    <ImageButton
+                    <Button
+                        android:enabled="false"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/edit_toilet"
-                        android:src="@drawable/edit_text"
-                        android:layout_marginTop="10dp"
-                        android:scaleType="fitCenter"
-                        android:background="@android:color/transparent" />
+                        android:background="@drawable/edit_text_button"
+                        android:layout_marginTop="10dp" />
 
                     <ImageButton
+                        android:enabled="false"
                         android:layout_width="70dip"
                         android:layout_height="70dip"
                         android:id="@+id/photo_button"
@@ -198,16 +198,15 @@
                     android:gravity="top"
                     android:src="@drawable/description_title" />
 
-                <ImageButton
+                <Button
+                    android:enabled="false"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:id="@+id/edit_description"
-                    android:src="@drawable/edit_text"
-                    android:layout_marginTop="2dp"
-                    android:scaleType="fitXY"
-                    android:background="@android:color/transparent" />
+                    android:background="@drawable/edit_text_button"
+                    android:layout_marginTop="2dp" />
             </RelativeLayout>
             <TextView
                 android:id="@+id/toilet_description"
@@ -244,16 +243,15 @@
                     android:gravity="top"
                     android:src="@drawable/rate_title" />
 
-                <ImageButton
+                <Button
+                    android:enabled="false"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:id="@+id/edit_rate"
-                    android:src="@drawable/edit_rate"
-                    android:layout_marginTop="2dp"
-                    android:scaleType="fitCenter"
-                    android:background="@android:color/transparent" />
+                    android:background="@drawable/edit_rate_button"
+                    android:layout_marginTop="2dp" />
             </RelativeLayout>
 
             <!-- -->
@@ -378,26 +376,27 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <!-- NAME of toilet comment block-->
-            <LinearLayout
-                android:orientation="horizontal"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:layout_width="180dp"
                     android:layout_height="wrap_content"
                     android:gravity="top"
-                    android:src="@drawable/comment_title"
-                    android:layout_gravity="left" />
+                    android:src="@drawable/comment_title" />
 
-                <ImageView
-                    android:layout_width="fill_parent"
+                <Button
+                    android:enabled="false"
+                    android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:id="@+id/add_comment"
-                    android:src="@drawable/icon_addrate"
+                    android:background="@drawable/add_comment_button"
                     android:layout_marginTop="2dp" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/comment_bubble"

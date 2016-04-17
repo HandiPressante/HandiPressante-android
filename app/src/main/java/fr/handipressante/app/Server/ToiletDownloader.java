@@ -71,6 +71,16 @@ public class ToiletDownloader extends Downloader {
         requestToilets(url, listener);
     }
 
+    /**
+     * Retrieve specified toilet
+     * @param id Toilet ID
+     * @param listener Listener to receive the toilet response
+     */
+    public void requestToilet(int id, final Listener<List<Toilet>> listener) {
+        String url = MyConstants.API_URL + "toilet/" + id;
+        requestToilets(url, listener);
+    }
+
     private void requestToilets(String url, final Listener<List<Toilet>> listener) {
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
                 (url, new Response.Listener<JSONArray>() {

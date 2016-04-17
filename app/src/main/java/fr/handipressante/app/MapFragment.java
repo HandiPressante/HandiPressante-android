@@ -139,6 +139,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         else{
             useArrows(mMapController, rl);
 
+            /*
+            Problem : markers don't work
             // Disable dragging
             mMapView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -146,6 +148,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                     return true;
                 }
             });
+            */
         }
 
         mMapView.setMapListener(new MapListener() {
