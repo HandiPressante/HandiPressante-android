@@ -212,8 +212,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        MenuItem item_mod = menu.add(Menu.NONE, R.id.modification,1,R.string.modification);
-        item_mod.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        /*MenuItem item_mod = menu.add(Menu.NONE, R.id.modification,1,R.string.modification);
+        item_mod.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 
         return super.onCreateOptionsMenu(menu);
     }
