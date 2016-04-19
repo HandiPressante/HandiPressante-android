@@ -8,7 +8,7 @@
             android:key="first_run"
             android:title="Aide au démarrage"
             android:summary="active le tutoriel à chaque démarrage"
-            android:defaultValue="@string/yes"
+            android:defaultValue="true"
             android:switchTextOn="On"
             android:switchTextOff="Off"/>
         <CheckBoxPreference
