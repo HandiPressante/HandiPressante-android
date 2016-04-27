@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 
@@ -56,7 +57,7 @@ import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
-    private final static int DATA_UPDATE_TIME = 1000;
+    private final static int DATA_UPDATE_TIME = 500;
     private final static int MIN_ZOOM_SHOW = 10;
 
     private ResourceProxy mResourceProxy;
@@ -66,6 +67,9 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     private IMapController mMapController;
     private MyLocationNewOverlay mLocationOverlay;
     private RadiusMarkerClusterer mPoiMarkers;
+    private Bitmap mClusterIcon;
+    private Drawable mMarkerIconAccessible;
+    private Drawable mMarkerIconNotAccessible;
 
     private LocationManager mLocationManager;
 
@@ -84,6 +88,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MapFragment", "onCreate");
         super.onCreate(savedInstanceState);
+
+        mMarkerIconAccessible = ContextCompat.getDrawable(getActivity(), Converters.pmrPinFromBoolean(true));
+        mMarkerIconNotAccessible = ContextCompat.getDrawable(getActivity(), Converters.pmrPinFromBoolean(false));
+
+        BitmapDrawable clusterIcon = (BitmapDrawable) ContextCompat.getDrawable(getActivity(), R.drawable.cluster_full_mini);
+        mClusterIcon = clusterIcon.getBitmap();
     }
 
     @Override
@@ -383,10 +393,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
             });
         }
 
-        Drawable clusterIconD = getResources().getDrawable(R.drawable.cluster_full_mini);
-        //clusterIconD.
-        Bitmap clusterIcon = ((BitmapDrawable) clusterIconD).getBitmap();
-        poiMarkers.setIcon(clusterIcon);
+        poiMarkers.setIcon(mClusterIcon);
 
         if (mPoiMarkers != null) {
             mMapView.getOverlays().remove(mPoiMarkers);
@@ -408,7 +415,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         newMarker.setSnippet("snippet");
         //newMarker.setSubDescription("300 m");
         newMarker.setImage(getResources().getDrawable(Converters.rankFromInteger(t.getRankAverage()))); //getResources().getDrawable(R.drawable.star_five)
-        newMarker.setIcon(getResources().getDrawable(Converters.pmrPinFromBoolean(t.isAdapted())));
+        if (t.isAdapted()) {
+            newMarker.setIcon(mMarkerIconAccessible);
+        } else {
+            newMarker.setIcon(mMarkerIconNotAccessible);
+        }
+
         return newMarker;
     }
 
