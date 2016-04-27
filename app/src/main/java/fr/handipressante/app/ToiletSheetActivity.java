@@ -34,7 +34,7 @@ import fr.handipressante.app.ToiletEdition.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
-    final int REQUEST_IMAGE_CAPTURE = 1;
+ // final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
 
 
@@ -129,8 +129,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
         //opens camera app
-        //TODO: Save thumbnail in carousel(viewpager)
-        findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
+        //TODO: Save thumbnail in carousel(viewpager) hidden for test at pole saint helier
+        /*findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -140,7 +140,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
             }
             }
-        });
+        });*/
 
 
         findViewById(R.id.edit_toilet).setOnClickListener(new View.OnClickListener() {
@@ -172,7 +172,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
     }
-
+/* hidden for test in pole saint helier
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -187,7 +187,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 fillToiletSheet(mToilet);
             }
         }
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
