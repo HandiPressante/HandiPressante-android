@@ -390,7 +390,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         if (mPoiMarkers != null) {
             mMapView.getOverlays().remove(mPoiMarkers);
-            mMapView.invalidate();
+            //mMapView.invalidate();
         }
 
         mPoiMarkers = poiMarkers;
