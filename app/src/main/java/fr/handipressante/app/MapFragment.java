@@ -184,12 +184,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
             if (location == null) {
                 location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-                if (location != null)
-                    Toast.makeText(getContext(), "Provider network has a last known location.",
-                            Toast.LENGTH_SHORT).show();
+                //if (location != null)
+                    //Toast.makeText(getContext(), "Provider network has a last known location.",
+                    //        Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Provider gps has a last known location.",
-                        Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Provider gps has a last known location.",
+                //        Toast.LENGTH_SHORT).show();
             }
 
             mLocationOverlay.setEnabled(false); // Default
@@ -280,8 +280,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     private void requestDataUpdate() {
         if (mMapView.getZoomLevel() < MIN_ZOOM_SHOW) return;
 
-        Toast.makeText(getContext(), "requestDataUpdate",
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "requestDataUpdate",
+        //        Toast.LENGTH_SHORT).show();
 
         BoundingBoxE6 BB = mMapView.getProjection().getBoundingBox();
         GeoPoint topLeft = new GeoPoint(BB.getLatNorthE6(), BB.getLonWestE6());
@@ -417,8 +417,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         if (mMapCenter == null)
             mMapCenter = new GeoPoint(location);
 
-        Toast.makeText(getContext(), "Location changed",
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Location changed",
+        //        Toast.LENGTH_SHORT).show();
         Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
                 R.drawable.my_location);
 
@@ -466,7 +466,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     @Override
     public boolean longPressHelper(GeoPoint geoPoint) {
-        Toast.makeText(getContext(), "Tap on ("+geoPoint.getLatitude()+","+geoPoint.getLongitude()+")", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Tap on ("+geoPoint.getLatitude()+","+geoPoint.getLongitude()+")", Toast.LENGTH_SHORT).show();
 
         Toilet toilet = new Toilet();
         toilet.setCoordinates(geoPoint);
@@ -485,7 +485,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         buttonZoomPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"click on zoom +", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"click on zoom +", Toast.LENGTH_SHORT).show();
                 mapController.zoomIn();
             }
         });

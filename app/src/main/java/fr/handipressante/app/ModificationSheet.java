@@ -85,7 +85,7 @@ public class ModificationSheet extends AppCompatActivity {
             case R.id.modification:
                 //Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
                 //intent.putExtra("toilet", mToilet);
-                Toast.makeText(getApplicationContext(), "Saving...", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Saving...", Toast.LENGTH_SHORT).show();
                 // startActivity(intent);
                 break;
             // Something else

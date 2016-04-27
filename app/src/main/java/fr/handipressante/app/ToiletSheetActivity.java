@@ -135,7 +135,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             public void onClick(View v) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (intent.resolveActivity(getPackageManager()) != null) {
-                Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
+                //Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
             }
@@ -199,7 +199,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), NameActivity.class);
                 intent.putExtra("toilet", mToilet);
                 intent.putExtra("new", false);
-                Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             break;
             // Something else

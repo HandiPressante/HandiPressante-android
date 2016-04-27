@@ -58,8 +58,8 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Criteria criteria = new Criteria();
         mProvider = mLocationManager.getBestProvider(criteria, true);
         Log.i("ToiletListFragment", "Provider selected : " + mProvider);
-        Toast.makeText(getContext(), "Provider selected : " + mProvider,
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Provider selected : " + mProvider,
+        //        Toast.LENGTH_SHORT).show();
 
         if (savedInstanceState != null) {
             mCurrentGeopoint = savedInstanceState.getParcelable("current_location");
@@ -82,12 +82,12 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Location location = mLocationManager.getLastKnownLocation(mProvider);
 
         if (location != null) {
-            Toast.makeText(getContext(), "Provider " + mProvider + " has a last known location.",
-                    Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Provider " + mProvider + " has a last known location.",
+            //        Toast.LENGTH_SHORT).show();
             onLocationChanged(location);
         } else {
-            Toast.makeText(getContext(), "Location not available",
-                    Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Location not available",
+            //        Toast.LENGTH_SHORT).show();
             mLocationManager.requestSingleUpdate(mProvider, this, null);
             Log.i("ToiletListFragment", "requestSingleUpdate");
         }
@@ -176,15 +176,15 @@ public class ToiletListFragment extends ListFragment implements LocationListener
 
     @Override
     public void onProviderEnabled(String provider) {
-        Toast.makeText(getContext(), "Enabled new provider " + provider,
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Enabled new provider " + provider,
+        //        Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Toast.makeText(getContext(), "Disabled provider " + provider,
-                Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "Disabled provider " + provider,
+        //        Toast.LENGTH_SHORT).show();
         //DataModel.instance().clearNearbyToilets();
     }
 

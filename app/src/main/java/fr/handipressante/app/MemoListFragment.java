@@ -295,7 +295,7 @@ public class MemoListFragment extends ListFragment {
             mWakeLock.release();
             if (result != null) {
                 Log.e("MemoManager", "Download error: " + result);
-                Toast.makeText(getContext(), "Download error: " + result, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Download error: " + result, Toast.LENGTH_LONG).show();
                 mMemoDownloadDialog.dismiss();
             }
             else {
