@@ -57,7 +57,7 @@ import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
-    private final static int DATA_UPDATE_TIME = 500;
+    private final static int DATA_UPDATE_TIME = 700;
     private final static int MIN_ZOOM_SHOW = 10;
 
     private ResourceProxy mResourceProxy;
