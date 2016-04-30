@@ -331,6 +331,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     }
 
     @Override
+    public void onDestroy()
+    {
+        Log.i("MapFragment", "OnDestroy");
+        super.onDestroy();
+    }
+
+    @Override
     public void onSaveInstanceState (Bundle outState){
         super.onSaveInstanceState(outState);
 
