@@ -15,8 +15,8 @@ import fr.handipressante.app.Data.Toilet;
  * Created by marc on 05/11/2015.
  */
 public class CustomInfoWindow extends MarkerInfoWindow {
+    private Toilet selectedToilet;
 
-    Toilet t;
     public CustomInfoWindow(final MapView mapView) {
         super(R.layout.bubble, mapView);
 
@@ -24,18 +24,19 @@ public class CustomInfoWindow extends MarkerInfoWindow {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(t !=null){
-                Intent intent = new Intent(v.getContext(), ToiletSheetActivity.class);
-                intent.putExtra("toilet", t);
-                v.getContext().startActivity(intent);
+                if(selectedToilet !=null) {
+                    Intent intent = new Intent(v.getContext(), ToiletSheetActivity.class);
+                    intent.putExtra("toilet", selectedToilet);
+                    v.getContext().startActivity(intent);
                 }
             }
         });
     }
+
     @Override public void onOpen(Object item){
         super.onOpen(item);
         Marker marker = (Marker)item;
-        t = (Toilet)marker.getRelatedObject();
+        selectedToilet = (Toilet)marker.getRelatedObject();
         //mView.findViewById(R.id.bubble_fiche).setVisibility(View.VISIBLE);
     }
 

@@ -372,8 +372,10 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         poiMarkers.getTextPaint().setTextSize(70.0f);
 
+        CustomInfoWindow infoWindow = new CustomInfoWindow(mMapView);
+
         for (final Toilet t : toiletList) {
-            final Marker poiMarker = createMarker(t);
+            final Marker poiMarker = createMarker(t, infoWindow);
             poiMarkers.add(poiMarker);
             //give a reference to the toilet object (needed for CustomInfoWindow)
             poiMarker.setRelatedObject(t);
@@ -410,9 +412,9 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     }
 
     // create a new marker
-    private Marker createMarker(final Toilet t) {
+    private Marker createMarker(final Toilet t, CustomInfoWindow infoWindow) {
         Marker newMarker = new Marker(mMapView);
-        newMarker.setInfoWindow(new CustomInfoWindow(mMapView));
+        newMarker.setInfoWindow(infoWindow);
         newMarker.setPosition(t.getCoordinates());
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         newMarker.setTitle(t.getAddress());
