@@ -109,6 +109,24 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(new CustomPagerAdapter(this));
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        // Needed for GarbageCollector !
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(null);
+    }
+
+    @Override
     public void onDestroy()
     {
         super.onDestroy();
@@ -262,7 +280,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
         //picture slider
         //listPics.add((ImageView)findViewById(R.id.picture_block1));
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CustomPagerAdapter(this));
 
 
         //changes the visible photo in the carousel to the previous one
