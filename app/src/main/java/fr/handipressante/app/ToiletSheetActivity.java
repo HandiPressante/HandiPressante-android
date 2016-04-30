@@ -71,7 +71,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     }
 
-    public static ArrayList<ImageView> listPics = new ArrayList<>();
+    //public static ArrayList<ImageView> listPics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +106,16 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        // Needed for GarbageCollector !
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setAdapter(null);
     }
 
     public void onStart() {
@@ -250,7 +260,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         ImageView next= (ImageView) findViewById(R.id.next);
         next.setImageResource(R.drawable.suivant);
         //picture slider
-        listPics.add((ImageView)findViewById(R.id.picture_block1));
+        //listPics.add((ImageView)findViewById(R.id.picture_block1));
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
 
