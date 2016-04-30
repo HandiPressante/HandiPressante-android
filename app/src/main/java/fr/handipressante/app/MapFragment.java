@@ -89,10 +89,10 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Log.i("MapFragment", "onCreate");
         super.onCreate(savedInstanceState);
 
-        mMarkerIconAccessible = ContextCompat.getDrawable(getActivity(), Converters.pmrPinFromBoolean(true));
-        mMarkerIconNotAccessible = ContextCompat.getDrawable(getActivity(), Converters.pmrPinFromBoolean(false));
+        mMarkerIconAccessible = ContextCompat.getDrawable(getActivity().getApplicationContext(), Converters.pmrPinFromBoolean(true));
+        mMarkerIconNotAccessible = ContextCompat.getDrawable(getActivity().getApplicationContext(), Converters.pmrPinFromBoolean(false));
 
-        BitmapDrawable clusterIcon = (BitmapDrawable) ContextCompat.getDrawable(getActivity(), R.drawable.cluster_full_mini);
+        BitmapDrawable clusterIcon = (BitmapDrawable) ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.cluster_full_mini);
         mClusterIcon = clusterIcon.getBitmap();
     }
 
@@ -105,7 +105,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         //add layout with map and Arrows (by default)
         RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_map, container, false);
 
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
         mMapView = (MapView)rl.findViewById(R.id.map);
 
@@ -335,6 +335,10 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     {
         Log.i("MapFragment", "OnDestroy");
         super.onDestroy();
+
+        if (mMapView != null && mPoiMarkers != null) {
+            mMapView.getOverlays().remove(mPoiMarkers);
+        }
     }
 
     @Override
@@ -431,7 +435,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         //Toast.makeText(getContext(), "Location changed",
         //        Toast.LENGTH_SHORT).show();
-        Bitmap icon = BitmapFactory.decodeResource(getActivity().getResources(),
+        Bitmap icon = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(),
                 R.drawable.my_location);
 
 
