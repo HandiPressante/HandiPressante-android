@@ -364,6 +364,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         for (final Toilet t : toiletList) {
             final Marker poiMarker = createMarker(t);
             poiMarkers.add(poiMarker);
+            //give a reference to the toilet object (needed for CustomInfoWindow)
+            poiMarker.setRelatedObject(t);
 
             // parse Uri with coordinates of the poi.
             final Uri mUri = Uri.parse("geo:" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude() + "?q=" + t.getCoordinates().getLatitude() + "," + t.getCoordinates().getLongitude());
@@ -380,15 +382,6 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                     if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                         startActivity(intent);
                     }
-                }
-            });
-
-            poiMarker.getInfoWindow().getView().findViewById(R.id.bubble_moreinfo).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
-                    intent.putExtra("toilet", t);
-                    startActivity(intent);
                 }
             });
         }

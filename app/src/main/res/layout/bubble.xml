@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageButton android:id="@+id/bubble_moreinfo"
+            <ImageButton android:id="@+id/bubble_fiche"
 
                 android:layout_width="60dp"
                 android:layout_height="60dp"
