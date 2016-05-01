@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -81,6 +82,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     private Timer mDataUpdateTimer;
     private TimerTask mDataUpdateTask;
     private Handler mDataUpdateHandler = new Handler();
+
+    private boolean canAddMarker = false;
 
     SharedPreferences sharedPrefs;
 
@@ -173,6 +176,25 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                     mPoiMarkers.setEnabled(event.getZoomLevel() >= MIN_ZOOM_SHOW);
                 }
                 return false;
+            }
+        });
+
+
+
+        final FloatingActionButton fab = (FloatingActionButton) rl.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Click action
+                if(!canAddMarker) {
+                    Toast.makeText(getActivity(), "Appuyer longuement sur la carte pour ajouter de nouvelles toilettes", Toast.LENGTH_LONG).show();
+                    canAddMarker = true;
+                    fab.setImageResource(R.drawable.ic_action_cancel);
+                }else{
+                    canAddMarker = false;
+                    fab.setImageResource(R.drawable.ic_action_new);
+                }
+
             }
         });
 
@@ -485,17 +507,18 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     @Override
     public boolean longPressHelper(GeoPoint geoPoint) {
         //Toast.makeText(getContext(), "Tap on ("+geoPoint.getLatitude()+","+geoPoint.getLongitude()+")", Toast.LENGTH_SHORT).show();
+        if(canAddMarker) {
+            Toilet toilet = new Toilet();
+            toilet.setCoordinates(geoPoint);
 
-        Toilet toilet = new Toilet();
-        toilet.setCoordinates(geoPoint);
+            AddToiletDialog addToiletDialog = new AddToiletDialog();
+            Bundle args = new Bundle();
+            args.putParcelable("toilet", toilet);
+            addToiletDialog.setArguments(args);
 
-        AddToiletDialog addToiletDialog = new AddToiletDialog();
-        Bundle args = new Bundle();
-        args.putParcelable("toilet", toilet);
-        addToiletDialog.setArguments(args);
-
-        addToiletDialog.show(getFragmentManager(), "adding toilets");
-        return false;
+            addToiletDialog.show(getFragmentManager(), "adding toilets");
+            return false;
+        }return false;
     }
 
     public void useArrows(final IMapController mapController, RelativeLayout rl){
