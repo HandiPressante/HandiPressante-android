@@ -1,50 +1,34 @@
 package fr.handipressante.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.app.SearchManager;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentManager;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.osmdroid.bonuspack.location.POI;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
 
 import java.util.UUID;
 import java.util.prefs.Preferences;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private String[] mTitles;
     private Integer[] mIcon;
 
+    private long lastPress;
+    private Toast toast;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -83,12 +69,14 @@ public class MainActivity extends AppCompatActivity {
         mTitle = mDrawerTitle = getTitle();
         mTitles = new String[]{"Home", "Réglages", "Mémos"};
 
+        //mTitles = getResources().getStringArray(R.array.navigation_drawer_items_array);
+
         // List of icon in the menu
         mIcon = new Integer[]{R.drawable.home_icon, R.drawable.settings_icon, R.drawable.memo_icon};
         initDrawer();
 
         if (savedInstanceState == null) {
-            selectItem(0);
+            selectItem(1);
         }
 
     }
@@ -154,9 +142,11 @@ public class MainActivity extends AppCompatActivity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
+        View header = getLayoutInflater().inflate(R.layout.header_drawer, null);
 
         MenuList adapter = new
-                MenuList(MainActivity.this, mTitles, mIcon);
+                MenuList(this, mTitles, mIcon);
+        mDrawerList.addHeaderView(header);
         mDrawerList.setAdapter(adapter);
 
 
@@ -194,14 +184,13 @@ public class MainActivity extends AppCompatActivity {
         // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
-        }
-        return super.onOptionsItemSelected(item);
+        } return super.onOptionsItemSelected(item);
     }
 
 
 
     private void selectItem(int position) {
-        if (position == 0) {
+        if (position == 1) {
             //removes frag Fragment if created before, because not compatible TODO: improve selectItem ?
             getFragmentManager()
                     .beginTransaction()
@@ -212,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.content_frame, mMainFragment)
                     .commit();
 
-        } else if (position == 1) {
+        } else if (position == 2) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .remove(mMainFragment)
@@ -227,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
 
-        } else if (position == 2) {
+        } else if (position == 3) {
             getFragmentManager().beginTransaction()
                     .remove(mSettingsFragment)
                     .commit();
@@ -239,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(mTitles[position]);
+        int pos = position-1;
+        setTitle(mTitles[pos]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
@@ -254,6 +244,19 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        toast = Toast.makeText(getBaseContext(), "Appuyer de nouveau sur Retour pour fermer l'application", Toast.LENGTH_SHORT);
+        if(currentTime - lastPress > 3000){
+            toast.show();
+            lastPress = currentTime;
+        }else{
+            toast.cancel();
+            super.onBackPressed();
+        }
     }
 
 }

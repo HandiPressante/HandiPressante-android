@@ -35,7 +35,7 @@ public class MenuList extends ArrayAdapter<String>{
             TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-            //txtTitle.setText(menu_item[position]);
+            txtTitle.setText(menu_item[position]);
 
             imageView.setImageResource(imageId[position]);
 

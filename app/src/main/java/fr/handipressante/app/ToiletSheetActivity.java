@@ -34,7 +34,7 @@ import fr.handipressante.app.ToiletEdition.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
- // final int REQUEST_IMAGE_CAPTURE = 1;
+    final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
 
 
@@ -200,7 +200,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
     }
-/* hidden for test in pole saint helier
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -215,7 +215,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 fillToiletSheet(mToilet);
             }
         }
-    }*/
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

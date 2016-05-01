@@ -22,6 +22,8 @@
     <string name="modification">Modifier fiche</string>
     <string name="save">Enregistrer</string>
 
+    <string name="add_marker">Ajouter</string>
+
     <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
@@ -51,6 +53,12 @@
         <item>50</item>
         <item>60</item>
         <item>70</item>
+    </string-array>
+
+    <string-array name="navigation_drawer_items_array">
+        <item>Home</item>
+        <item>Réglages</item>
+        <item>Mémos</item>
     </string-array>
 
     <string name="preference_file_key">fr.handipressante.app.PREFERENCE_FILE_KEY</string>
