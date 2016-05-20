@@ -214,7 +214,7 @@
                 android:layout_height="fill_parent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:fontFamily="sans-serif-medium"
-                android:textSize="13dp"/>
+                android:textSize="13sp"/>
 
         </LinearLayout>
 

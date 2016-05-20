@@ -1,6 +1,7 @@
 package fr.handipressante.app;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,12 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
             row = inflater.inflate(R.layout.item_fragment_list, parent, false);
 
             holder = new ViewHolder();
+            if(holder.pmr != null) {
+                ((BitmapDrawable)holder.pmr.getDrawable()).getBitmap().recycle();
+            }
+            if(holder.rank != null) {
+                ((BitmapDrawable)holder.rank.getDrawable()).getBitmap().recycle();
+            }
             holder.pmr = (ImageView) row.findViewById(R.id.pmr);
             holder.address = (TextView) row.findViewById(R.id.address);
             holder.rank = (ImageView) row.findViewById(R.id.rank);

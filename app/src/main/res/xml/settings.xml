@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory
         android:title="Ergonomie"
         android:key="acessibility">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="first_run"
             android:title="Aide au démarrage"
             android:summary="active le tutoriel à chaque démarrage"
@@ -21,7 +20,6 @@
             android:title="Taille de la police"
             android:summary="Cliquer pour accéder aux paramètres généraux"
             android:defaultValue="false">
-
         </Preference>/>
         <ListPreference
             android:key="button_size"
@@ -31,11 +29,6 @@
             android:title="Taille des boutons"
             android:summary="@string/button_size_value"
             android:defaultValue="false">
-
         </ListPreference>/>
-
-
     </PreferenceCategory>
-
-
 </PreferenceScreen>

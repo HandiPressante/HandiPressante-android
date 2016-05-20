@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">HandiPressante</string>
+    <string name="app_name_uppercase">HANDIPRESSANTE</string>
 
     <string name="tab_list_title">Liste</string>
     <string name="tab_map_title">Carte</string>
@@ -27,6 +28,7 @@
     <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="ok">Ok</string>
 
     <string name="button_size_value">Cliquer pour accéder aux modifications</string>
 
@@ -105,6 +107,8 @@
     <string name="cleanliness">Propreté</string>
     <string name="facilities">Équipement</string>
     <string name="place_accessibility">Accessibilité du lieu</string>
+    <string name="description">Description</string>
+    <string name="toilet_name">Nom des toilettes</string>
 
     <string-array name="array_rating_values">
         <item>0</item>
@@ -118,5 +122,14 @@
     <string name="toiletrating_explanation">
         Veuillez attribuer une note pour chaque critère.
     </string>
+
+    <string name="improve_ergo">Améliorer l\'ergonomie</string>
+    <string name="button_size">Taille des boutons</string>
+    <string name="contrast">Contraste</string>
+    <string name="sliding_or_not">Activer glissement des doigts</string>
+    <string name="phone_settings">Paramètres téléphone</string>
+
+    <string name="is_there_logo">Le logo est-il présent?</string>
+    <string name="powered_by">Propulsé par: INSA Rennes</string>
 
 </resources>

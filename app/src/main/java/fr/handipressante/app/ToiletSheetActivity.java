@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.os.Bundle;
@@ -50,8 +51,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         RED(0, R.layout.pics_test),
         BLUE(1, R.layout.pics_test2),
-        ORANGE(2, R.layout.pics_test),
-        GREEN(3,R.layout.pics_test);
+        ORANGE(2, R.layout.pics_test);
 
         private int mTitleResId;
         private int mLayoutResId;
@@ -207,6 +207,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             ImageView pics= (ImageView) findViewById(R.id.picture_block2);
+            if(pics != null) {
+                ((BitmapDrawable)pics.getDrawable()).getBitmap().recycle();
+            }
             pics.setImageBitmap(imageBitmap);
         } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");

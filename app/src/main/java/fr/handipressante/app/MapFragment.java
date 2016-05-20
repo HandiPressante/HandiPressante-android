@@ -4,8 +4,10 @@ package fr.handipressante.app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -190,9 +192,13 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
                     Toast.makeText(getActivity(), "Appuyer longuement sur la carte pour ajouter de nouvelles toilettes", Toast.LENGTH_LONG).show();
                     canAddMarker = true;
                     fab.setImageResource(R.drawable.ic_action_cancel);
+                    //color in red
+                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255,211,47,47)));
                 }else{
                     canAddMarker = false;
                     fab.setImageResource(R.drawable.ic_action_new);
+                    //color in blue
+                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255,22,79,134)));
                 }
 
             }

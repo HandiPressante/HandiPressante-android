@@ -188,14 +188,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // position 0 is a picture
     private void selectItem(int position) {
         if (position == 1) {
             //removes frag Fragment if created before, because not compatible TODO: improve selectItem ?
-            getFragmentManager()
-                    .beginTransaction()
-                    .remove(mSettingsFragment)
-                    .commit();
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content_frame, mMainFragment)
@@ -204,22 +200,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (position == 2) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .remove(mMainFragment)
-                    .commit();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(mMemoListFragment)
-                    .commit();
-            getFragmentManager()
-                    .beginTransaction()
                     .replace(R.id.content_frame, mSettingsFragment)
                     .commit();
             PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
 
         } else if (position == 3) {
-            getFragmentManager().beginTransaction()
-                    .remove(mSettingsFragment)
-                    .commit();
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.content_frame, mMemoListFragment)

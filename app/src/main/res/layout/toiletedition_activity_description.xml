@@ -11,7 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@id/toolbar"
         android:background="#eaeaea">
 
         <RelativeLayout
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="18sp"
-                    android:hint="Description"/>
+                    android:hint="@string/description"/>
 
                 <Button
                     android:id="@+id/validate"

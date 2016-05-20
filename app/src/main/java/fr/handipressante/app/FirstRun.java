@@ -22,11 +22,11 @@ public class FirstRun extends AppIntro2 {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
-        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'appliciation HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.g2, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Il y a aussi la possibilité de naviguer sur une carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.g4, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Vous pouvez aussi accéder aux informations de ces toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.g3, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Vous pouvez ajouter des informations ou des commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.g3, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Un menu est disponible pour accéder aux réglages et aux mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.g1, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.g2, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.g4, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.g3, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.g3, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.g1, Color.GRAY));
 
         // OPTIONAL METHODS
 
@@ -73,6 +73,7 @@ public class FirstRun extends AppIntro2 {
     @Override
     public void onDonePressed() {
         loadMainActivity();
+        finish();
     }
 
     @Override

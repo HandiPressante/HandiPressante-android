@@ -1,26 +1,29 @@
 package fr.handipressante.app;
 
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.widget.Toast;
 
 
 /**
  * Created by Nico on 19/10/2015.
  */
-public class SettingsFragment extends PreferenceFragment implements
+public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private Context myContext;
     SharedPreferences mPrefs;
 
     @Override
@@ -43,7 +46,7 @@ public class SettingsFragment extends PreferenceFragment implements
         final ListPreference buttonSize = (ListPreference) findPreference( "button_size");
         if(buttonSize != null)
         {
-            buttonSize.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            buttonSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object value) {
                     int data = Integer.parseInt(value.toString());
@@ -64,6 +67,11 @@ public class SettingsFragment extends PreferenceFragment implements
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+
     }
 
 
@@ -103,9 +111,9 @@ public class SettingsFragment extends PreferenceFragment implements
             ((CheckBoxPreference) p).setChecked(checkPref.isChecked());
         }
 
-        if (p instanceof SwitchPreference) {
-            SwitchPreference switchPref = (SwitchPreference) p;
-            ((SwitchPreference) p).setChecked(switchPref.isChecked());
+        if (p instanceof SwitchPreferenceCompat) {
+            SwitchPreferenceCompat switchPref = (SwitchPreferenceCompat) p;
+            ((SwitchPreferenceCompat) p).setChecked(switchPref.isChecked());
         }
     }
 }

@@ -1,19 +1,7 @@
+<!-- styles for level 20 or less-->
+
 <resources>
-
     <!-- Base application theme. -->
-
-    <!-- the theme applied to the application or activity -->
-    <style name="CustomActionBarTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle</item>
-    </style>
-
-    <!-- ActionBar styles -->
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">#E53935</item>
-        <item name="android:backgroundStacked">#D32F2F</item>
-    </style>
-
     <!-- ActionBarTab custom tab under selected onglet -->
     <style name="ActionBarTabStyle" parent="@android:style/Widget.Holo.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_stylingactionbar</item>
@@ -24,7 +12,8 @@
         <!-- colorPrimary is used for coloring the Toolbar -->
         <item name="colorPrimary">#E53935</item>
         <item name="colorPrimaryDark">#D32F2F</item>
-        <item name="colorAccent">@color/common_signin_btn_default_background</item>
+        <item name="colorAccent">@android:color/holo_blue_dark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
     <!--Both themes below are those accepted to make the ToolBar works-->
@@ -39,6 +28,9 @@
         </item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <string-array name="number_of_stars">
         <item>0</item>
@@ -49,9 +41,7 @@
         <item>5</item>
     </string-array>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

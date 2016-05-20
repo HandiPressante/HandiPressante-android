@@ -11,7 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@id/toolbar"
         android:background="#eaeaea">
 
         <RelativeLayout
@@ -40,7 +40,7 @@
                     android:maxLines="1"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="18sp"
-                    android:hint="Nom des toilettes"/>
+                    android:hint="@string/toilet_name"/>
 
                 <TextView
                     android:id="@+id/error"
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/toilet_name"
                     android:layout_alignRight="@+id/toilet_name"
-                    android:text="Ok"
+                    android:text="@string/ok"
                     android:enabled="false"/>
 
             </RelativeLayout>

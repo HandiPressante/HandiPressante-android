@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Améliorer l&apos;ergonomie"
+            android:text="@string/improve_ergo"
             android:id="@+id/textView"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Taille des boutons"
+                android:text="@string/button_size"
                 android:id="@+id/buttonSize"
                 android:layout_weight="50"
                 android:layout_gravity="center" />
@@ -56,7 +56,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:text="Contraste"
+                android:text="@string/contrast"
                 android:id="@+id/textView4"
                 android:layout_gravity="center"
                 android:layout_weight="50" />
@@ -72,14 +72,14 @@
         <Switch
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Activer glissement des doigts"
+            android:text="@string/sliding_or_not"
             android:id="@+id/switch1"
             android:layout_marginLeft="10dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paramètres téléphone"
+            android:text="@string/phone_settings"
             android:id="@+id/button_settings"
             android:layout_gravity="center_horizontal" />
 
