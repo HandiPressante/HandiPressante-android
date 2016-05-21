@@ -44,7 +44,7 @@ public class SplashScreen extends Activity {
             public void onAnimationEnd(Animation animation) {
 
                 SharedPreferences getPrefs = PreferenceManager
-                        .getDefaultSharedPreferences(getBaseContext());
+                        .getDefaultSharedPreferences(getApplicationContext());
 
                 //  Create a new boolean and preference and set it to true
                 final boolean isFirstStart = getPrefs.getBoolean("first_run", true);
