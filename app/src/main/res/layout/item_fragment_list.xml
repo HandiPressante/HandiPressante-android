@@ -1,91 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/pmr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="60dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="fitCenter"
        />
 
-
-
-   <LinearLayout
+   <TextView
+       android:id="@+id/address"
+       android:layout_toRightOf="@+id/pmr"
+       android:layout_toEndOf="@+id/pmr"
        android:layout_width="wrap_content"
-       android:layout_height="match_parent"
-       android:orientation="vertical">
+       android:layout_height="wrap_content"
+       android:textSize="15sp"
+       android:textStyle="bold"
+       />
 
-       <TextView
-           android:id="@+id/address"
+   <ImageView
+       android:id="@+id/rank"
+       android:layout_alignLeft="@+id/address"
+       android:layout_alignStart="@+id/address"
+       android:layout_below="@+id/address"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="1dp"
 
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="15sp"
-           android:textStyle="bold"
-           />
+       />
 
-      <!-- <TextView
-           android:id="@+id/dist"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="15dp"
-           android:textStyle="italic"
-           />-->
-
-       <!-- temp -->
-       <ImageView
-           android:id="@+id/rank"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="1dp"
-           android:adjustViewBounds="true"
-           android:maxWidth="80dp"
-
-           />
-
-    </LinearLayout>
-
-
-   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-      >
-
-       <!-- temp -->
-       <TextView
-           android:id="@+id/distance"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="15sp"
-           android:textStyle="italic"
-           android:layout_alignParentRight="true"
-           android:layout_centerVertical="true"
-           android:layout_alignParentTop="true"
-           android:layout_marginRight="10dp"
-           />
-
-    <!--   <ImageButton
-           android:background="@null"
-           android:id="@+id/info"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/icon_info"
-           android:layout_alignParentRight="true"
-           android:layout_centerVertical="true"
-           android:layout_marginRight="10dp"
-           /> -->
-
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        />
 
 </RelativeLayout>
-
-
-
-</LinearLayout>
 
 
 
