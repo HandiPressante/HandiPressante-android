@@ -42,16 +42,14 @@
 
                 <ImageView
                     android:id="@+id/handicapped"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:layout_gravity="start" />
 
                 <ImageView
                     android:id="@+id/global_rate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="75dp"
                     android:layout_height="wrap_content"
-                    android:maxWidth="75dip"
-                    android:adjustViewBounds="true"
                     android:layout_gravity="start" />
 
             </LinearLayout>
@@ -60,20 +58,20 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
-                android:layout_gravity="right">
+                android:layout_gravity="end">
 
                 <TextView
                     android:id="@+id/toilet_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="18dp"/>
+                    android:textSize="18sp"/>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:orientation="horizontal"
-                    android:gravity="right">
+                    android:gravity="end">
 
                     <Button
                         android:enabled="false"
@@ -89,7 +87,7 @@
                         android:layout_height="70dip"
                         android:id="@+id/photo_button"
                         android:src="@drawable/icon_addpic"
-                        android:layout_gravity="right"
+                        android:layout_gravity="end"
                         android:background="@android:color/transparent"
                         android:scaleType="fitCenter" />
 
@@ -97,7 +95,7 @@
                         android:id="@+id/map_button"
                         android:layout_width="60dip"
                         android:layout_height="55dip"
-                        android:layout_gravity="right|bottom"
+                        android:layout_gravity="end|bottom"
                         android:scaleType="fitCenter"
                         android:background="@android:color/transparent"
                         android:src="@drawable/navigation_icon"
@@ -140,7 +138,7 @@
                             android:id="@+id/previous"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_gravity="left"
+                            android:layout_gravity="start"
                             android:layout_weight="1"
                             android:adjustViewBounds="true" />
 
@@ -148,7 +146,7 @@
                             android:id="@+id/next"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
-                            android:layout_gravity="right"
+                            android:layout_gravity="start"
                             android:layout_weight="1"
                             android:adjustViewBounds="true" />
                     </LinearLayout>
@@ -208,11 +206,13 @@
                     android:background="@drawable/edit_text_button"
                     android:layout_marginTop="2dp" />
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/toilet_description"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingStart="@dimen/activity_horizontal_margin"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="13sp"/>
 
@@ -271,6 +271,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
                         android:fontFamily="sans-serif-medium"
                         android:text="Accessibilité du lieu"
                         android:textColor="#be3733"/>
@@ -285,7 +286,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginRight="50dp"
+                            android:layout_marginEnd="50dp"
                             android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:maxWidth="75dip"
                             android:adjustViewBounds="true" />
                     </RelativeLayout>
