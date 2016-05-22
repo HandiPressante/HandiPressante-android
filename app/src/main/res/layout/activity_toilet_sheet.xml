@@ -4,6 +4,7 @@
     android:layout_height="match_parent">
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar_sheet" />
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,18 +12,19 @@
     android:layout_height="match_parent"
     android:layout_below="@id/toolbar_sheet">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:background="#eaeaea"
+        android:orientation="vertical"
         tools:context="fr.handipressante.app.ToiletSheetActivity">
 
         <!-- Toilet presentation block-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/presentation_block"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -30,136 +32,106 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_horizontal_margin"
-            android:background="@drawable/background_shadow"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
+            android:background="@drawable/background_shadow">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/handicapped"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageView
+                android:id="@+id/global_rate"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/handicapped" />
+
+            <TextView
+                android:id="@+id/toilet_name"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="18sp"
+                android:layout_toRightOf="@id/handicapped"
+                android:layout_toEndOf="@+id/handicapped"
+                android:layout_alignParentTop="true" />
 
-                <ImageView
-                    android:id="@+id/handicapped"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_gravity="start" />
+            <ImageButton
+                android:id="@+id/map_button"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
+                android:background="@android:color/transparent"
+                android:src="@drawable/navigation_icon"
+                android:baselineAlignBottom="false"
+                android:cropToPadding="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/toilet_name" />
 
-                <ImageView
-                    android:id="@+id/global_rate"
-                    android:layout_width="75dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start" />
+            <ImageButton
+                android:enabled="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/photo_button"
+                android:src="@drawable/icon_addpic"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_alignTop="@+id/map_button"
+                android:layout_toLeftOf="@+id/map_button"
+                android:layout_toStartOf="@+id/map_button" />
 
-            </LinearLayout>
+            <Button
+                android:enabled="false"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/edit_toilet"
+                android:background="@drawable/edit_text_button"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_alignTop="@+id/photo_button"
+                android:layout_toLeftOf="@+id/photo_button"
+                android:layout_toStartOf="@+id/photo_button" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_gravity="end">
-
-                <TextView
-                    android:id="@+id/toilet_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="18sp"/>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"
-                    android:gravity="end">
-
-                    <Button
-                        android:enabled="false"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:id="@+id/edit_toilet"
-                        android:background="@drawable/edit_text_button"
-                        android:layout_marginTop="10dp" />
-
-                    <ImageButton
-                        android:enabled="false"
-                        android:layout_width="70dip"
-                        android:layout_height="70dip"
-                        android:id="@+id/photo_button"
-                        android:src="@drawable/icon_addpic"
-                        android:layout_gravity="end"
-                        android:background="@android:color/transparent"
-                        android:scaleType="fitCenter" />
-
-                    <ImageButton
-                        android:id="@+id/map_button"
-                        android:layout_width="60dip"
-                        android:layout_height="55dip"
-                        android:layout_gravity="end|bottom"
-                        android:scaleType="fitCenter"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/navigation_icon"
-                        android:baselineAlignBottom="false"
-                        android:cropToPadding="false"
-                        android:layout_marginBottom="7dp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <!-- Toilet pictures block-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/pics_block"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/presentation_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/background_shadow"
-            android:orientation="vertical"
             android:layout_marginTop="15dp">
+
             <!--ajout tests -->
-            <LinearLayout
-                android:gravity="top"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="168dp"
+                android:layout_height="40dp"
+                android:src="@drawable/precedent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <ImageView
-                            android:id="@+id/previous"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="start"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true" />
-
-                        <ImageView
-                            android:id="@+id/next"
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:layout_gravity="start"
-                            android:layout_weight="1"
-                            android:adjustViewBounds="true" />
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="168dp"
+                android:layout_height="40dp"
+                android:src="@drawable/suivant"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <android.support.v4.view.ViewPager
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/viewpager"
                 android:layout_width="wrap_content"
-                android:layout_height="230dp" />
+                android:layout_height="230dp"
+                android:layout_below="@+id/previous" />
             <!--
             <ImageView
                 android:id="@+id/picture_block"
@@ -168,244 +140,192 @@
                 android:adjustViewBounds="true"
                 android:gravity="bottom"/>
                 -->
-        </LinearLayout>
+        </RelativeLayout>
 
 
 
         <!-- Toilet description block-->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/description_block"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/pics_block"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="170dp"
+                android:layout_height="44dp"
+                android:src="@drawable/description_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
-                <ImageView
-                    android:layout_width="170dp"
-                    android:layout_height="fill_parent"
-                    android:gravity="top"
-                    android:src="@drawable/description_title" />
-
-                <Button
-                    android:enabled="false"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/edit_description"
-                    android:background="@drawable/edit_text_button"
-                    android:layout_marginTop="2dp" />
-            </RelativeLayout>
+            <Button
+                android:id="@+id/edit_description"
+                android:enabled="false"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/edit_text_button"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
 
             <TextView
                 android:id="@+id/toilet_description"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:fontFamily="sans-serif-medium"
-                android:textSize="13sp"/>
+                android:textSize="13sp"
+                android:layout_below="@id/edit_description" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
         <!-- Toilet rate block-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/rate_block"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/description_block"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!-- NAME of toilet rate block-->
 
-                <!-- NAME of toilet rate block-->
-                <ImageView
-                    android:layout_width="210dp"
-                    android:layout_height="fill_parent"
-                    android:gravity="top"
-                    android:src="@drawable/rate_title" />
+            <ImageView
+                android:id="@+id/rate_title"
+                android:layout_width="208dp"
+                android:layout_height="44dp"
+                android:src="@drawable/rate_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
-                <Button
-                    android:enabled="false"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/edit_rate"
-                    android:background="@drawable/edit_rate_button"
-                    android:layout_marginTop="2dp" />
-            </RelativeLayout>
+            <Button
+                android:id="@+id/edit_rate"
+                android:enabled="false"
+                android:layout_width="50dp"
+                android:layout_height="44dp"
+                android:background="@drawable/edit_rate_button"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
 
             <!-- -->
-            <LinearLayout
-                android:layout_width="fill_parent"
+
+            <!-- Criteria names -->
+            <TextView
+                android:id="@+id/accessibility_label"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/rate_title"
+                android:fontFamily="sans-serif-medium"
+                android:text="Accessibilité du lieu"
+                android:textColor="#be3733"/>
 
-                <!-- First category -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+            <TextView
+                android:id="@+id/cleanliness_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/accessibility_label"
+                android:fontFamily="sans-serif-medium"
+                android:text="Propreté"
+                android:textColor="#be3733" />
 
-                    <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingStart="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Accessibilité du lieu"
-                        android:textColor="#be3733"/>
-
-                    <!-- Image (stars) of the category-->
-                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:id="@+id/accessibility_rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginEnd="50dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:maxWidth="75dip"
-                            android:adjustViewBounds="true" />
-                    </RelativeLayout>
-
-                </LinearLayout>
+            <TextView
+                android:id="@+id/facilities_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/cleanliness_label"
+                android:fontFamily="sans-serif-medium"
+                android:text="Equipement"
+                android:textColor="#be3733"/>
 
 
-                <!-- Second category -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+            <!-- Criteria rates -->
+            <ImageView
+                android:id="@+id/accessibility_rate"
+                android:layout_width="75dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/accessibility_label"
+                android:scaleType="fitStart" />
 
+            <ImageView
+                android:id="@+id/cleanliness_rate"
+                android:layout_width="75dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@id/cleanliness_label"
+                android:scaleType="fitStart" />
 
-                    <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Propreté"
-                        android:textColor="#be3733"
-                        android:enabled="false" />
+            <ImageView
+                android:id="@+id/facilities_rate"
+                android:layout_width="75dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@id/facilities_label"
+                android:scaleType="fitStart" />
 
-                    <!-- Image (stars) of the category-->
-                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:id="@+id/cleanliness_rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
-                            android:layout_alignParentRight="true"
-                            android:maxWidth="75dip"
-                            android:adjustViewBounds="true" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-
-                <!-- Third category -->
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Name of the category-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="Equipement"
-                        android:textColor="#be3733"/>
-
-                    <!-- Image (stars) of the category-->
-                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:id="@+id/facilities_rate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginRight="50dp"
-                            android:layout_alignParentRight="true"
-                            android:maxWidth="75dip"
-                            android:adjustViewBounds="true" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
 
         <!-- Toilet comment block-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/comment_block"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/rate_block"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="187dp"
+                android:layout_height="44dp"
+                android:src="@drawable/comment_title" />
 
-                <ImageView
-                    android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:src="@drawable/comment_title" />
-
-                <Button
-                    android:enabled="false"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:id="@+id/add_comment"
-                    android:background="@drawable/add_comment_button"
-                    android:layout_marginTop="2dp" />
-            </RelativeLayout>
+            <Button
+                android:id="@+id/add_comment"
+                android:enabled="false"
+                android:layout_width="56dp"
+                android:layout_height="44dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/add_comment_button" />
 
             <LinearLayout
-                android:id="@+id/comment_bubble"
-                android:layout_width="fill_parent"
+                android:id="@+id/comments_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_below="@+id/add_comment" />
 
                 <!-- IMPORTANT : LOOK OF THE COMMENT BUBBLE -->
                 <!--<LinearLayout
@@ -451,10 +371,8 @@
 
                 </LinearLayout>-->
 
-            </LinearLayout>
+        </RelativeLayout>
 
-        </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>
 </RelativeLayout>

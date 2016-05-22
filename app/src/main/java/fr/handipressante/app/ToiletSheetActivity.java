@@ -106,34 +106,28 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 }
             }
         });
+
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        if (viewPager != null)
+            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext()));
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CustomPagerAdapter(this));
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-
-        // Needed for GarbageCollector !
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(null);
     }
 
     @Override
     public void onDestroy()
     {
         super.onDestroy();
-
-        // Needed for GarbageCollector !
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPager.setAdapter(null);
     }
 
     public void onStart() {
@@ -275,11 +269,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
         //Set pictures
         //Previous arrow
         ImageView previous= (ImageView) findViewById(R.id.previous);
-        previous.setImageResource(R.drawable.precedent);
+        //previous.setImageResource(R.drawable.precedent);
 
         //next arrow
         ImageView next= (ImageView) findViewById(R.id.next);
-        next.setImageResource(R.drawable.suivant);
+        //next.setImageResource(R.drawable.suivant);
         //picture slider
         //listPics.add((ImageView)findViewById(R.id.picture_block1));
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -334,7 +328,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     public void addComment(Toilet toilet){
-        LinearLayout container = (LinearLayout) findViewById(R.id.comment_bubble);
+        LinearLayout container = (LinearLayout) findViewById(R.id.comments_layout);
         boolean comment = false;
 
         if (comment) {
@@ -382,7 +376,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
-
     }
 
 
