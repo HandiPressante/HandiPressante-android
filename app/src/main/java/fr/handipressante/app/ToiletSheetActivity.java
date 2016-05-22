@@ -1,11 +1,13 @@
 package fr.handipressante.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.os.Bundle;
 
@@ -16,8 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +44,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
 
+    SharedPreferences sharedPrefs;
 
     //TODO:finir de changer l'enum en liste
    /* public static ArrayList<ImageView> imgList = new ArrayList<>();
@@ -83,15 +89,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mToilet = intent.getParcelableExtra("toilet");
 
-        Toolbar toolbar =   (Toolbar) findViewById(R.id.toolbar_sheet);
-        setSupportActionBar(toolbar);
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setSubtitleTextColor(Color.WHITE);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle("Retour");
+        initToolbar();
+        initScrollToolbar();
 
         fillToiletSheet(mToilet);
         addComment(mToilet);
@@ -194,6 +193,60 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
             }
         });
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar =   (Toolbar) findViewById(R.id.toolbar_sheet);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        toolbar.setTitle("Retour");
+    }
+
+    private void initScrollToolbar() {
+        Toolbar toolbarBottom = (Toolbar) findViewById(R.id.scroll_toolbar);
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean can_scroll = sharedPrefs.getBoolean("slide",false);
+
+        if(can_scroll && toolbarBottom != null) {
+            toolbarBottom.setVisibility(View.GONE);
+            return;
+        }
+
+        ImageButton up = (ImageButton) findViewById(R.id.upList);
+        if (up != null) {
+            up.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+                    if (scrollView != null) {
+                        int scrollViewHeight = scrollView.getHeight();
+                        int dy = scrollViewHeight / 2;
+                        scrollView.smoothScrollBy(0, -dy);
+                    }
+                }
+            });
+        }
+
+        ImageButton down = (ImageButton) findViewById(R.id.downList);
+        if (down != null) {
+            down.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+                    if (scrollView != null) {
+                        int scrollViewHeight = scrollView.getHeight();
+                        int dy = scrollViewHeight / 2;
+                        scrollView.smoothScrollBy(0, dy);
+                    }
+                }
+            });
+        }
     }
 
     @Override
