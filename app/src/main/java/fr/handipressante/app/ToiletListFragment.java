@@ -68,19 +68,20 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         getActivity().findViewById(R.id.upList).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"up", Toast.LENGTH_SHORT).show();
+                int offset = computeVisibleItemCount();
+                getListView().smoothScrollByOffset(-offset);
             }
         });
         getActivity().findViewById(R.id.downList).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(getContext(),"down", Toast.LENGTH_SHORT).show();
+                int offset = computeVisibleItemCount();
+                getListView().smoothScrollByOffset(offset);
             }
         });
 
         mToiletCache = new ArrayList<>();
-        mAdapter = new ToiletListAdapter(getActivity(), mToiletCache);
+        mAdapter = new ToiletListAdapter(getContext().getApplicationContext(), mToiletCache);
         //mAdapter = new ToiletListAdapter(getActivity(), DataModel.instance().getNearbyToilets());
         //DataModel.instance().addNearbyToiletsListener(adapter);
 
@@ -161,6 +162,18 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             outState.putParcelable("current_location", mCurrentGeopoint);
 
         Log.i("ToiletListFragment", "Instance state saved");
+    }
+
+    private int computeVisibleItemCount() {
+        if (mToiletCache.isEmpty())
+            return 0;
+
+        int listViewHeight = getListView().getHeight();
+        View listItem = mAdapter.getView(0, null, getListView());
+        listItem.measure(0, 0);
+        int childItemHeight = listItem.getMeasuredHeight() + getListView().getDividerHeight();
+
+        return listViewHeight / childItemHeight;
     }
 
     private boolean startLocationUpdates() throws SecurityException {
