@@ -9,12 +9,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_below="@+id/toolbar_mod_sheet">
+    android:layout_below="@id/toolbar_mod_sheet">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -92,7 +92,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:textSize="18dp" />
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -178,7 +178,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/activity_horizontal_margin"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Propreté"
+                            android:text="@string/cleanliness"
                             android:textColor="#be3733"
                             android:enabled="false" />
 
@@ -237,7 +237,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/activity_horizontal_margin"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Equipement"
+                            android:text="@string/facilities"
                             android:textColor="#be3733"/>
 
                         <LinearLayout
@@ -293,7 +293,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/activity_horizontal_margin"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Accessibilité du lieu"
+                            android:text="@string/place_accessibility"
                             android:textColor="#be3733"/>
 
                         <LinearLayout

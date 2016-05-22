@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import com.github.paolorotolo.appintro.AppIntro2;
+import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
 /**
  * Created by marc on 13/04/2016.
  */
-public class FirstRun extends AppIntro2 {
+public class FirstRun extends AppIntro {
 
     // Please DO NOT override onCreate. Use init
     @Override
@@ -22,17 +22,19 @@ public class FirstRun extends AppIntro2 {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
-        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.g2, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.g4, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.g3, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.g3, Color.GRAY));
-        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.g1, Color.GRAY));
+        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.g2, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.g4, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.g3, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.g3, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.g1, Color.parseColor("#164F86")));
 
         // OPTIONAL METHODS
 
         // Override bar/separator color
-        //setBarColor(Color.parseColor("#3F51B5"));
-        //setSeparatorColor(Color.parseColor("#2196F3"));
+        setBarColor(Color.parseColor("#D32F2F"));
+        setSeparatorColor(Color.parseColor("#164F86"));
+        setSkipText("Passer");
+        setDoneText("Ok");
 
         // SHOW or HIDE the statusbar
         showStatusBar(true);
@@ -79,5 +81,11 @@ public class FirstRun extends AppIntro2 {
     @Override
     public void onSlideChanged() {
         // Do something when slide is changed
+    }
+
+    @Override
+    public void onSkipPressed(){
+        loadMainActivity();
+        finish();
     }
 }

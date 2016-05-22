@@ -8,6 +8,7 @@ package fr.handipressante.app;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,11 +16,19 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.support.v4.app.ListFragment;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
@@ -32,7 +41,6 @@ import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 
-
 public class ToiletListFragment extends ListFragment implements LocationListener {
     private LocationManager mLocationManager;
     private String mProvider;
@@ -41,10 +49,35 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     private ToiletListAdapter mAdapter;
     private List<Toilet> mToiletCache;
 
+    SharedPreferences sharedPrefs;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("ToiletListFragment", "onActivityCreated");
+
+        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.bottom_toolbar);
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        boolean can_scroll = sharedPrefs.getBoolean("slide",false);
+
+        if(can_scroll) {
+            toolbarBottom.setVisibility(View.GONE);
+        }
+
+        getActivity().findViewById(R.id.upList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(),"up", Toast.LENGTH_SHORT).show();
+            }
+        });
+        getActivity().findViewById(R.id.downList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getContext(),"down", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         mToiletCache = new ArrayList<>();
         mAdapter = new ToiletListAdapter(getActivity(), mToiletCache);
@@ -202,6 +235,22 @@ public class ToiletListFragment extends ListFragment implements LocationListener
                 setListAdapter(mAdapter);
             }
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        return inflater.inflate(R.layout.fragment_list, container, false); }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intentHelp = new Intent(getContext(), HelpSlideList.class);
+                startActivity(intentHelp);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class LoadDatabaseTask extends AsyncTask<Void, Void, List<Toilet>> {

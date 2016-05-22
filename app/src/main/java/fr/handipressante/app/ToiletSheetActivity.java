@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.View;
@@ -225,13 +226,16 @@ public class ToiletSheetActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.modification:
+         /*   case R.id.modification:
                 //Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
                 Intent intent = new Intent(getApplicationContext(), NameActivity.class);
                 intent.putExtra("toilet", mToilet);
                 intent.putExtra("new", false);
                 //Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                startActivity(intent);*/
+            case R.id.help:
+                Intent intentHelp = new Intent(getApplicationContext(), HelpSlideToiletSheet.class);
+                startActivity(intentHelp);
             break;
             // Something else
             default:
@@ -242,11 +246,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
         // Inflate the menu; this adds items to the action bar if it is present.
         /*MenuItem item_mod = menu.add(Menu.NONE, R.id.modification,1,R.string.modification);
         item_mod.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 
-        return super.onCreateOptionsMenu(menu);
+        //return super.onCreateOptionsMenu(menu);
     }
 
     public void fillToiletSheet(Toilet toilet) {

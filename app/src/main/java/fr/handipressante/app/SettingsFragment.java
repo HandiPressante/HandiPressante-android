@@ -43,7 +43,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         //List Preferences TODO: needs to be final?,
         //
-        final ListPreference buttonSize = (ListPreference) findPreference( "button_size");
+        final ListPreference buttonSize = (ListPreference) findPreference("button_size");
         if(buttonSize != null)
         {
             buttonSize.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -58,11 +58,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             });
         }
 
-
         getPreferenceManager().findPreference("font_size").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 Intent intent = new Intent(Settings.ACTION_DISPLAY_SETTINGS);
+                startActivity(intent);
+                return false;
+            }
+        });
+
+        getPreferenceManager().findPreference("color").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 startActivity(intent);
                 return false;
             }

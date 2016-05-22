@@ -21,6 +21,12 @@
             android:summary="Cliquer pour accéder aux paramètres généraux"
             android:defaultValue="false">
         </Preference>/>
+        <Preference
+            android:key="color"
+            android:title="Adapter les couleurs"
+            android:summary="Cliquer pour accéder aux paramètres d'accessibilité"
+            android:defaultValue="false">
+        </Preference>/>
         <ListPreference
             android:key="button_size"
             android:dialogTitle="Dimension des boutons"

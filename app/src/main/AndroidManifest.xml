@@ -54,10 +54,13 @@
             -->
         </activity>
         <activity android:name=".ToiletSheetActivity" />
-        <activity android:name=".ModificationSheet">
+        <activity android:name=".ModificationSheet"/>
+        <activity android:name=".HelpSlideList"/>
+        <activity android:name=".HelpSlideToiletSheet"/>
+        <activity android:name=".HelpSlideMap"/>
 
             <!-- android:theme="@style/Base.Theme.AppCompat" -->
-        </activity>
+
         <activity android:name=".FirstRun" android:noHistory="true"/>
 
         <provider

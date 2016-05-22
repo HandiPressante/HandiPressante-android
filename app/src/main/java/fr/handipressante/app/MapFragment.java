@@ -24,6 +24,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +59,6 @@ import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.AddToiletDialog;
-
 
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
@@ -106,6 +108,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         Log.i("MapFragment", "onCreateView");
 
         mResourceProxy = new ResourceProxyImpl(getContext().getApplicationContext());
+        setHasOptionsMenu(true);
+
 
         //add layout with map and Arrows (by default)
         RelativeLayout rl = (RelativeLayout) inflater.inflate(R.layout.fragment_map, container, false);
@@ -206,6 +210,17 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         return rl;
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intentHelp = new Intent(getContext(), HelpSlideMap.class);
+                startActivity(intentHelp);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
