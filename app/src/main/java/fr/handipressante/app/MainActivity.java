@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.app.FragmentManager;
 
@@ -35,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    private MainFragment mMainFragment = new MainFragment();
-    private SettingsFragment mSettingsFragment = new SettingsFragment();
-    private MemoListFragment mMemoListFragment = new MemoListFragment();
 
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
@@ -190,24 +187,22 @@ public class MainActivity extends AppCompatActivity {
 
     // position 0 is a picture
     private void selectItem(int position) {
+        Fragment newFragment = null;
+
         if (position == 1) {
-            //removes frag Fragment if created before, because not compatible TODO: improve selectItem ?
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, mMainFragment)
-                    .commit();
-
+            newFragment = new MainFragment();
         } else if (position == 2) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.content_frame, mSettingsFragment)
-                    .commit();
-            PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
-
+            newFragment = new SettingsFragment();
+            // TODO : explain this line because it crashes the app
+            //PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.settings, false);
         } else if (position == 3) {
+            newFragment = new MemoListFragment();
+        }
+
+        if (newFragment != null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.content_frame, mMemoListFragment)
+                    .replace(R.id.content_frame, newFragment)
                     .commit();
         }
 
@@ -215,6 +210,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setItemChecked(position, true);
         int pos = position-1;
         setTitle(mTitles[pos]);
+
+        // Wait completed transaction before closing the drawer
+        getSupportFragmentManager().executePendingTransactions();
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 

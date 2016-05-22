@@ -83,9 +83,9 @@ public class NameActivity extends AppCompatActivity {
         if (toiletName.isEmpty()) {
             valid = false;
             error = getString(R.string.required_field);
-        } else if (toiletName.length() > 30) {
+        } else if (toiletName.length() > 40) {
             valid = false;
-            error = getResources().getQuantityString(R.plurals.maxchars, 30, 30);
+            error = getResources().getQuantityString(R.plurals.maxchars, 40, 40);
         }
 
         TextView errorView = (TextView) findViewById(R.id.error);

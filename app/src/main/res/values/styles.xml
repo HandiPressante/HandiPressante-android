@@ -12,7 +12,7 @@
         <!-- colorPrimary is used for coloring the Toolbar -->
         <item name="colorPrimary">#E53935</item>
         <item name="colorPrimaryDark">#D32F2F</item>
-        <item name="colorAccent">@android:color/holo_blue_dark</item>
+        <item name="colorAccent">#164F86</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 

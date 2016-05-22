@@ -99,8 +99,12 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         mMarkerIconAccessible = ContextCompat.getDrawable(getActivity().getApplicationContext(), Converters.pmrPinFromBoolean(true));
         mMarkerIconNotAccessible = ContextCompat.getDrawable(getActivity().getApplicationContext(), Converters.pmrPinFromBoolean(false));
 
-        BitmapDrawable clusterIcon = (BitmapDrawable) ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.cluster_full_mini);
-        mClusterIcon = clusterIcon.getBitmap();
+        BitmapDrawable drawable = (BitmapDrawable) ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.cluster_full);
+
+        // Computing 48dp size in pixels
+        final float scale = getResources().getDisplayMetrics().density;
+        int sizeInPx = (int) (48 * scale + 0.5f);
+        mClusterIcon = Bitmap.createScaledBitmap(drawable.getBitmap(), sizeInPx, sizeInPx, true);
     }
 
     @Override
