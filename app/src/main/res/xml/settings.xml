@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="tuto"
+        android:title="Voir le guide" />
+
     <PreferenceCategory
         android:title="Ergonomie"
         android:key="acessibility">
-        <SwitchPreferenceCompat
-            android:key="first_run"
-            android:title="Aide au démarrage"
-            android:summary="active le tutoriel à chaque démarrage"
-            android:defaultValue="true"
-            android:switchTextOn="On"
-            android:switchTextOff="Off"/>
+
         <CheckBoxPreference
-            android:key="slide"
-            android:title="Active le glissement avec les doigts"
-            android:summary="Si désactivé, remplacé par des boutons de navigation"
+            android:key="scroll_help"
+            android:title="Aide à la navigation"
+            android:summary="Ajoute des boutons de navigation"
             android:defaultValue="true"/>
+
         <Preference
             android:key="font_size"
             android:title="Taille de la police"
             android:summary="Cliquer pour accéder aux paramètres généraux"
-            android:defaultValue="false">
-        </Preference>/>
+            android:defaultValue="false" />
+
         <Preference
             android:key="color"
             android:title="Adapter les couleurs"
             android:summary="Cliquer pour accéder aux paramètres d'accessibilité"
-            android:defaultValue="false">
-        </Preference>/>
+            android:defaultValue="false" />
+
         <ListPreference
             android:key="button_size"
             android:dialogTitle="Dimension des boutons"
@@ -34,7 +33,6 @@
             android:entryValues="@array/array_settings_size_values"
             android:title="Taille des boutons"
             android:summary="@string/button_size_value"
-            android:defaultValue="false">
-        </ListPreference>/>
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>

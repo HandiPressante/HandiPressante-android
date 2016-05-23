@@ -20,16 +20,11 @@ import android.widget.Toast;
 /**
  * Created by Nico on 19/10/2015.
  */
-public class SettingsFragment extends PreferenceFragmentCompat implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
-
-    private Context myContext;
-    SharedPreferences mPrefs;
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onStart(){
         super.onStart();
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Override
@@ -37,12 +32,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        for (int i = 0; i < getPreferenceScreen().getPreferenceCount(); i++) {
-            initSummary(getPreferenceScreen().getPreference(i));
-        }
-
-        //List Preferences TODO: needs to be final?,
-        //
         final ListPreference buttonSize = (ListPreference) findPreference("button_size");
         if(buttonSize != null)
         {
@@ -57,6 +46,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 }
             });
         }
+
+        getPreferenceManager().findPreference("tuto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getActivity(), FirstRun.class);
+                startActivity(intent);
+                return false;
+            }
+        });
 
         getPreferenceManager().findPreference("font_size").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -82,47 +80,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        // Set up a listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updatePreferences(findPreference(key));
-    }
-
-    private void initSummary(Preference p) {
-        if (p instanceof PreferenceCategory) {
-            PreferenceCategory cat = (PreferenceCategory) p;
-            for (int i = 0; i < cat.getPreferenceCount(); i++) {
-                initSummary(cat.getPreference(i));
-            }
-        } else {
-            updatePreferences(p);
-        }
-    }
-
-    private void updatePreferences(Preference p) {
-        if (p instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) p;
-            p.setSummary(listPref.getEntry());
-        }
-
-        if (p instanceof CheckBoxPreference) {
-            CheckBoxPreference checkPref = (CheckBoxPreference) p;
-            ((CheckBoxPreference) p).setChecked(checkPref.isChecked());
-        }
-
-        if (p instanceof SwitchPreferenceCompat) {
-            SwitchPreferenceCompat switchPref = (SwitchPreferenceCompat) p;
-            ((SwitchPreferenceCompat) p).setChecked(switchPref.isChecked());
-        }
     }
 }
 
