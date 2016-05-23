@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:style="http://schemas.android.com/apk/res-auto">
     <Preference
         android:key="tuto"
         android:title="Voir le guide" />
 
     <PreferenceCategory
         android:title="Ergonomie"
-        android:key="acessibility">
+        android:key="accessibility">
 
         <CheckBoxPreference
             android:key="scroll_help"
@@ -16,13 +17,13 @@
 
         <Preference
             android:key="font_size"
-            android:title="Taille de la police"
-            android:summary="Cliquer pour accéder aux paramètres généraux"
-            android:defaultValue="false" />
-
+            android:title="Affichage"
+            android:summary="Cliquer pour accéder aux paramètres d'affichage"
+            android:defaultValue="false">
+        </Preference>/>
         <Preference
             android:key="color"
-            android:title="Adapter les couleurs"
+            android:title="Accessibilité"
             android:summary="Cliquer pour accéder aux paramètres d'accessibilité"
             android:defaultValue="false" />
 
@@ -34,5 +35,25 @@
             android:title="Taille des boutons"
             android:summary="@string/button_size_value"
             android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Filtres"
+        android:key="filters">
+        <ListPreference
+            android:key="pmr_filter"
+            android:dialogTitle="Choisir la catégorie"
+            android:entries="@array/array_settings_pmr"
+            android:entryValues="@array/array_settings_pmr_values"
+            android:title="Choix type de toilettes"
+            android:summary="@string/pmr_value"
+            android:defaultValue="2" />
+        <ListPreference
+            android:key="money_filter"
+            android:dialogTitle="Choisir la catégorie"
+            android:entries="@array/array_settings_money"
+            android:entryValues="@array/array_settings_money_values"
+            android:title="Toilettes payantes"
+            android:summary="@string/money_value"
+            android:defaultValue="2" />
     </PreferenceCategory>
 </PreferenceScreen>

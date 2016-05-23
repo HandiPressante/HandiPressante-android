@@ -33,22 +33,42 @@
     <string name="help">Aide</string>
 
     <string name="button_size_value">Cliquer pour accéder aux modifications</string>
+    <string name="pmr_value">Cliquer pour filtrer ou non les toilettes accessibles</string>
+    <string name="money_value">Cliquer pour filtrer ou non les toilettes payantes</string>
 
+
+    <string-array name="array_settings_pmr_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="array_settings_money_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
     <string-array name="array_settings_size_values">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
     </string-array>
 
     <string-array name="array_settings_size_entries">
-        <item> Très Petit</item>
-        <item> Petit</item>
-        <item> Moyen</item>
+        <item> Normal</item>
         <item> Grand</item>
-        <item> Très grand</item>
+    </string-array>
+
+    <string-array name="array_settings_pmr">
+        <item> Handicapé</item>
+        <item> Tout utilisateur</item>
+        <item> Les deux </item>
+    </string-array>
+
+    <string-array name="array_settings_money">
+        <item>Gratuit</item>
+        <item>Payant</item>
+        <item>Les deux</item>
     </string-array>
 
     <string-array name="button_map_size_values">
@@ -63,6 +83,15 @@
         <item>Home</item>
         <item>Réglages</item>
         <item>Mémos</item>
+    </string-array>
+
+    <string-array name="array_rating_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
 
     <string name="preference_file_key">fr.handipressante.app.PREFERENCE_FILE_KEY</string>
@@ -111,15 +140,6 @@
     <string name="place_accessibility">Accessibilité du lieu</string>
     <string name="description">Description</string>
     <string name="toilet_name">Nom des toilettes</string>
-
-    <string-array name="array_rating_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
 
     <string name="toiletrating_explanation">
         Veuillez attribuer une note pour chaque critère.
