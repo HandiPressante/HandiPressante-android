@@ -29,6 +29,7 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">Ok</string>
+    <string name="cancel">Annuler</string>
 
     <string name="help">Aide</string>
 
@@ -153,5 +154,8 @@
 
     <string name="is_there_logo">Le logo est-il présent?</string>
     <string name="powered_by">Propulsé par: INSA Rennes</string>
+
+    <string name="confirm_send">Confirmation de l\'envoi</string>
+    <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>
 
 </resources>

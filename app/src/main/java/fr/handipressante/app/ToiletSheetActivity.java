@@ -1,5 +1,6 @@
 package fr.handipressante.app;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -7,11 +8,14 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.os.Bundle;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,12 +33,18 @@ import android.support.v7.widget.Toolbar;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
+import fr.handipressante.app.ToiletEdition.AddToiletDialog;
+import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
 import fr.handipressante.app.ToiletEdition.RatingActivity;
@@ -45,6 +55,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
     final int REQUEST_TOILET_EDIT = 2;
 
     SharedPreferences sharedPrefs;
+
+    private String mCurrentPhotoPath;
 
     //TODO:finir de changer l'enum en liste
    /* public static ArrayList<ImageView> imgList = new ArrayList<>();
@@ -150,20 +162,26 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 }
             }
         });
-        //opens camera app
-        //TODO: Save thumbnail in carousel(viewpager) hidden for test at pole saint helier
-        /*findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                //Toast.makeText(getApplicationContext(), "Open camera App", Toast.LENGTH_SHORT ).show();
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
 
-            }
-            }
-        });*/
+                ConfirmPhotoDialogFragment dialogFragment = new ConfirmPhotoDialogFragment();
+                dialogFragment.setListener(new ConfirmPhotoDialogFragment.ConfirmPhotoDialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        dispatchTakePictureIntent();
+                    }
 
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+
+                    }
+                });
+                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_send));
+            }
+        });
 
         findViewById(R.id.edit_toilet).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,16 +267,62 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+
+        File storageDir;
+        if (Environment.getExternalStorageState().equals("mounted")) {
+            // TODO : using this dir (not visible from gallery) is better, but managing is then needed
+            // storageDir = getExternalCacheDir();
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        } else {
+            storageDir = getFilesDir();
+        }
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private void rescaleAndUploadPhoto() {
+        
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            ImageView pics= (ImageView) findViewById(R.id.picture_block2);
-            if(pics != null) {
-                ((BitmapDrawable)pics.getDrawable()).getBitmap().recycle();
-            }
-            pics.setImageBitmap(imageBitmap);
+
+            Toast.makeText(this, "Photo path : " + mCurrentPhotoPath, Toast.LENGTH_SHORT).show();
+
         } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
             if (toilet != null) {
