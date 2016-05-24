@@ -16,6 +16,7 @@ public class Toilet implements Parcelable {
     private Boolean _adapted;
     private String _address;
     private GeoPoint _coord;
+    private Boolean _charged;
 
     private String _description;
 
@@ -32,6 +33,7 @@ public class Toilet implements Parcelable {
         _adapted = false;
         _address = "Undefined";
         _coord = new GeoPoint(0, 0);
+        _charged = false;
 
         _description = "";
         _rankCleanliness = -1;
@@ -44,6 +46,7 @@ public class Toilet implements Parcelable {
         _adapted = adapted;
         _address = address;
         _coord = coord;
+        _charged = false;
 
         _description = "";
         _rankCleanliness = -1;
@@ -56,6 +59,7 @@ public class Toilet implements Parcelable {
         _adapted = in.readByte() != 0;
         _address = in.readString();
         _coord = new GeoPoint(in.readDouble(), in.readDouble());
+        _charged = false;
 
         _description = in.readString();
         _rankCleanliness = in.readInt();
@@ -120,6 +124,10 @@ public class Toilet implements Parcelable {
 
     public Boolean isAdapted() {
         return _adapted;
+    }
+
+    public Boolean isCharged(){
+        return _charged;
     }
 
     public void setAdapted(Boolean adapted) {

@@ -58,6 +58,18 @@ public class Converters {
         }
     }
 
+
+    /**
+    * Return charged resource corresponding to a charged state
+    * @param charged  state
+    * @return charged resource
+    */
+    public static Integer chargedFromBoolean(Boolean charged) {
+        if (charged) {
+            return R.drawable.ic_euro_symbol_white_48dp;
+        } else{ return 0 ;}
+    }
+
     /**
      * Return formatted distance string
      * @param distance Distance in meters

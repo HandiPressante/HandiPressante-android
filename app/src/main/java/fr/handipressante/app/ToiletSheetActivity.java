@@ -58,6 +58,7 @@ import fr.handipressante.app.Server.MultipartRequest;
 import fr.handipressante.app.Server.RequestManager;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.CommentEdition;
+import fr.handipressante.app.ToiletEdition.ConfirmDeleteComment;
 import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
@@ -122,6 +123,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         fillToiletSheet(mToilet);
         addComment(mToilet);
+        deleteComment(mToilet);
 
         ToiletDownloader downloader = new ToiletDownloader(this);
         downloader.requestToilet(mToilet.getId(), new Downloader.Listener<List<Toilet>>() {
@@ -225,6 +227,18 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), RatingActivity.class);
                 intent.putExtra("toilet", mToilet);
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        findViewById(R.id.delete_comment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDeleteComment deleteDialog = new ConfirmDeleteComment();
+                Bundle args = new Bundle();
+                args.putParcelable("toilet", mToilet);
+                deleteDialog.setArguments(args);
+
+                deleteDialog.show(getSupportFragmentManager(),"test");
             }
         });
 
@@ -415,6 +429,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
             handicapped.setImageResource(R.drawable.not_handicap_icon);
         }
 
+        ImageView charged= (ImageView) findViewById(R.id.charged);
+        if (toilet.isCharged()){
+            charged.setImageResource(R.drawable.ic_euro_symbol_white_48dp);
+        }
+
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
         name.setText(toilet.getAddress());
@@ -422,7 +441,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
         if(toilet.getDescription().isEmpty()){
-            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !"); // TODO : String res
+            description.setText(R.string.still_no_description);
             description.setTypeface(null, Typeface.ITALIC);
         }else{
             description.setText(toilet.getDescription());
@@ -492,7 +511,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     public void addComment(Toilet toilet){
         LinearLayout container = (LinearLayout) findViewById(R.id.comments_layout);
-        boolean comment = false;
+        boolean comment = true;
 
         if (comment) {
             // Create LinearLayout
@@ -535,10 +554,21 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
             // Create TextView for name
             TextView no_comment = new TextView(this);
-            no_comment.setText(" Il n'y a pas encore de commentaires pour ces toilettes !");
+            no_comment.setText(R.string.still_no_comment);
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
+    }
+
+    public void deleteComment(Toilet toilet){
+        ImageButton deleteButton = (ImageButton)findViewById(R.id.delete_comment);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Bouton pour supprimer un commentaire", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**

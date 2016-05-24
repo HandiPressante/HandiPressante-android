@@ -460,18 +460,25 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
     // create a new marker
     private Marker createMarker(final Toilet t, CustomInfoWindow infoWindow) {
+
         Marker newMarker = new Marker(mMapView);
         newMarker.setInfoWindow(infoWindow);
+        ImageView charged = (ImageView)infoWindow.getView().findViewById(R.id.charged);
+        ImageView rank = (ImageView)infoWindow.getView().findViewById(R.id.rank);
         newMarker.setPosition(t.getCoordinates());
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        newMarker.setTitle(t.getAddress());
-        newMarker.setSnippet("snippet");
-        //newMarker.setSubDescription("300 m");
-        newMarker.setImage(getResources().getDrawable(Converters.rankFromInteger(t.getRankAverage()))); //getResources().getDrawable(R.drawable.star_five)
+        //newMarker.setSnippet("snippet");
+        rank.setImageDrawable(getResources().getDrawable(Converters.rankFromInteger(t.getRankAverage())));
         if (t.isAdapted()) {
             newMarker.setIcon(mMarkerIconAccessible);
         } else {
             newMarker.setIcon(mMarkerIconNotAccessible);
+        }
+
+        if (t.isCharged()){
+            charged.setImageResource(R.drawable.ic_euro_symbol_white_48dp);
+        } else {
+            charged.setImageResource(0);
         }
 
         return newMarker;

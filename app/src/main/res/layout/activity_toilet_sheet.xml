@@ -6,7 +6,6 @@
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar_sheet" />
 
-
     <include layout="@layout/bottom_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -107,6 +106,15 @@
                 android:layout_alignTop="@id/photo_button"
                 android:layout_toLeftOf="@id/photo_button"
                 android:layout_toStartOf="@id/photo_button" />
+
+            <ImageView
+                android:enabled="false"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/charged"
+                android:layout_centerVertical="true"
+                android:layout_alignLeft="@+id/toilet_name"
+                android:layout_alignStart="@+id/toilet_name" />
 
         </RelativeLayout>
 
@@ -334,9 +342,20 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:id="@+id/comments_layout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/delete_comment"
                 android:layout_below="@+id/add_comment" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_comment"
+                android:src="@drawable/ic_action_delete"
+                android:layout_alignTop="@id/comments_layout"
+                android:background="@android:color/transparent"
+                android:layout_alignParentRight="true" />
 
                 <!-- IMPORTANT : LOOK OF THE COMMENT BUBBLE -->
                 <!--<LinearLayout
