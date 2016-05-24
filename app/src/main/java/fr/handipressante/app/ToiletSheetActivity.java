@@ -3,6 +3,7 @@ package fr.handipressante.app;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -273,7 +274,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         String imageFileName = "JPEG_" + timeStamp;
 
         File storageDir;
-        if (Environment.getExternalStorageState().equals("mounted")) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // TODO : using this dir (not visible from gallery) is better, but managing is then needed
             // storageDir = getExternalCacheDir();
             storageDir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
@@ -293,6 +294,14 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void dispatchTakePictureIntent() {
+        // Checking camera availability
+        if (!getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Toast.makeText(getApplicationContext(),
+                    "Désolé ! Votre appareil ne gère pas de caméra.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -314,7 +323,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void rescaleAndUploadPhoto() {
-        
+
     }
 
     @Override
