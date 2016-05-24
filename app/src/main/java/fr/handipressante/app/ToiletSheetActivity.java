@@ -1,5 +1,7 @@
 package fr.handipressante.app;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +11,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.os.Bundle;
@@ -18,6 +22,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,13 +39,21 @@ import android.support.v7.widget.Toolbar;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import fr.handipressante.app.Data.Memo;
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
@@ -330,7 +343,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            Toast.makeText(this, "Photo path : " + mCurrentPhotoPath, Toast.LENGTH_SHORT).show();
+            new CompressAndUploadPhotoTask().execute();
 
         } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
@@ -514,4 +527,87 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
 
+    private ProgressDialog mPhotoUploadDialog;
+    private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
+            mPhotoUploadDialog.setTitle("Veuillez patienter");
+            mPhotoUploadDialog.setMessage("Envoi du fichier en cours ...");
+            mPhotoUploadDialog.setIndeterminate(false);
+            mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            mPhotoUploadDialog.setMax(100);
+            mPhotoUploadDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            if (progress.length != 1) return;
+            mPhotoUploadDialog.setProgress(progress[0]);
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            // TODO : compress image resolution
+            return uploadFile();
+        }
+
+        private String uploadFile() {
+            String serverResponse = null;
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+
+            return "test";
+        }
+
+        private void buildPart(DataOutputStream dataOutputStream, byte[] fileData, String fileName) throws IOException {
+            dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
+            dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\"; filename=\""
+                    + fileName + "\"" + lineEnd);
+            dataOutputStream.writeBytes(lineEnd);
+
+            ByteArrayInputStream fileInputStream = new ByteArrayInputStream(fileData);
+            int bytesAvailable = fileInputStream.available();
+
+            int maxBufferSize = 1024 * 1024;
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            byte[] buffer = new byte[bufferSize];
+
+            // read file and write it into form...
+            int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                dataOutputStream.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            dataOutputStream.writeBytes(lineEnd);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            mPhotoUploadDialog.dismiss();
+            showAlert(result);
+        }
+    }
+
+    /**
+     * Method to show alert dialog
+     * */
+    private void showAlert(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message).setTitle("Response from Servers")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // do nothing
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }
