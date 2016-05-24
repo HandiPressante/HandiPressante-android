@@ -108,6 +108,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         fillToiletSheet(mToilet);
         addComment(mToilet);
+        deleteComment(mToilet);
 
         ToiletDownloader downloader = new ToiletDownloader(this);
         downloader.requestToilet(mToilet.getId(), new Downloader.Listener<List<Toilet>>() {
@@ -470,7 +471,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     public void addComment(Toilet toilet){
         LinearLayout container = (LinearLayout) findViewById(R.id.comments_layout);
-        boolean comment = false;
+        boolean comment = true;
 
         if (comment) {
             // Create LinearLayout
@@ -517,6 +518,17 @@ public class ToiletSheetActivity extends AppCompatActivity {
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
+    }
+
+    public void deleteComment(Toilet toilet){
+        ImageButton deleteButton = (ImageButton)findViewById(R.id.delete_comment);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Bouton pour supprimer un commentaire", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 
