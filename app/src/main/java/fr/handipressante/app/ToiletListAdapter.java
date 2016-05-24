@@ -22,6 +22,7 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
         TextView address;
         ImageView rank;
         TextView distance;
+        ImageView charged;
     }
 
     public ToiletListAdapter(Context context, List<Toilet> toilets) {
@@ -44,10 +45,14 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
             if(holder.rank != null) {
                 ((BitmapDrawable)holder.rank.getDrawable()).getBitmap().recycle();
             }
+            if(holder.charged !=null){
+                ((BitmapDrawable)holder.charged.getDrawable()).getBitmap().recycle();
+            }
             holder.pmr = (ImageView) row.findViewById(R.id.pmr);
             holder.address = (TextView) row.findViewById(R.id.address);
             holder.rank = (ImageView) row.findViewById(R.id.rank);
             holder.distance = (TextView) row.findViewById(R.id.distance);
+            holder.charged = (ImageView) row.findViewById(R.id.charged);
 
             row.setTag(holder);
         } else {
@@ -59,6 +64,7 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
         holder.address.setText(toilet.getAddress());
         holder.rank.setImageResource(Converters.rankFromInteger(toilet.getRankAverage()));
         holder.distance.setText(Converters.formattedDistanceFromDouble(toilet.getDistance()));
+        holder.charged.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
 
         return row;
     }

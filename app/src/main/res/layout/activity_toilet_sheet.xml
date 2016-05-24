@@ -108,6 +108,15 @@
                 android:layout_toLeftOf="@id/photo_button"
                 android:layout_toStartOf="@id/photo_button" />
 
+            <ImageView
+                android:enabled="false"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/charged"
+                android:layout_centerVertical="true"
+                android:layout_alignLeft="@+id/toilet_name"
+                android:layout_alignStart="@+id/toilet_name" />
+
         </RelativeLayout>
 
         <!-- Toilet pictures block-->

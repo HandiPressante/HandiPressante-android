@@ -87,7 +87,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
 
         // Get the location manager
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
+        // Define the criteria how to select the location provider -> use
         // default
         Criteria criteria = new Criteria();
         mProvider = mLocationManager.getBestProvider(criteria, true);

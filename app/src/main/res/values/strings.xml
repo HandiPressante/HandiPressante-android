@@ -102,6 +102,9 @@
     <string name="edittoilet_new">Ajout de toilettes</string>
     <string name="edittoilet_edit">Édition de la fiche</string>
 
+    <string name="still_no_comment">Il n\'y a pas encore de commentaires pour ces toilettes !</string>
+    <string name="still_no_description">Ces toilettes n\'ont pas de description ! Soyez le premier à la remplir !</string>
+
     <string name="toiletname_explanation_1">
             Afin de permettre aux autres utilisateurs d\'identifier ces toilettes dans la liste ou sur la carte, il vous faut donner leur donner un nom.
     </string>

@@ -388,6 +388,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
             handicapped.setImageResource(R.drawable.not_handicap_icon);
         }
 
+        ImageView charged= (ImageView) findViewById(R.id.charged);
+        if (toilet.isCharged()){
+            charged.setImageResource(R.drawable.ic_euro_symbol_white_48dp);
+        }
+
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
         name.setText(toilet.getAddress());
@@ -395,7 +400,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
         if(toilet.getDescription().isEmpty()){
-            description.setText("Ces toilettes n'ont pas de description ! Soyez le premier à la remplir !"); // TODO : String res
+            description.setText(R.string.still_no_description);
             description.setTypeface(null, Typeface.ITALIC);
         }else{
             description.setText(toilet.getDescription());
@@ -508,7 +513,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
             // Create TextView for name
             TextView no_comment = new TextView(this);
-            no_comment.setText(" Il n'y a pas encore de commentaires pour ces toilettes !");
+            no_comment.setText(R.string.still_no_comment);
             no_comment.setTypeface(null, Typeface.ITALIC);
             comment_layout.addView(no_comment);
         }
