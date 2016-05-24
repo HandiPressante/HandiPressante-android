@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ToiletEdition.NameActivity"
+    tools:context=".ToiletEdition.AccessibleActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,12 +11,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@+id/toolbar"
         android:background="#eaeaea">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
@@ -34,29 +35,47 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/toilet_name"
+                    android:id="@+id/username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:maxLength="30"
                     android:fontFamily="sans-serif-medium"
-                    android:textSize="15sp"
-                    android:hint="@string/toilet_name"/>
+                    android:textSize="18sp"
+                    android:hint="@string/username"/>
 
                 <TextView
-                    android:id="@+id/error"
+                    android:id="@+id/error_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/validate"
-                    android:textColor="#ea0000"
-                    android:layout_toLeftOf="@+id/validate"
-                    android:layout_toStartOf="@+id/validate" />
+                    android:layout_below="@id/username"
+                    android:textColor="#ea0000"/>
+
+
+                <EditText
+                    android:id="@+id/comment_edition"
+                    android:layout_below="@id/error_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="18sp"
+                    android:hint="@string/comment_edition"/>
+
+                <TextView
+                    android:id="@+id/error_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/comment_edition"
+                    android:textColor="#ea0000"/>
+
 
                 <Button
-                    android:id="@+id/validate"
+                    android:id="@+id/validate_comment"
+                    android:layout_below="@id/error_comment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/toilet_name"
-                    android:layout_alignRight="@+id/toilet_name"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/ok"
                     android:enabled="false"/>
 
@@ -79,23 +98,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="14sp"
-                    android:text="@string/toiletname_explanation_1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="14sp"
-                    android:text="@string/toiletname_explanation_2"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="14sp"
-                    android:text="@string/toiletname_explanation_3"/>
+                    android:text="@string/comment_explanation"/>
 
             </LinearLayout>
 

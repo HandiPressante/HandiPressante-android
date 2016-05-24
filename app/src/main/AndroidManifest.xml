@@ -69,6 +69,8 @@
 
         <activity android:name=".ToiletEdition.NameActivity"
                   android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ToiletEdition.CommentEdition"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".ToiletEdition.AccessibleActivity" />
         <activity android:name=".ToiletEdition.DescriptionActivity"
                   android:windowSoftInputMode="stateHidden"/>
