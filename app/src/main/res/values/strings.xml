@@ -37,6 +37,12 @@
     <string name="pmr_value">Cliquer pour filtrer ou non les toilettes accessibles</string>
     <string name="money_value">Cliquer pour filtrer ou non les toilettes payantes</string>
 
+    <string name="dialog_delete_comment">Pourquoi voulez-vous supprimer ce commentaire?</string>
+    <string-array name="array_why_delete_comment">
+        <item> Ce commentaire est déplacé </item>
+        <item> Ce commentaire est obsolète </item>
+        <item> Autre</item>
+    </string-array>
 
     <string-array name="array_settings_pmr_values">
         <item>0</item>

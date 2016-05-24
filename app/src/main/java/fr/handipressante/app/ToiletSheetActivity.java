@@ -45,6 +45,7 @@ import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 import fr.handipressante.app.ToiletEdition.CommentEdition;
+import fr.handipressante.app.ToiletEdition.ConfirmDeleteComment;
 import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
@@ -212,6 +213,18 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), RatingActivity.class);
                 intent.putExtra("toilet", mToilet);
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        findViewById(R.id.delete_comment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDeleteComment deleteDialog = new ConfirmDeleteComment();
+                Bundle args = new Bundle();
+                args.putParcelable("toilet", mToilet);
+                deleteDialog.setArguments(args);
+
+                deleteDialog.show(getSupportFragmentManager(),"test");
             }
         });
 
