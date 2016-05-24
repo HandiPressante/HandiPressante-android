@@ -8,6 +8,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -63,5 +68,76 @@ public class MultipartRequest extends Request<NetworkResponse> {
     @Override
     public void deliverError(VolleyError error) {
         mErrorListener.onErrorResponse(error);
+    }
+
+    public static class Builder {
+        private final String twoHyphens = "--";
+        private final String lineEnd = "\r\n";
+        private final String boundary = "apiclient-" + System.currentTimeMillis();
+        private final String mimeType = "multipart/form-data;boundary=" + boundary;
+
+        private ByteArrayOutputStream mBos;
+        private DataOutputStream mDos;
+
+        private String mUrl;
+
+        public Builder() {
+            mBos = new ByteArrayOutputStream();
+            mDos = new DataOutputStream(mBos);
+        }
+
+        public MultipartRequest build(Response.Listener<NetworkResponse> listener, Response.ErrorListener errorListener) {
+            byte[] multipartBody = null;
+
+            try {
+                mDos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                multipartBody = mBos.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            MultipartRequest request = new MultipartRequest(mUrl, null, mimeType, multipartBody,
+                    listener, errorListener);
+
+            return request;
+        }
+
+        public void setUrl(String url) {
+            mUrl = url;
+        }
+
+        public void addTextPart(String parameterName, String parameterValue) throws IOException {
+            mDos.writeBytes(twoHyphens + boundary + lineEnd);
+            mDos.writeBytes("Content-Disposition: form-data; name=\"" + parameterName + "\"" + lineEnd);
+            mDos.writeBytes("Content-Type: text/plain; charset=UTF-8" + lineEnd);
+            mDos.writeBytes(lineEnd);
+            mDos.writeBytes(parameterValue + lineEnd);
+        }
+
+        public void addFilePart(String parameterName, byte[] fileData, String fileName) throws IOException {
+            mDos.writeBytes(twoHyphens + boundary + lineEnd);
+            mDos.writeBytes("Content-Disposition: form-data; name=\"photo\"; filename=\""
+                    + fileName + "\"" + lineEnd);
+            mDos.writeBytes(lineEnd);
+
+            ByteArrayInputStream fileInputStream = new ByteArrayInputStream(fileData);
+            int bytesAvailable = fileInputStream.available();
+
+            int maxBufferSize = 1024 * 1024;
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            byte[] buffer = new byte[bufferSize];
+
+            // read file and write it into form...
+            int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                mDos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            mDos.writeBytes(lineEnd);
+        }
     }
 }

@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -19,6 +21,7 @@ import android.provider.MediaStore;
 import android.os.Bundle;
 
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -37,27 +40,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
-import org.osmdroid.util.GeoPoint;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataOutputStream;
+import org.osmdroid.util.GeoPoint;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import fr.handipressante.app.Data.Memo;
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.Server.MultipartRequest;
+import fr.handipressante.app.Server.RequestManager;
 import fr.handipressante.app.Server.ToiletDownloader;
-import fr.handipressante.app.ToiletEdition.AddToiletDialog;
 import fr.handipressante.app.ToiletEdition.CommentEdition;
 import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
@@ -73,6 +72,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     SharedPreferences sharedPrefs;
 
     private String mCurrentPhotoPath;
+    private boolean mReturningPhoto = false;
 
     //TODO:finir de changer l'enum en liste
    /* public static ArrayList<ImageView> imgList = new ArrayList<>();
@@ -311,8 +311,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
+
         return image;
     }
 
@@ -347,13 +347,23 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     private void rescaleAndUploadPhoto() {
 
+        mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
+        mPhotoUploadDialog.setTitle("Veuillez patienter");
+        mPhotoUploadDialog.setMessage("Envoi du fichier en cours ...");
+        mPhotoUploadDialog.setIndeterminate(true);
+        mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mPhotoUploadDialog.show();
+
+        uploadFile();
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            new CompressAndUploadPhotoTask().execute();
+            mReturningPhoto = true;
+            //new CompressAndUploadPhotoTask().execute();
 
         } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
@@ -361,6 +371,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 mToilet = toilet;
                 fillToiletSheet(mToilet);
             }
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (mReturningPhoto) {
+            mReturningPhoto = false;
+            rescaleAndUploadPhoto();
         }
     }
 
@@ -536,18 +555,78 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Helper functions
+     */
+
+    private void uploadFile() {
+        MultipartRequest.Builder builder = new MultipartRequest.Builder();
+        builder.setUrl("http://www.handipressante.fr/api.php/toilet-add-photo");
+
+        Log.i("AddPhoto", "Path : " + mCurrentPhotoPath);
+
+        File photoFile = new File(mCurrentPhotoPath);
+        if (photoFile.exists()) {
+            Log.i("AddPhoto", "File exists");
+        }
+
+        if (photoFile.canRead()) {
+            Log.i("AddPhoto", "Readable");
+        }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        byte[] photoData = byteArrayOutputStream.toByteArray();
+        //byte[] photoData = getFileDataFromDrawable(ToiletSheetActivity.this, R.drawable.logostart);
+
+        try {
+            builder.addTextPart("uuid", "yo");
+            builder.addTextPart("toilet_id", "108");
+            builder.addFilePart("photo", photoData, "photo.jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MultipartRequest request = builder.build(
+                new Response.Listener<NetworkResponse>() {
+                     @Override
+                     public void onResponse(NetworkResponse response) {
+                         Toast.makeText(ToiletSheetActivity.this, "Upload successfully!", Toast.LENGTH_SHORT).show();
+                         mPhotoUploadDialog.dismiss();
+                     }
+                 },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ToiletSheetActivity.this, "Upload failed!\r\n" + error.toString(), Toast.LENGTH_SHORT).show();
+                        mPhotoUploadDialog.dismiss();
+                    }
+                });
+
+        RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+
+    private byte[] getFileDataFromDrawable(Context context, int id) {
+        Drawable drawable = ContextCompat.getDrawable(context, id);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
 
     private ProgressDialog mPhotoUploadDialog;
     private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, String> {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
             mPhotoUploadDialog.setTitle("Veuillez patienter");
-            mPhotoUploadDialog.setMessage("Envoi du fichier en cours ...");
-            mPhotoUploadDialog.setIndeterminate(false);
-            mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mPhotoUploadDialog.setMax(100);
+            mPhotoUploadDialog.setMessage("Compression du fichier en cours ...");
+            mPhotoUploadDialog.setIndeterminate(true);
+            mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mPhotoUploadDialog.show();
         }
 
@@ -559,43 +638,12 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            // TODO : compress image resolution
-            return uploadFile();
+            return compressFile();
         }
 
-        private String uploadFile() {
-            String serverResponse = null;
-
-            HttpClient httpClient = new DefaultHttpClient();
-
+        private String compressFile() {
 
             return "test";
-        }
-
-        private void buildPart(DataOutputStream dataOutputStream, byte[] fileData, String fileName) throws IOException {
-            dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
-            dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\"; filename=\""
-                    + fileName + "\"" + lineEnd);
-            dataOutputStream.writeBytes(lineEnd);
-
-            ByteArrayInputStream fileInputStream = new ByteArrayInputStream(fileData);
-            int bytesAvailable = fileInputStream.available();
-
-            int maxBufferSize = 1024 * 1024;
-            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            byte[] buffer = new byte[bufferSize];
-
-            // read file and write it into form...
-            int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-            while (bytesRead > 0) {
-                dataOutputStream.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-
-            dataOutputStream.writeBytes(lineEnd);
         }
 
         @Override
