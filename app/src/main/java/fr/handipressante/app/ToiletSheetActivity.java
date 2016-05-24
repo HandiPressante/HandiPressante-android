@@ -345,25 +345,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
     }
 
-    private void rescaleAndUploadPhoto() {
-
-        mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
-        mPhotoUploadDialog.setTitle("Veuillez patienter");
-        mPhotoUploadDialog.setMessage("Envoi du fichier en cours ...");
-        mPhotoUploadDialog.setIndeterminate(true);
-        mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mPhotoUploadDialog.show();
-
-        uploadFile();
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
             mReturningPhoto = true;
-            //new CompressAndUploadPhotoTask().execute();
 
         } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
@@ -379,7 +365,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         super.onPostResume();
         if (mReturningPhoto) {
             mReturningPhoto = false;
-            rescaleAndUploadPhoto();
+            new CompressAndUploadPhotoTask().execute();
         }
     }
 
@@ -559,26 +545,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
      * Helper functions
      */
 
-    private void uploadFile() {
+    private void uploadPhoto(byte[] photoData) {
         MultipartRequest.Builder builder = new MultipartRequest.Builder();
         builder.setUrl("http://www.handipressante.fr/api.php/toilet-add-photo");
-
-        Log.i("AddPhoto", "Path : " + mCurrentPhotoPath);
-
-        File photoFile = new File(mCurrentPhotoPath);
-        if (photoFile.exists()) {
-            Log.i("AddPhoto", "File exists");
-        }
-
-        if (photoFile.canRead()) {
-            Log.i("AddPhoto", "Readable");
-        }
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-        byte[] photoData = byteArrayOutputStream.toByteArray();
-        //byte[] photoData = getFileDataFromDrawable(ToiletSheetActivity.this, R.drawable.logostart);
 
         try {
             builder.addTextPart("uuid", "yo");
@@ -592,14 +561,14 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 new Response.Listener<NetworkResponse>() {
                      @Override
                      public void onResponse(NetworkResponse response) {
-                         Toast.makeText(ToiletSheetActivity.this, "Upload successfully!", Toast.LENGTH_SHORT).show();
+                         Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
                          mPhotoUploadDialog.dismiss();
                      }
                  },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ToiletSheetActivity.this, "Upload failed!\r\n" + error.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
                         mPhotoUploadDialog.dismiss();
                     }
                 });
@@ -607,24 +576,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
         RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
 
-
-    private byte[] getFileDataFromDrawable(Context context, int id) {
-        Drawable drawable = ContextCompat.getDrawable(context, id);
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
-    }
-
     private ProgressDialog mPhotoUploadDialog;
-    private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, String> {
+    private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, byte[]> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
             mPhotoUploadDialog.setTitle("Veuillez patienter");
-            mPhotoUploadDialog.setMessage("Compression du fichier en cours ...");
+            mPhotoUploadDialog.setMessage("Compression en cours ...");
             mPhotoUploadDialog.setIndeterminate(true);
             mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mPhotoUploadDialog.show();
@@ -637,35 +597,64 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected byte[] doInBackground(Void... params) {
             return compressFile();
         }
 
-        private String compressFile() {
+        private byte[] compressFile() {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(mCurrentPhotoPath, options);
 
-            return "test";
+            // Calculate inSampleSize
+
+            if (options.outHeight >= options.outWidth) {
+                options.inSampleSize = calculateInSampleSize(options, 720, 1280);
+            } else {
+                options.inSampleSize = calculateInSampleSize(options, 1280, 720);
+            }
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+
+            return byteArrayOutputStream.toByteArray();
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(byte[] result) {
             mPhotoUploadDialog.dismiss();
-            showAlert(result);
-        }
-    }
 
-    /**
-     * Method to show alert dialog
-     * */
-    private void showAlert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message).setTitle("Response from Servers")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // do nothing
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+            mPhotoUploadDialog.setMessage("Envoi en cours ...");
+            mPhotoUploadDialog.show();
+
+            uploadPhoto(result);
+        }
+
+        private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+            // Raw height and width of image
+            final int height = options.outHeight;
+            final int width = options.outWidth;
+            int inSampleSize = 1;
+
+            if (height > reqHeight || width > reqWidth) {
+
+                final int halfHeight = height / 2;
+                final int halfWidth = width / 2;
+
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((halfHeight / inSampleSize) > reqHeight
+                        && (halfWidth / inSampleSize) > reqWidth) {
+                    inSampleSize *= 2;
+                }
+            }
+
+            return inSampleSize;
+        }
     }
 }
