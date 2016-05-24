@@ -118,11 +118,16 @@
         - À défaut, le nom de la rue.
     </string>
 
-    <string name="required_field">Le champs est requis.</string>
+    <string name="required_field">Le champ est requis.</string>
 
     <plurals name="maxchars">
         <item quantity="one">%d caractère maximum.</item>
         <item quantity="other">%d caractères maximum.</item>
+    </plurals>
+
+    <plurals name="minchars">
+        <item quantity="one">%d caractère minimum.</item>
+        <item quantity="other">%d caractères minimum.</item>
     </plurals>
 
     <string name="toiletaccessible_explanation">
@@ -154,6 +159,9 @@
 
     <string name="is_there_logo">Le logo est-il présent?</string>
     <string name="powered_by">Propulsé par: INSA Rennes</string>
+    <string name="comment_edition">Votre commentaire ici</string>
+    <string name="comment_explanation">Veuillez rédiger votre commentaire concernant ces toilettes puis valider en cliquant sur OK.</string>
+    <string name="username">Nom d\'utilisateur</string>
 
     <string name="confirm_send">Confirmation de l\'envoi</string>
     <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>

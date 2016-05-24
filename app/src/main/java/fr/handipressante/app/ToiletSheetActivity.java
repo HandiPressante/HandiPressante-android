@@ -44,6 +44,7 @@ import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.AddToiletDialog;
+import fr.handipressante.app.ToiletEdition.CommentEdition;
 import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
@@ -53,6 +54,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
+    final int REQUEST_ADD_COMMENT = 3;
 
     SharedPreferences sharedPrefs;
 
@@ -211,6 +213,14 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
             }
         });
+
+        findViewById(R.id.add_comment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentEdition.class);
+                startActivityForResult(intent, REQUEST_ADD_COMMENT);
+            }
+        });
     }
 
     private void initToolbar() {
@@ -314,7 +324,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void rescaleAndUploadPhoto() {
-        
+
     }
 
     @Override
