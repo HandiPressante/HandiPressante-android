@@ -103,7 +103,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
 
         // Computing 48dp size in pixels
         final float scale = getResources().getDisplayMetrics().density;
-        int sizeInPx = (int) (48 * scale + 0.5f);
+        int sizeInPx = (int) (64 * scale + 0.5f);
         mClusterIcon = Bitmap.createScaledBitmap(drawable.getBitmap(), sizeInPx, sizeInPx, true);
     }
 
