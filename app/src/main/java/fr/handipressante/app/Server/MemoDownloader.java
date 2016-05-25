@@ -3,6 +3,7 @@ package fr.handipressante.app.Server;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.Cache;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -45,13 +46,6 @@ public class MemoDownloader extends Downloader {
                             }
                         }
 
-                            /*
-                            MemoDAO memoDAO = new MemoDAO(mContext);
-                            memoDAO.open();
-                            memoDAO.save(memos);
-                            memoDAO.close();
-                            */
-
                         listener.onResponse(memoList);
                     }
                 }, new Response.ErrorListener() {
@@ -62,6 +56,14 @@ public class MemoDownloader extends Downloader {
                         error.printStackTrace();
                     }
                 });
+
+        String key = jsObjRequest.getCacheKey();
+        Cache cache = RequestManager.getInstance(mContext).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
+            }
+        }
 
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
