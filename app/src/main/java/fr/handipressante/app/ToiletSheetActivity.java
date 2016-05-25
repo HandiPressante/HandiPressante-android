@@ -2,7 +2,6 @@ package fr.handipressante.app;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,8 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -21,17 +18,13 @@ import android.provider.MediaStore;
 import android.os.Bundle;
 
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +38,6 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
@@ -56,9 +48,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import fr.handipressante.app.Data.Photo;
+import fr.handipressante.app.Data.PhotoDAO;
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.MultipartRequest;
+import fr.handipressante.app.Server.PhotoDownloader;
 import fr.handipressante.app.Server.RequestManager;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.CommentEdition;
@@ -70,6 +65,8 @@ import fr.handipressante.app.ToiletEdition.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;
+    private PhotoPagerAdapter mPhotoAdapter;
+
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
     final int REQUEST_ADD_COMMENT = 3;
@@ -78,40 +75,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     private String mCurrentPhotoPath;
     private boolean mReturningPhoto = false;
-
-    //TODO:finir de changer l'enum en liste
-   /* public static ArrayList<ImageView> imgList = new ArrayList<>();
-
-    public static ArrayList<ImageView> getImgList() {
-        return imgList;
-    }
-*/
-    //enum for Viewpager slider
-    public enum CustomPagerEnum {
-
-        RED(0, R.layout.pics_test),
-        BLUE(1, R.layout.pics_test2),
-        ORANGE(2, R.layout.pics_test);
-
-        private int mTitleResId;
-        private int mLayoutResId;
-
-        CustomPagerEnum(int titleResId, int layoutResId) {
-            mTitleResId = titleResId;
-            mLayoutResId = layoutResId;
-        }
-
-        public int getTitleResId() {
-            return mTitleResId;
-        }
-
-        public int getLayoutResId() {
-            return mLayoutResId;
-        }
-
-    }
-
-    //public static ArrayList<ImageView> listPics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,9 +104,14 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
 
+        mPhotoAdapter = new PhotoPagerAdapter(getApplicationContext());
+
         final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
         if (viewPager != null)
-            viewPager.setAdapter(new CustomPagerAdapter(getApplicationContext()));
+            viewPager.setAdapter(mPhotoAdapter);
+
+        new LoadDatabaseTask().execute();
+        // onPostExecute : data are loaded from the server
     }
 
     @Override
@@ -718,6 +686,95 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
 
             return inSampleSize;
+        }
+    }
+
+
+    private class LoadDatabaseTask extends AsyncTask<Void, Void, List<Photo>> {
+        @Override
+        protected List<Photo> doInBackground(Void... params) {
+            PhotoDAO dao = new PhotoDAO(ToiletSheetActivity.this);
+            dao.open();
+            List<Photo> result = dao.selectByToilet(mToilet.getId());
+            dao.close();
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(List<Photo> photoList) {
+            if (!photoList.isEmpty()) {
+
+                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+                if (viewPager != null)
+                    mPhotoAdapter.swapItems(viewPager, photoList);
+            }
+
+            syncWithServer();
+        }
+    }
+
+    private void syncWithServer() {
+        new PhotoDownloader(getApplicationContext()).downloadPhotoList(mToilet.getId(), new Downloader.Listener<List<Photo>>() {
+            @Override
+            public void onResponse(List<Photo> response) {
+                new UpdatePhotoListTask().execute(response);
+
+                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+                if (viewPager != null)
+                    mPhotoAdapter.swapItems(viewPager, response);
+            }
+        });
+    }
+
+    private class UpdatePhotoListTask extends AsyncTask<List<Photo>, Void, Void> {
+        @Override
+        protected Void doInBackground(List<Photo>... params) {
+            if (params.length != 1) return null;
+
+            List<Photo> photoList = params[0];
+            if (photoList == null) return null;
+
+            PhotoDAO dao = new PhotoDAO(ToiletSheetActivity.this);
+            dao.open();
+            List<Photo> oldPhotoList = dao.selectByToilet(mToilet.getId());
+
+            // Removed photos
+            for (Photo oldPhoto : oldPhotoList) {
+                boolean removed = true;
+                for (Photo photo : photoList) {
+                    if (photo.getId().equals(oldPhoto.getId())) {
+                        removed = false;
+                        break;
+                    }
+                }
+
+                if (removed) {
+                    File file = new File(getFilesDir(), oldPhoto.getLocalPath());
+                    file.delete();
+                    dao.remove(oldPhoto.getId());
+                }
+            }
+
+            // Added photos
+            for (Photo photo : photoList) {
+                boolean updated = false;
+                for (Photo oldPhoto : oldPhotoList) {
+                    if (photo.getId().equals(oldPhoto.getId())) {
+                        updated = true;
+                        break;
+                    }
+                }
+
+                if (updated) {
+                    dao.update(photo);
+                } else {
+                    dao.add(photo);
+                }
+            }
+
+            dao.close();
+            return null;
         }
     }
 }

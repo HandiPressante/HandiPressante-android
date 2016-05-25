@@ -45,4 +45,14 @@ public class DataFactory {
         Memo m = new Memo(id, title, filename, salt);
         return m;
     }
+
+    public Photo createPhoto(JSONObject jsonObject) throws JSONException {
+        int id = jsonObject.getInt("id");
+        int toiletId = jsonObject.getInt("toilet_id");
+        String userId = jsonObject.getString("user_id");
+        String filename = jsonObject.getString("filename");
+        String postdate = jsonObject.getString("postdate");
+
+        return new Photo(id, toiletId, userId, filename, postdate);
+    }
 }
