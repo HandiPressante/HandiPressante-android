@@ -66,7 +66,7 @@ public class Converters {
     */
     public static Integer chargedFromBoolean(Boolean charged) {
         if (charged) {
-            return R.drawable.ic_euro_symbol_white_48dp;
+            return R.drawable.ic_euro_symbol_red;
         } else{ return 0 ;}
     }
 

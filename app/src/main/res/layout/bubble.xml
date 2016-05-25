@@ -31,17 +31,18 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/star_five"
+        android:src="@drawable/no_rate_stars"
         android:id="@+id/rank"
         android:layout_toLeftOf="@+id/charged"
-        android:padding="5dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="2dp" />
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:id="@+id/charged"
-        android:src="@drawable/ic_euro_symbol_white_48dp"
+        android:src="@drawable/ic_euro_symbol_red"
+        android:padding="2dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/bubble_fiche"
         android:layout_alignParentLeft="false"

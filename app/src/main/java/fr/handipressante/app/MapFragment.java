@@ -468,6 +468,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         newMarker.setPosition(t.getCoordinates());
         newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         //newMarker.setSnippet("snippet");
+        //TODO: non géré pour chaque marker
         rank.setImageDrawable(getResources().getDrawable(Converters.rankFromInteger(t.getRankAverage())));
         if (t.isAdapted()) {
             newMarker.setIcon(mMarkerIconAccessible);
@@ -476,7 +477,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         }
 
         if (t.isCharged()){
-            charged.setImageResource(R.drawable.ic_euro_symbol_white_48dp);
+            charged.setImageResource(R.drawable.ic_euro_symbol_red);
         } else {
             charged.setImageResource(0);
         }

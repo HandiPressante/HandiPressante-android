@@ -6,9 +6,10 @@
 
     <ImageView
         android:id="@+id/pmr"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:scaleType="fitCenter"
+        android:padding="5dp"
        />
 
    <TextView

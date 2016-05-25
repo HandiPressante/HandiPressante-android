@@ -431,7 +431,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         ImageView charged= (ImageView) findViewById(R.id.charged);
         if (toilet.isCharged()){
-            charged.setImageResource(R.drawable.ic_euro_symbol_white_48dp);
+            charged.setImageResource(R.drawable.ic_euro_symbol_red);
         }
 
         // Set toilet's name

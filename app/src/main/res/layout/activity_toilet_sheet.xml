@@ -83,7 +83,7 @@
 
             <ImageButton
                 android:enabled="false"
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:id="@+id/photo_button"
                 android:src="@drawable/icon_addpic"
@@ -128,11 +128,25 @@
 
             <!--ajout tests -->
 
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:background="#C82408"
+                android:text="Photos"
+                android:id="@+id/photo_title"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp" />
+
             <ImageView
                 android:id="@+id/previous"
                 android:layout_width="168dp"
                 android:layout_height="40dp"
-                android:src="@drawable/precedent"
+                android:src="@drawable/ic_action_back"
+                android:layout_below="@id/photo_title"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -140,7 +154,8 @@
                 android:id="@+id/next"
                 android:layout_width="168dp"
                 android:layout_height="40dp"
-                android:src="@drawable/suivant"
+                android:src="@drawable/ic_action_next"
+                android:layout_below="@+id/photo_title"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
@@ -175,12 +190,15 @@
             android:layout_marginTop="@dimen/activity_horizontal_margin"
             android:background="@drawable/background_shadow">
 
-            <ImageView
+            <TextView
                 android:layout_width="170dp"
-                android:layout_height="44dp"
-                android:src="@drawable/description_title"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:background="#C82408"
+                android:text="Description"
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/edit_description"
@@ -220,13 +238,16 @@
 
             <!-- NAME of toilet rate block-->
 
-            <ImageView
-                android:id="@+id/rate_title"
-                android:layout_width="208dp"
-                android:layout_height="44dp"
-                android:src="@drawable/rate_title"
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:background="#C82408"
+                android:text="Informations générales"
+                android:id="@+id/rate_title"
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/edit_rate"
@@ -249,7 +270,7 @@
                 android:layout_below="@+id/rate_title"
                 android:fontFamily="sans-serif-medium"
                 android:text="Accessibilité du lieu"
-                android:textColor="#be3733"/>
+                android:textColor="#C82408"/>
 
             <TextView
                 android:id="@+id/cleanliness_label"
@@ -260,7 +281,7 @@
                 android:layout_below="@+id/accessibility_label"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/cleanliness"
-                android:textColor="#be3733" />
+                android:textColor="#C82408" />
 
             <TextView
                 android:id="@+id/facilities_label"
@@ -271,7 +292,7 @@
                 android:layout_below="@+id/cleanliness_label"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/facilities"
-                android:textColor="#be3733"/>
+                android:textColor="#C82408"/>
 
 
             <!-- Criteria rates -->
@@ -325,10 +346,16 @@
             android:background="@drawable/background_shadow">
 
 
-            <ImageView
-                android:layout_width="187dp"
-                android:layout_height="44dp"
-                android:src="@drawable/comment_title" />
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="30dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:background="#C82408"
+                android:text="Commentaires"
+                android:id="@+id/comment_title"
+                android:gravity="center" />
 
             <Button
                 android:id="@+id/add_comment"
