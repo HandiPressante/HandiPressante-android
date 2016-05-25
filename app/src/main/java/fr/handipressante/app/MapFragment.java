@@ -59,6 +59,8 @@ import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.AddToiletDialog;
+import fr.handipressante.app.ToiletEdition.AddWithLongPressDialog;
+import fr.handipressante.app.ToiletEdition.ZoomBeforeAddToiletDialog;
 
 public class MapFragment extends Fragment implements LocationListener, MapEventsReceiver {
     private final static int ZOOM = 14;
@@ -108,7 +110,7 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         Log.i("MapFragment", "onCreateView");
 
         mResourceProxy = new ResourceProxyImpl(getContext().getApplicationContext());
@@ -196,17 +198,30 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
             @Override
             public void onClick(View view) {
                 // Click action
-                if(!canAddMarker) {
-                    Toast.makeText(getActivity(), "Appuyer longuement sur la carte pour ajouter de nouvelles toilettes", Toast.LENGTH_LONG).show();
-                    canAddMarker = true;
-                    fab.setImageResource(R.drawable.ic_action_cancel);
-                    //color in red
-                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255,211,47,47)));
-                }else{
+                ZoomBeforeAddToiletDialog zoomMax = new ZoomBeforeAddToiletDialog();
+                Bundle args = new Bundle();
+                zoomMax.setArguments(args);
+
+                if(mMapView.getZoomLevel() < 18) {
+                    zoomMax.show(getFragmentManager(), "zoomMax");
                     canAddMarker = false;
-                    fab.setImageResource(R.drawable.ic_action_new);
-                    //color in blue
-                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255,22,79,134)));
+                }else {
+                    if (!canAddMarker) {
+                        AddWithLongPressDialog canAddToiletDialog = new AddWithLongPressDialog();
+                        Bundle argss = new Bundle();
+                        canAddToiletDialog.setArguments(argss);
+                        canAddToiletDialog.show(getFragmentManager(),"canAddToilet");
+                        //Toast.makeText(getActivity(), "Appuyer longuement sur la carte pour ajouter de nouvelles toilettes", Toast.LENGTH_LONG).show();
+                        canAddMarker = true;
+                        fab.setImageResource(R.drawable.ic_action_cancel);
+                        //color in red
+                        fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 211, 47, 47)));
+                    } else {
+                        canAddMarker = false;
+                        fab.setImageResource(R.drawable.ic_action_new);
+                        //color in blue
+                        fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 22, 79, 134)));
+                    }
                 }
 
             }

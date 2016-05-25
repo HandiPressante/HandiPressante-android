@@ -26,6 +26,8 @@
     <string name="add_marker">Ajouter</string>
 
     <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
+    <string name="dialog_ready_to_add">Vous pouvez maintenant ajouter des toilettes.</string>
+    <string name="dialog_zoom_max">Suivre les instructions</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">Ok</string>
@@ -174,5 +176,6 @@
 
     <string name="confirm_send">Confirmation de l\'envoi</string>
     <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>
+    <string name="gotit">Compris !</string>
 
 </resources>
