@@ -40,10 +40,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -580,8 +584,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
         builder.setUrl("http://www.handipressante.fr/api.php/toilet-add-photo");
 
         try {
-            builder.addTextPart("uuid", "yo");
-            builder.addTextPart("toilet_id", "108");
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
+
+            builder.addTextPart("uuid", uuid);
+            builder.addTextPart("toilet_id", mToilet.getId().toString());
             builder.addFilePart("photo", photoData, "photo.jpg");
         } catch (IOException e) {
             e.printStackTrace();
@@ -591,17 +598,43 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 new Response.Listener<NetworkResponse>() {
                      @Override
                      public void onResponse(NetworkResponse response) {
-                         Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
                          mPhotoUploadDialog.dismiss();
+
+                         String strJsonResponse = new String(response.data);
+                         boolean error = true;
+                         int errorCode = -1;
+
+                         try {
+                             JSONObject jsonResponse = new JSONObject(strJsonResponse);
+                             if (jsonResponse.has("error")) {
+                                errorCode = jsonResponse.getInt("error");
+                                if (errorCode == 0) error = false;
+                             }
+                         } catch (JSONException e) {
+                             e.printStackTrace();
+                         }
+
+                         if (!error)
+                            Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
+                         else
+                             Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué. (Code d'erreur : " + errorCode + ")", Toast.LENGTH_LONG).show();
                      }
                  },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
                         mPhotoUploadDialog.dismiss();
+                        Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+        String key = request.getCacheKey();
+        Cache cache = RequestManager.getInstance(getApplicationContext()).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
+            }
+        }
 
         RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
     }
