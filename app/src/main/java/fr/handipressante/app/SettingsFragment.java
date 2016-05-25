@@ -14,6 +14,7 @@ import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
@@ -31,6 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
+        setHasOptionsMenu(true);
 
         final ListPreference buttonSize = (ListPreference) findPreference("button_size");
         if(buttonSize != null)
@@ -84,6 +86,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intentHelp = new Intent(getContext(), HelpSlideSettings.class);
+                startActivity(intentHelp);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 
 

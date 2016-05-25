@@ -22,11 +22,11 @@ public class FirstRun extends AppIntro {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
-        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.g2, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.g4, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.g3, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.g3, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.g1, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.tuto_list, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.tuto_map, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.tuto_sheet, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.tuto_name, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.tuto_slider, Color.parseColor("#164F86")));
 
         // OPTIONAL METHODS
 

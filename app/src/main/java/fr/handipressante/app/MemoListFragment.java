@@ -16,6 +16,7 @@ import android.os.PowerManager;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -44,6 +45,7 @@ public class MemoListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         Log.i("MemoListFragment", "onCreate");
 
         mAdapter = new MemoListAdapter(getContext().getApplicationContext(), new ArrayList<Memo>());
@@ -307,6 +309,17 @@ public class MemoListFragment extends ListFragment {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intentHelp = new Intent(getContext(), HelpSlideMemo.class);
+                startActivity(intentHelp);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

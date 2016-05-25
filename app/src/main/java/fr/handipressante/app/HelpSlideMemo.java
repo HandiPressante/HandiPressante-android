@@ -8,18 +8,18 @@ import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
 /**
- * Created by marc on 22/05/2016.
+ * Created by marc on 25/05/2016.
  */
-public class HelpSlideMap extends AppIntro {
+public class HelpSlideMemo extends AppIntro {
 
     // Please DO NOT override onCreate. Use init
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Géolocalisation des toilettes", "Naviguez sur la carte pour trouver les toilettes à l'endroit que vous souhaitez. Appuyez sur le bouton + pour ajouter des toilettes sur la carte.",
-                R.drawable.tuto_map, Color.parseColor("#164F86")));
-       // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
-       //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Aide mémo", "Retrouvez ici des fiches d'information sur des pathologies, des guides de soin ainsi que d'autres informations médicales.",
+                R.drawable.tuto_memo, Color.parseColor("#164F86")));
+        // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
+        //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
         // OPTIONAL METHODS
 
         // Override bar/separator color
@@ -54,4 +54,5 @@ public class HelpSlideMap extends AppIntro {
         finish();
     }
 }
+
 

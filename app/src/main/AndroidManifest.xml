@@ -45,6 +45,8 @@
         <activity android:name=".HelpSlideList"/>
         <activity android:name=".HelpSlideToiletSheet"/>
         <activity android:name=".HelpSlideMap"/>
+        <activity android:name=".HelpSlideSettings"/>
+        <activity android:name=".HelpSlideMemo"/>
 
             <!-- android:theme="@style/Base.Theme.AppCompat" -->
 
