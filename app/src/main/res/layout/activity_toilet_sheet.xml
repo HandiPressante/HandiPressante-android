@@ -375,15 +375,37 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/add_comment_button" />
 
+            <ListView android:id="@+id/comment_list"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/add_comment" />
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:id="@+id/comments_layout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/delete_comment"
                 android:layout_below="@+id/add_comment" />
 
+
+            <TextView
+                android:id="@+id/no_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/comments_layout"
+                android:textStyle="italic"
+                android:text="@string/still_no_comment" />
+
+            <Button
+                android:id="@+id/show_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/no_comment"
+                android:text="Voir les commentaires" />
+
+            <!--
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -392,6 +414,7 @@
                 android:layout_alignTop="@id/comments_layout"
                 android:background="@android:color/transparent"
                 android:layout_alignParentRight="true" />
+                -->
 
                 <!-- IMPORTANT : LOOK OF THE COMMENT BUBBLE -->
                 <!--<LinearLayout

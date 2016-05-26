@@ -22,11 +22,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,19 +45,21 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import fr.handipressante.app.Data.Comment;
 import fr.handipressante.app.Data.Photo;
 import fr.handipressante.app.Data.PhotoDAO;
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.Server.CommentDownloader;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.MultipartRequest;
 import fr.handipressante.app.Server.PhotoDownloader;
 import fr.handipressante.app.Server.RequestManager;
 import fr.handipressante.app.Server.ToiletDownloader;
 import fr.handipressante.app.ToiletEdition.CommentEdition;
-import fr.handipressante.app.ToiletEdition.ConfirmDeleteComment;
 import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
 import fr.handipressante.app.ToiletEdition.DescriptionActivity;
 import fr.handipressante.app.ToiletEdition.NameActivity;
@@ -88,8 +91,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         initScrollToolbar();
 
         fillToiletSheet(mToilet);
-        addComment(mToilet);
-        deleteComment(mToilet);
+
 
         ToiletDownloader downloader = new ToiletDownloader(this);
         downloader.requestToilet(mToilet.getId(), new Downloader.Listener<List<Toilet>>() {
@@ -111,6 +113,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         new LoadDatabaseTask().execute();
         // onPostExecute : data are loaded from the server
+
+        syncCommentWithServer();
     }
 
     @Override
@@ -201,6 +205,16 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.show_comments).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra("toiletId", mToilet.getId());
+                startActivity(intent);
+            }
+        });
+
+        /*
         findViewById(R.id.delete_comment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +226,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 deleteDialog.show(getSupportFragmentManager(),"test");
             }
         });
+        */
 
         findViewById(R.id.add_comment).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -483,6 +498,55 @@ public class ToiletSheetActivity extends AppCompatActivity {
         findViewById(R.id.add_comment).setEnabled(true);
     }
 
+    private void updateCommentList(List<Comment> commentList) {
+        if (commentList.size() == 0) {
+            findViewById(R.id.no_comment).setVisibility(View.VISIBLE);
+            findViewById(R.id.show_comments).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.no_comment).setVisibility(View.GONE);
+            findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
+        }
+
+        /*
+        findViewById(R.id.no_comment).setVisibility(View.GONE);
+        int count = commentList.size();
+        for (int i = 0; i < 3; ++i) {
+            if (i < count) {
+                Comment c = commentList.get(i);
+                View row = findViewById(kCommentViews[i]);
+
+                TextView username = (TextView) row.findViewById(R.id.username);
+                TextView content = (TextView) row.findViewById(R.id.content);
+                TextView date = (TextView) row.findViewById(R.id.date);
+
+                username.setText(c.getUsername());
+                content.setText(c.getContent());
+                date.setText(c.getContent());
+
+                row.setVisibility(View.VISIBLE);
+            } else {
+                View row = findViewById(kCommentViews[i]);
+                row.setVisibility(View.GONE);
+            }
+        }
+
+        if (commentList.size() > 3) {
+            findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
+        }
+        */
+    }
+
+    private void syncCommentWithServer() {
+        CommentDownloader commentDownloader = new CommentDownloader(getApplicationContext());
+        commentDownloader.downloadCommentList(mToilet.getId(), new Downloader.Listener<List<Comment>>() {
+            @Override
+            public void onResponse(List<Comment> response) {
+                updateCommentList(response);
+            }
+        });
+    }
+
+    /*
     public void addComment(Toilet toilet){
         LinearLayout container = (LinearLayout) findViewById(R.id.comments_layout);
         boolean comment = true;
@@ -544,6 +608,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         });
 
     }
+    */
 
     /**
      * Helper functions
@@ -584,9 +649,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
                              e.printStackTrace();
                          }
 
-                         if (!error)
-                            Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
-                         else
+                         if (!error) {
+                             Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
+                             syncPhotoWithServer();
+                         } else
                              Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué. (Code d'erreur : " + errorCode + ")", Toast.LENGTH_LONG).show();
                      }
                  },
@@ -712,11 +778,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
                     mPhotoAdapter.swapItems(viewPager, photoList);
             }
 
-            syncWithServer();
+            syncPhotoWithServer();
         }
     }
 
-    private void syncWithServer() {
+    private void syncPhotoWithServer() {
         new PhotoDownloader(getApplicationContext()).downloadPhotoList(mToilet.getId(), new Downloader.Listener<List<Photo>>() {
             @Override
             public void onResponse(List<Photo> response) {

@@ -55,4 +55,13 @@ public class DataFactory {
 
         return new Photo(id, toiletId, userId, filename, postdate);
     }
+
+    public Comment createComment(JSONObject jsonObject) throws JSONException {
+        Comment comment = new Comment();
+        comment.setUsername(jsonObject.getString("username"));
+        comment.setContent(jsonObject.getString("content"));
+        comment.setPostdate(jsonObject.getString("postdate"));
+
+        return comment;
+    }
 }

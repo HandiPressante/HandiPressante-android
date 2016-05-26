@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- TODO : Should be false ? App is usable without camera ?-->
+    <!-- TODO : Should be false ? App is usable without camera ? -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -29,28 +29,27 @@
         android:icon="@mipmap/icone_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity">
-        </activity>
-
+        <activity android:name=".MainActivity"></activity>
         <activity android:name=".ToiletSheetActivity" />
-        <activity android:name=".ModificationSheet"/>
-        <activity android:name=".HelpSlideList"/>
-        <activity android:name=".HelpSlideToiletSheet"/>
-        <activity android:name=".HelpSlideMap"/>
-        <activity android:name=".HelpSlideSettings"/>
-        <activity android:name=".HelpSlideMemo"/>
+        <activity android:name=".ModificationSheet" />
+        <activity android:name=".HelpSlideList" />
+        <activity android:name=".HelpSlideToiletSheet" />
+        <activity android:name=".HelpSlideMap" />
+        <activity android:name=".HelpSlideSettings" />
+        <activity android:name=".HelpSlideMemo" />
 
-            <!-- android:theme="@style/Base.Theme.AppCompat" -->
+        <!-- android:theme="@style/Base.Theme.AppCompat" -->
 
-        <activity android:name=".FirstRun" android:noHistory="true"/>
+        <activity
+            android:name=".FirstRun"
+            android:noHistory="true" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -69,14 +68,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ToiletEdition.NameActivity"
-                  android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".ToiletEdition.CommentEdition"
-            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".ToiletEdition.NameActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ToiletEdition.CommentEdition"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ToiletEdition.AccessibleActivity" />
-        <activity android:name=".ToiletEdition.DescriptionActivity"
-                  android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".ToiletEdition.DescriptionActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ToiletEdition.RatingActivity" />
+        <activity android:name=".CommentActivity"></activity>
     </application>
 
 </manifest>
