@@ -186,6 +186,31 @@ public class ToiletDownloader extends Downloader {
         postJson(url, data, listener);
     }
 
+    public void postToiletComment(Integer toiletId, String username, String content, final Listener<JSONObject> listener) {
+        Log.i("ToiletDownloader", "postToiletComment");
+        String url;
+        JSONObject data = new JSONObject();
+
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+            data.put("uuid", uuid);
+            data.put("toilet_id", toiletId.toString());
+
+            data.put("username", username);
+            data.put("content", content);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(null);
+            return;
+        }
+
+        url = MyConstants.API_URL + "toilet-add-comment";
+
+        postJson(url, data, listener);
+    }
+
     private void postJson(String url, JSONObject data, final Listener<JSONObject> listener) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>() {
@@ -207,9 +232,9 @@ public class ToiletDownloader extends Downloader {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    listener.onResponse(null);
                 }
-
-                listener.onResponse(null);
             }
         }, new Response.ErrorListener() {
 

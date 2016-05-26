@@ -1,5 +1,6 @@
 package fr.handipressante.app.ToiletEdition;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,14 +13,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.R;
+import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.Server.ToiletDownloader;
 
 /**
  * Created by marc on 23/05/2016.
  */
-public class CommentEdition extends AppCompatActivity {
-    private Toilet mToilet;
+public class CommentEdition extends AppCompatActivity implements Downloader.Listener<JSONObject> {
+    private Integer mToiletId;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,7 @@ public class CommentEdition extends AppCompatActivity {
         setContentView(R.layout.comment_edition);
 
         Intent intent = getIntent();
+        mToiletId = intent.getIntExtra("toiletId", 0);
 
         EditText usernameField = (EditText) findViewById(R.id.username);
         EditText commentField = (EditText)findViewById(R.id.comment_edition);
@@ -44,18 +52,34 @@ public class CommentEdition extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkData()) {
-                   /* EditText toiletNameField = (EditText) findViewById(R.id.toilet_name);
-                    String toiletName = toiletNameField.getText().toString();
-                    mToilet.setAddress(toiletName);
-
-                    Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
-                    intent.putExtra("toilet", mToilet);
-                    intent.putExtra("new", mNewToilet);
-                    startActivityForResult(intent, 1);*/
-                    Toast.makeText(getApplicationContext(),"Bien tenté, mais ce n'est pas encore prêt", Toast.LENGTH_SHORT).show();
+                    save();
                 }
             }
         });
+    }
+
+    private void save() {
+        EditText usernameField = (EditText) findViewById(R.id.username);
+        EditText commentField = (EditText)findViewById(R.id.comment_edition);
+        Button validate = (Button) findViewById(R.id.validate_comment);
+
+        if (usernameField == null || commentField == null || validate == null)
+            return;
+
+        usernameField.setEnabled(false);
+        commentField.setEnabled(false);
+        validate.setEnabled(false);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Veuillez patienter");
+        mProgressDialog.setMessage("Enregistrement en cours ...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.show();
+
+        String username = usernameField.getText().toString();
+        String comment = commentField.getText().toString();
+
+        new ToiletDownloader(this).postToiletComment(mToiletId, username, comment, this);
     }
 
     private boolean checkData() {
@@ -83,9 +107,12 @@ public class CommentEdition extends AppCompatActivity {
         if (comment.isEmpty()){
             validComment = false;
             errorComment = getString(R.string.required_field);
-        } else if (comment.length() < 2){
+        } else if (comment.length() < 2) {
             validComment = false;
-            errorComment = getResources().getQuantityString(R.plurals.minchars,2, 2);
+            errorComment = getResources().getQuantityString(R.plurals.minchars, 2, 2);
+        } else if (comment.length() > 255) {
+            validComment = false;
+            errorComment = getResources().getQuantityString(R.plurals.maxchars, 255, 255);
         }
 
         TextView errorCommentView = (TextView) findViewById(R.id.error_comment);
@@ -116,10 +143,30 @@ public class CommentEdition extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onResponse(JSONObject response) {
+        mProgressDialog.dismiss();
 
-        setResult(resultCode, data);
+        try {
+            if (response != null && response.has("error")) {
+                int errorCode = response.getInt("error");
+                if (errorCode == 0) {
+                    Toast.makeText(getApplicationContext(), "Commentaire ajouté !", Toast.LENGTH_SHORT).show();
+                    setResult(0, null);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Impossible d'envoyer le commentaire. (Code d'erreur : " +
+                            errorCode + ").", Toast.LENGTH_LONG).show();
+                    setResult(-1, null);
+                    finish();
+                }
+                return;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(getApplicationContext(), "Désolé, une erreur s'est produite.", Toast.LENGTH_SHORT).show();
+        setResult(-1, null);
         finish();
     }
 }

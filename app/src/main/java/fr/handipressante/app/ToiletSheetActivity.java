@@ -12,7 +12,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.os.Bundle;
@@ -218,6 +217,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CommentEdition.class);
+                intent.putExtra("toiletId", mToilet.getId());
                 startActivityForResult(intent, REQUEST_ADD_COMMENT);
             }
         });
@@ -343,6 +343,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 mToilet = toilet;
                 fillToiletSheet(mToilet);
             }
+        } else if (requestCode == REQUEST_ADD_COMMENT && resultCode == 0) {
+            // TODO : reload comments
         }
     }
 
