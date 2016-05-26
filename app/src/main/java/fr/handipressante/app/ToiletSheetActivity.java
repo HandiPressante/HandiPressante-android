@@ -239,9 +239,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
         Toolbar toolbarBottom = (Toolbar) findViewById(R.id.scroll_toolbar);
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean can_scroll = sharedPrefs.getBoolean("slide",false);
+        boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
 
-        if(can_scroll && toolbarBottom != null) {
+        if(!scroll_help && toolbarBottom != null) {
             toolbarBottom.setVisibility(View.GONE);
             return;
         }

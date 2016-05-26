@@ -59,9 +59,9 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.bottom_toolbar);
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        boolean can_scroll = sharedPrefs.getBoolean("slide",false);
+        boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
 
-        if(can_scroll) {
+        if(!scroll_help) {
             toolbarBottom.setVisibility(View.GONE);
         }
 

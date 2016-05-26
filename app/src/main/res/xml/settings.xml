@@ -13,7 +13,7 @@
             android:key="scroll_help"
             android:title="Aide à la navigation"
             android:summary="Ajoute des boutons de navigation"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
 
         <Preference
             android:key="font_size"

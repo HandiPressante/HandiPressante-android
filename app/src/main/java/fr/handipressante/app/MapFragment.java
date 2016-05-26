@@ -152,8 +152,8 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         mMapView.getOverlays().add(0, mapEventsOverlay);
         InfoWindow.closeAllInfoWindowsOn(mMapView);
 
-        //removes the arrows according the SharedPreferences "slide"
-        boolean slide = sharedPrefs.getBoolean("slide",false);
+        // removes the arrows according the SharedPreferences "scroll_help"
+        boolean slide = !sharedPrefs.getBoolean("scroll_help", false);
 
         //mMapView.setBuiltInZoomControls(slide);
         mMapView.setMultiTouchControls(slide);
