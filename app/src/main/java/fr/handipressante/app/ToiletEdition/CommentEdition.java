@@ -2,7 +2,9 @@ package fr.handipressante.app.ToiletEdition;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -41,6 +43,14 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
 
         changeListener(usernameField);
         changeListener(commentField);
+
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String lastUsername = sharedPrefs.getString("last_username", new String());
+        if (!lastUsername.isEmpty()) {
+            usernameField.setText(lastUsername);
+            commentField.requestFocus();
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -151,6 +161,15 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
                 int errorCode = response.getInt("error");
                 if (errorCode == 0) {
                     Toast.makeText(getApplicationContext(), "Commentaire ajouté !", Toast.LENGTH_SHORT).show();
+
+                    EditText usernameField = (EditText) findViewById(R.id.username);
+                    String username = usernameField.getText().toString();
+
+                    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor e = sharedPrefs.edit();
+                    e.putString("last_username", username);
+                    e.apply();
+
                     setResult(0, null);
                     finish();
                 } else {
