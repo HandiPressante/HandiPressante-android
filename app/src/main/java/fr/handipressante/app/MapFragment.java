@@ -21,6 +21,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 
 
@@ -433,7 +434,6 @@ public class MapFragment extends Fragment implements LocationListener, MapEvents
         RadiusMarkerClusterer poiMarkers = new RadiusMarkerClusterer(getContext());
 
         poiMarkers.getTextPaint().setTextSize(70.0f);
-
         CustomInfoWindow infoWindow = new CustomInfoWindow(mMapView);
 
         for (final Toilet t : toiletList) {

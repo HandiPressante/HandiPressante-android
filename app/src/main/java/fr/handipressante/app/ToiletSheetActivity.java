@@ -567,7 +567,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
             // Create TextView for comment text
             TextView comment_text = new TextView(this);
-            comment_text.setText("Ceci est mon commentaire pour ces toilettes bla bla bla bla bla bla bla bla");
+            comment_text.setText("Les toilettes sont bien équipées mais la poubelle a disparu oO");
             comment_layout.addView(comment_text);
 
 

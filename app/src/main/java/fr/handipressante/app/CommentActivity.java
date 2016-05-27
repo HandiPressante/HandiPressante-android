@@ -6,6 +6,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -27,6 +30,12 @@ public class CommentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comment);
 
         mAdapter = new CommentListAdapter(getApplicationContext(), new ArrayList<Comment>());
+
+        Toolbar toolbarTop = (Toolbar)findViewById(R.id.toolbar_comment);
+        setSupportActionBar(toolbarTop);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
+        toolbarTop.setTitle("Retour");
 
         Toolbar toolbarBottom = (Toolbar) findViewById(R.id.scroll_toolbar);
 
@@ -81,5 +90,24 @@ public class CommentActivity extends AppCompatActivity {
         int childItemHeight = listItem.getMeasuredHeight() + mListView.getDividerHeight();
 
         return listViewHeight / childItemHeight;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.help).setVisible(false);
+        return true;
     }
 }

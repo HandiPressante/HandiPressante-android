@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <include layout="@layout/toolbar"
-        android:id="@+id/toolbar_sheet" />
+        android:id="@+id/toolbar_comment" />
 
     <include layout="@layout/bottom_toolbar"
         android:layout_height="wrap_content"
@@ -16,6 +16,6 @@
         android:id="@+id/listView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_sheet"
+        android:layout_below="@id/toolbar_comment"
         android:layout_above="@id/scroll_toolbar" />
 </RelativeLayout>
