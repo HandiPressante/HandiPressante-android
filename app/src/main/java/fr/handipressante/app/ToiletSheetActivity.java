@@ -359,7 +359,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 fillToiletSheet(mToilet);
             }
         } else if (requestCode == REQUEST_ADD_COMMENT && resultCode == 0) {
-            // TODO : reload comments
+            syncCommentWithServer();
         }
     }
 

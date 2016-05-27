@@ -403,6 +403,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/no_comment"
+                android:visibility="gone"
                 android:text="Voir les commentaires" />
 
             <!--

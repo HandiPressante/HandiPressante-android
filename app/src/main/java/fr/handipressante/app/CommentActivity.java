@@ -1,6 +1,5 @@
 package fr.handipressante.app;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
