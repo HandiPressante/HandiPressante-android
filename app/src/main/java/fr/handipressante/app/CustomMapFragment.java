@@ -1,45 +1,52 @@
 package fr.handipressante.app;
 
-import android.location.Location;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
-public class CustomMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+import org.osmdroid.util.GeoPoint;
+
+import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.ToiletEdition.AddToiletDialog;
+import fr.handipressante.app.ToiletEdition.AddWithLongPressDialog;
+import fr.handipressante.app.ToiletEdition.ZoomBeforeAddToiletDialog;
+
+public class CustomMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private final String LOG_TAG = "HandipressanteApp";
+
+    private boolean mAccessibilityOptionEnabled = true;
+
     private GoogleMap mMap;
     private boolean mMapReady = false;
 
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    private Location mLastLocation;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private final float MIN_ZOOM_TO_ADD_TOILET = 19.0f;
+    private boolean mAddToiletEnabled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        // Activate help menu
+        setHasOptionsMenu(true);
+
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -47,50 +54,28 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        mAccessibilityOptionEnabled = sharedPrefs.getBoolean("scroll_help", false);
+
+        initAddToiletButton();
+        if (mAccessibilityOptionEnabled) {
+            initAccessibilityLayout();
+        }
+
         MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        buildGoogleApiClient();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mGoogleApiClient.isConnected())
-        {
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.help:
+                Intent intentHelp = new Intent(getContext(), HelpSlideMap.class);
+                startActivity(intentHelp);
+                break;
         }
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        stopLocationUpdates();
-        if (mGoogleApiClient.isConnected())
-            mGoogleApiClient.disconnect();
-
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onSaveInstanceState (Bundle outState){
-        super.onSaveInstanceState(outState);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -99,87 +84,191 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 
+        if (mAccessibilityOptionEnabled) {
+            mMap.getUiSettings().setAllGesturesEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+
         try {
             mMap.setMyLocationEnabled(true);
         } catch (SecurityException ex) {
             // todo
         }
-        mMapReady = true;
 
-        if (mLastLocation != null) onMapAndLocationReady();
+        mMapReady = true;
     }
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        if (mMap.getCameraPosition().zoom == mMap.getMaxZoomLevel()) {
-            // todo show add toilet
-        } else {
-            // todo : show zoom more message
+        if (mAddToiletEnabled) {
+            float currentZoom = mMap.getCameraPosition().zoom;
+
+            if (currentZoom < MIN_ZOOM_TO_ADD_TOILET) {
+                ZoomBeforeAddToiletDialog zoomMax = new ZoomBeforeAddToiletDialog();
+                zoomMax.show(getFragmentManager(), "zoomMax");
+            } else {
+                Toilet toilet = new Toilet();
+                GeoPoint geoPoint = new GeoPoint(latLng.latitude, latLng.longitude);
+                toilet.setCoordinates(geoPoint);
+
+                AddToiletDialog addToiletDialog = new AddToiletDialog();
+                Bundle args = new Bundle();
+                args.putParcelable("toilet", toilet);
+                addToiletDialog.setArguments(args);
+
+                addToiletDialog.show(getFragmentManager(), "adding toilets");
+            }
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(10000);
+    private void initAddToiletButton() {
+        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mMapReady) return;
 
-        try {
-            Log.i(LOG_TAG, "Getting last location ...");
-            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (mLastLocation != null)
-                Log.i(LOG_TAG, "Last location : " + mLastLocation);
-            else
-                Log.i(LOG_TAG, "No last location");
-        } catch (SecurityException ex) {
-            // todo
-        }
+                if (!mAddToiletEnabled) {
+                    AddWithLongPressDialog canAddToiletDialog = new AddWithLongPressDialog();
+                    canAddToiletDialog.show(getFragmentManager(),"canAddToilet");
 
-        if (mLastLocation != null && mMapReady) onMapAndLocationReady();
-        startLocationUpdates();
+                    mAddToiletEnabled = true;
+
+                    fab.setImageResource(R.drawable.ic_action_cancel);
+                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 211, 47, 47)));
+                } else {
+                    mAddToiletEnabled = false;
+                    fab.setImageResource(R.drawable.ic_action_new);
+                    //color in blue
+                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 22, 79, 134)));
+                }
+            }
+        });
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
+    private void initAccessibilityLayout() {
+        ImageView upButton = (ImageView) getActivity().findViewById(R.id.up);
+        ImageView downButton = (ImageView) getActivity().findViewById(R.id.down);
+        ImageView leftButton = (ImageView) getActivity().findViewById(R.id.left);
+        ImageView rightButton = (ImageView) getActivity().findViewById(R.id.right);
+        ImageView zoomInButton = (ImageView) getActivity().findViewById(R.id.zoom_in);
+        ImageView zoomOutButton = (ImageView) getActivity().findViewById(R.id.zoom_out);
 
-    }
+        upButton.setVisibility(View.VISIBLE);
+        downButton.setVisibility(View.VISIBLE);
+        leftButton.setVisibility(View.VISIBLE);
+        rightButton.setVisibility(View.VISIBLE);
+        zoomInButton.setVisibility(View.VISIBLE);
+        zoomOutButton.setVisibility(View.VISIBLE);
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLngBounds latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+                    double northsouth = Math.abs(latLngBounds.northeast.latitude - latLngBounds.southwest.latitude);
 
-    }
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
 
-    @Override
-    public void onLocationChanged(Location location) {
-        Toast.makeText(getContext(), "Location changed : " + location, Toast.LENGTH_LONG).show();
-    }
+                    LatLng targetLatLng = new LatLng(
+                            currentLatLng.latitude + (northsouth / 5),
+                            currentLatLng.longitude);
 
-    private void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-    }
+                    CameraPosition target = CameraPosition.builder().target(targetLatLng).zoom(currentZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
 
-    private void startLocationUpdates() {
-        try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
-        } catch (SecurityException ex) {
-            // todo
-        }
-    }
+        downButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLngBounds latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+                    double northsouth = Math.abs(latLngBounds.northeast.latitude - latLngBounds.southwest.latitude);
 
-    private void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(
-                mGoogleApiClient, this);
-    }
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
 
-    private void onMapAndLocationReady() {
-        Log.i(LOG_TAG, "Map and Location Ready");
-        LatLng targetLatLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-        CameraPosition target = CameraPosition.builder().target(targetLatLng).zoom(14).build();
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+                    LatLng targetLatLng = new LatLng(
+                            currentLatLng.latitude - (northsouth / 5),
+                            currentLatLng.longitude);
+
+                    CameraPosition target = CameraPosition.builder().target(targetLatLng).zoom(currentZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
+
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLngBounds latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+                    double westeast = Math.abs(latLngBounds.southwest.longitude - latLngBounds.northeast.longitude);
+
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
+
+                    LatLng targetLatLng = new LatLng(
+                            currentLatLng.latitude,
+                            currentLatLng.longitude - (westeast / 5));
+
+                    CameraPosition target = CameraPosition.builder().target(targetLatLng).zoom(currentZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
+
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLngBounds latLngBounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+                    double westeast = Math.abs(latLngBounds.southwest.longitude - latLngBounds.northeast.longitude);
+
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
+
+                    LatLng targetLatLng = new LatLng(
+                            currentLatLng.latitude,
+                            currentLatLng.longitude + (westeast / 5));
+
+                    CameraPosition target = CameraPosition.builder().target(targetLatLng).zoom(currentZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
+
+        zoomInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
+
+                    float targetZoom = Math.min(mMap.getMaxZoomLevel(), currentZoom + 1);
+
+                    CameraPosition target = CameraPosition.builder().target(currentLatLng).zoom(targetZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
+
+        zoomOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mMapReady) {
+                    LatLng currentLatLng = mMap.getCameraPosition().target;
+                    float currentZoom = mMap.getCameraPosition().zoom;
+
+                    float targetZoom = Math.max(mMap.getMinZoomLevel(), currentZoom - 1);
+
+                    CameraPosition target = CameraPosition.builder().target(currentLatLng).zoom(targetZoom).build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(target), 400, null);
+                }
+            }
+        });
     }
 }
