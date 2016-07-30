@@ -32,7 +32,7 @@ public class MainFragment extends Fragment {
         mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_list_title)),
                 ToiletListFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(getTabIndicator(mTabHost.getContext(), R.string.tab_map_title)),
-                MapFragment.class, null);
+                CustomMapFragment.class, null);
 
         return mTabHost;
     }
