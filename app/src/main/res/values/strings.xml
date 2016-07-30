@@ -27,7 +27,8 @@
 
     <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
     <string name="dialog_ready_to_add">Vous pouvez maintenant ajouter des toilettes.</string>
-    <string name="dialog_zoom_max">Suivre les instructions</string>
+    <string name="dialog_zoom_more">Niveau de zoom insuffisant</string>
+    <string name="dialog_zoom_more_instructions">Veuillez augmenter le niveau de zoom afin d\'effectuer un ajout plus précis.</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="ok">Ok</string>
