@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -17,7 +16,7 @@ public class SplashScreen extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splashscreen);
+        setContentView(R.layout.activity_splashscreen);
 
         ImageView view = (ImageView)findViewById(R.id.logo); //Initialize ImageView via FindViewById or programatically
 

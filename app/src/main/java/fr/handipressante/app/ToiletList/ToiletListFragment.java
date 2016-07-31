@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.ToiletList;
 
 
 /**
@@ -22,14 +22,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 
@@ -38,8 +34,11 @@ import java.util.List;
 
 import fr.handipressante.app.Data.NearbyToiletDAO;
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.HelpSlides.HelpSlideList;
+import fr.handipressante.app.R;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
+import fr.handipressante.app.ToiletSheet.ToiletSheetActivity;
 
 public class ToiletListFragment extends ListFragment implements LocationListener {
     private LocationManager mLocationManager;
@@ -56,7 +55,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         super.onActivityCreated(savedInstanceState);
         Log.i("ToiletListFragment", "onActivityCreated");
 
-        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.bottom_toolbar);
+        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_bottom);
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
@@ -253,7 +252,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_list, container, false); }
+        return inflater.inflate(R.layout.fragment_toiletlist, container, false); }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

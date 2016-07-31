@@ -10,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import fr.handipressante.app.R;
-
 public class MenuList extends ArrayAdapter<String>{
 
         private final Activity context;
@@ -21,7 +19,7 @@ public class MenuList extends ArrayAdapter<String>{
 
         public MenuList(Activity context,
                           String[] menu_item, Integer[] imageId) {
-            super(context, R.layout.drawer_list_item, menu_item);
+            super(context, R.layout.listitem_drawer, menu_item);
             this.context = context;
             this.menu_item = menu_item;
             this.imageId = imageId;
@@ -31,7 +29,7 @@ public class MenuList extends ArrayAdapter<String>{
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             LayoutInflater inflater = context.getLayoutInflater();
-            View rowView= inflater.inflate(R.layout.drawer_list_item, null, true);
+            View rowView= inflater.inflate(R.layout.listitem_drawer, null, true);
             TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.img);

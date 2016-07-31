@@ -18,7 +18,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.handipressante.app.Data.Toilet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.ToiletDownloader;
@@ -33,7 +32,7 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.comment_edition);
+        setContentView(R.layout.activity_comment);
 
         Intent intent = getIntent();
         mToiletId = intent.getIntExtra("toiletId", 0);

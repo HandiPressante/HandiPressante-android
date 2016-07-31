@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.HelpSlides;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,17 +7,21 @@ import android.os.Bundle;
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
+import fr.handipressante.app.R;
+
 /**
- * Created by marc on 21/05/2016.
+ * Created by marc on 25/05/2016.
  */
-public class HelpSlideToiletSheet extends AppIntro {
+public class HelpSlideMemo extends AppIntro {
 
     // Please DO NOT override onCreate. Use init
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Fiche d'information des toilettes", "Cliquez sur les icônes pour modifier les différents éléments de la fiche ou pour les noter.",
-                R.drawable.tuto_sheet,Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Aide mémo", "Retrouvez ici des fiches d'information sur des pathologies, des guides de soin ainsi que d'autres informations médicales.",
+                R.drawable.tuto_memo, Color.parseColor("#164F86")));
+        // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
+        //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
         // OPTIONAL METHODS
 
         // Override bar/separator color
@@ -31,13 +35,6 @@ public class HelpSlideToiletSheet extends AppIntro {
         // Hide Skip/Done button
         showSkipButton(false);
     }
-
-
-    private void loadMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
 
     @Override
     public void onNextPressed() {
@@ -59,4 +56,5 @@ public class HelpSlideToiletSheet extends AppIntro {
         finish();
     }
 }
+
 

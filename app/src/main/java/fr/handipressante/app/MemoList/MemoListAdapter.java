@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.MemoList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.handipressante.app.Data.Memo;
+import fr.handipressante.app.R;
 
 
 /**
@@ -31,7 +32,7 @@ public class MemoListAdapter extends ArrayAdapter<Memo> {
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.item_fragment_memolist, parent, false);
+            row = inflater.inflate(R.layout.listitem_memo, parent, false);
 
             holder = new ViewHolder();
             holder.title = (TextView) row.findViewById(R.id.title);

@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.ToiletList;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import fr.handipressante.app.Converters;
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.R;
 
 /**
  * Created by Nico on 02/02/2016.
@@ -36,7 +38,7 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.item_fragment_list, parent, false);
+            row = inflater.inflate(R.layout.listitem_toilet, parent, false);
 
             holder = new ViewHolder();
             if(holder.pmr != null) {

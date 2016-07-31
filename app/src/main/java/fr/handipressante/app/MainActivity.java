@@ -3,17 +3,13 @@ package fr.handipressante.app;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.app.FragmentManager;
 
 import android.content.Context;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,8 +23,8 @@ import android.widget.Toast;
 
 
 import java.util.UUID;
-import java.util.prefs.Preferences;
 
+import fr.handipressante.app.MemoList.MemoListFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -149,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set up the drawer's list view with items and click listener
         /*mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mTitles));
+                R.layout.listitem_drawer, mTitles));
                 */
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());

@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletEdition;
+package fr.handipressante.app.ToiletMap;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,7 +11,7 @@ import fr.handipressante.app.R;
 /**
  * Created by marc on 25/05/2016.
  */
-public class AddWithLongPressDialog extends DialogFragment
+public class ZoomBeforeAddToiletDialog extends DialogFragment
 {
 
     @Override
@@ -20,9 +20,9 @@ public class AddWithLongPressDialog extends DialogFragment
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Appuyez longtemps à l'endroit désiré pour démarrer l'ajout.")
-                .setTitle(R.string.dialog_ready_to_add)
-                .setPositiveButton(R.string.gotit, new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.dialog_zoom_more_instructions)
+                .setTitle(R.string.dialog_zoom_more)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });

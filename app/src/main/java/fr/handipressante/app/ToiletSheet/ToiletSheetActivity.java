@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.ToiletSheet;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,11 +23,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,14 +42,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import fr.handipressante.app.Converters;
 import fr.handipressante.app.Data.Comment;
 import fr.handipressante.app.Data.Photo;
 import fr.handipressante.app.Data.PhotoDAO;
 import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.HelpSlides.HelpSlideToiletSheet;
+import fr.handipressante.app.R;
 import fr.handipressante.app.Server.CommentDownloader;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.MultipartRequest;
@@ -81,7 +80,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_toilet_sheet);
+        setContentView(R.layout.activity_toiletsheet);
 
         // get info from parent view
         Intent intent = getIntent();
@@ -378,18 +377,11 @@ public class ToiletSheetActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-         /*   case R.id.modification:
-                //Intent intent = new Intent(getApplicationContext(), ModificationSheet.class);
-                Intent intent = new Intent(getApplicationContext(), NameActivity.class);
-                intent.putExtra("toilet", mToilet);
-                intent.putExtra("new", false);
-                //Toast.makeText(getApplicationContext(), "Open Sheet Modification", Toast.LENGTH_SHORT).show();
-                startActivity(intent);*/
             case R.id.help:
                 Intent intentHelp = new Intent(getApplicationContext(), HelpSlideToiletSheet.class);
                 startActivity(intentHelp);
             break;
-            // Something else
+
             default:
                 break;
         }

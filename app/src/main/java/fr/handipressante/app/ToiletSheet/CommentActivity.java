@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.ToiletSheet;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.handipressante.app.Data.Comment;
+import fr.handipressante.app.R;
 import fr.handipressante.app.Server.CommentDownloader;
 import fr.handipressante.app.Server.Downloader;
 
