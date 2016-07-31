@@ -55,7 +55,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         super.onActivityCreated(savedInstanceState);
         Log.i("ToiletListFragment", "onActivityCreated");
 
-        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_bottom);
+        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_scroll);
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);

@@ -6,7 +6,7 @@
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar_sheet" />
 
-    <include layout="@layout/toolbar_bottom"
+    <include layout="@layout/toolbar_scroll"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/scroll_toolbar"
