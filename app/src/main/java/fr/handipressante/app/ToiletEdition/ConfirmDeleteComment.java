@@ -21,7 +21,7 @@ public class ConfirmDeleteComment extends DialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-        mToilet = (Toilet) args.getParcelable("toilet");
+        mToilet = args.getParcelable("toilet");
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
