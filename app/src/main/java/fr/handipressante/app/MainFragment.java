@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import fr.handipressante.app.ToiletList.ToiletListFragment;
+import fr.handipressante.app.ToiletMap.CustomMapFragment;
+
 public class MainFragment extends Fragment {
     private FragmentTabHost mTabHost;
 

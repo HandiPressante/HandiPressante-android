@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.MemoList;
 
 
 /**
@@ -19,9 +19,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import org.osmdroid.util.GeoPoint;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +32,8 @@ import java.util.List;
 
 import fr.handipressante.app.Data.Memo;
 import fr.handipressante.app.Data.MemoDAO;
+import fr.handipressante.app.HelpSlides.HelpSlideMemo;
+import fr.handipressante.app.R;
 import fr.handipressante.app.Server.Downloader;
 import fr.handipressante.app.Server.MemoDownloader;
 

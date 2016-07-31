@@ -42,13 +42,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ToiletSheetActivity" />
-        <activity android:name=".ModificationSheet" />
-        <activity android:name=".HelpSlideList" />
-        <activity android:name=".HelpSlideToiletSheet" />
-        <activity android:name=".HelpSlideMap" />
-        <activity android:name=".HelpSlideSettings" />
-        <activity android:name=".HelpSlideMemo" />
+        <activity android:name=".ToiletSheet.ToiletSheetActivity" />
+        <activity android:name=".HelpSlides.HelpSlideList" />
+        <activity android:name=".HelpSlides.HelpSlideToiletSheet" />
+        <activity android:name=".HelpSlides.HelpSlideMap" />
+        <activity android:name=".HelpSlides.HelpSlideSettings" />
+        <activity android:name=".HelpSlides.HelpSlideMemo" />
 
         <!-- android:theme="@style/Base.Theme.AppCompat" -->
 
@@ -84,7 +83,7 @@
             android:name=".ToiletEdition.DescriptionActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".ToiletEdition.RatingActivity" />
-        <activity android:name=".CommentActivity" />
+        <activity android:name=".ToiletSheet.CommentActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

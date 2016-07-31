@@ -25,13 +25,15 @@
 
     <string name="add_marker">Ajouter</string>
 
-    <string name="dialog_add_toilets">Ajouter un emplacement ?</string>
-    <string name="dialog_ready_to_add">Vous pouvez maintenant ajouter des toilettes.</string>
     <string name="dialog_zoom_more">Niveau de zoom insuffisant</string>
     <string name="dialog_zoom_more_instructions">Veuillez augmenter le niveau de zoom afin d\'effectuer un ajout plus précis.</string>
+    <string name="dialog_add_toilet">Vous pouvez maintenant ajouter des toilettes.</string>
+    <string name="dialog_add_toilet_instructions">Appuyez longtemps à l\'endroit désiré pour démarrer l\'ajout.</string>
+    <string name="dialog_add_toilet_confirm">Ajouter des toilettes</string>
+    <string name="dialog_add_toilet_confirm_message">Souhaitez-vous ajouter des toilettes à l\'endroit pressé ?</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
 
     <string name="help">Aide</string>
@@ -178,6 +180,6 @@
 
     <string name="confirm_send">Confirmation de l\'envoi</string>
     <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>
-    <string name="gotit">Compris !</string>
+    <string name="gotit">Compris</string>
 
 </resources>

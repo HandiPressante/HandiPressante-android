@@ -5,12 +5,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -34,7 +32,7 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.toiletedition_activity_rating);
+        setContentView(R.layout.activity_toiletedition_rating);
 
         Intent intent = getIntent();
         mToilet = intent.getParcelableExtra("toilet");

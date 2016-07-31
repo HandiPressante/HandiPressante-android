@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 
@@ -21,7 +20,7 @@ public class AccessibleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.toiletedition_activity_accessible);
+        setContentView(R.layout.activity_toiletedition_accessible);
 
         Intent intent = getIntent();
         mNewToilet = intent.getBooleanExtra("new", true);

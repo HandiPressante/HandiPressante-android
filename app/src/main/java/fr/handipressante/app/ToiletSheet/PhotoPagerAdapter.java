@@ -1,4 +1,4 @@
-package fr.handipressante.app;
+package fr.handipressante.app.ToiletSheet;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.handipressante.app.Data.Photo;
+import fr.handipressante.app.R;
 
 /**
  * Created by marc on 05/03/2016.
@@ -72,7 +73,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.photopager_item, collection, false);
+        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.pageritem_photo, collection, false);
         collection.addView(layout);
 
         ImageView imageView = (ImageView) layout.findViewById(R.id.picture_block);
@@ -263,7 +264,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
 
             DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
             int targetWidth = metrics.widthPixels;
-            // 220dp to px (correlated with viewpager height in activity_toilet_sheet.xml)
+            // 220dp to px (correlated with viewpager height in activity_toiletsheet.xml)
             int targetHeight = 220 * metrics.densityDpi / 160;
 
             return decodeSampledBitmapFromFile(mFilepath, targetWidth, targetHeight);

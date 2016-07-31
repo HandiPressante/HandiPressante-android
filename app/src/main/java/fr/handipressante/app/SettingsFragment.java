@@ -1,21 +1,15 @@
 package fr.handipressante.app;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import fr.handipressante.app.HelpSlides.HelpSlideSettings;
 
 
 /**
