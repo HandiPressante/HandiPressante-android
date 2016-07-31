@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -147,19 +148,15 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
     }
 
     private void initAccessibilityLayout() {
-        ImageView upButton = (ImageView) getActivity().findViewById(R.id.up);
-        ImageView downButton = (ImageView) getActivity().findViewById(R.id.down);
-        ImageView leftButton = (ImageView) getActivity().findViewById(R.id.left);
-        ImageView rightButton = (ImageView) getActivity().findViewById(R.id.right);
-        ImageView zoomInButton = (ImageView) getActivity().findViewById(R.id.zoom_in);
-        ImageView zoomOutButton = (ImageView) getActivity().findViewById(R.id.zoom_out);
+        RelativeLayout accessibilityLayout = (RelativeLayout) getActivity().findViewById(R.id.accessibility_layout);
+        ImageView upButton = (ImageView) accessibilityLayout.findViewById(R.id.up);
+        ImageView downButton = (ImageView) accessibilityLayout.findViewById(R.id.down);
+        ImageView leftButton = (ImageView) accessibilityLayout.findViewById(R.id.left);
+        ImageView rightButton = (ImageView) accessibilityLayout.findViewById(R.id.right);
+        ImageView zoomInButton = (ImageView) accessibilityLayout.findViewById(R.id.zoom_in);
+        ImageView zoomOutButton = (ImageView) accessibilityLayout.findViewById(R.id.zoom_out);
 
-        upButton.setVisibility(View.VISIBLE);
-        downButton.setVisibility(View.VISIBLE);
-        leftButton.setVisibility(View.VISIBLE);
-        rightButton.setVisibility(View.VISIBLE);
-        zoomInButton.setVisibility(View.VISIBLE);
-        zoomOutButton.setVisibility(View.VISIBLE);
+        accessibilityLayout.setVisibility(View.VISIBLE);
 
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
