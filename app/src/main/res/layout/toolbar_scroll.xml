@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar_bottom"
+    android:id="@+id/toolbar_scroll"
     android:background="#E53935"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:contentDescription="up"
             android:src="@drawable/ic_action_collapse"
-            android:background="@drawable/bottom_toolbar_button"
+            android:background="@drawable/scroll_toolbar_button"
             android:clickable="true" />
 
         <ImageButton
@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:contentDescription="down"
             android:src="@drawable/ic_action_expand"
-            android:background="@drawable/bottom_toolbar_button"
+            android:background="@drawable/scroll_toolbar_button"
             android:clickable="true" />
     </LinearLayout>
 
