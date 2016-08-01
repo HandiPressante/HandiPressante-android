@@ -74,6 +74,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mDrawerLayout.removeDrawerListener(mDrawerToggle);
+    }
+
     private boolean hasUuid() {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String uuid = sharedPref.getString(getString(R.string.saved_uuid), "");
@@ -152,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         createDrawerToggle();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     //method used with a button to send coords to external map app. Don't touch at the moment!!
