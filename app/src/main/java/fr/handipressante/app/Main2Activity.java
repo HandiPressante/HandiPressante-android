@@ -1,5 +1,7 @@
 package fr.handipressante.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
@@ -8,15 +10,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Stack;
+import java.util.UUID;
+
 import fr.handipressante.app.memo.MemoListFragment;
-import fr.handipressante.app.list.ToiletListFragment;
-import fr.handipressante.app.map.CustomMapFragment;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final String LOG_TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,21 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        if (!hasUuid())
+            generateUuid();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
+        Log.i(LOG_TAG, "UUID : " + uuid);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, new MainFragment())
+                    .commit();
+        }
     }
 
     @Override
@@ -40,6 +61,8 @@ public class Main2Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -54,16 +77,6 @@ public class Main2Activity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.help) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -72,30 +85,49 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        boolean commit = true;
 
-        if (id == R.id.nav_toiletlist) {
-            openFragment(new ToiletListFragment());
-        } else if (id == R.id.nav_toiletmap) {
-            openFragment(new CustomMapFragment());
+        if (id == R.id.nav_toilets) {
+            openFragment(new MainFragment());
         } else if (id == R.id.nav_memolist) {
             openFragment(new MemoListFragment());
         } else if (id == R.id.nav_settings) {
             openFragment(new SettingsFragment());
+        } else {
+            commit = false;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        if (commit) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+
+        return commit;
     }
 
-    private void openFragment(Fragment fragment)
-    {
+    private void openFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_main, fragment)
+                .addToBackStack(null)
                 .commit();
 
         // Wait completed transaction before closing the drawer
         getSupportFragmentManager().executePendingTransactions();
+    }
+
+    private boolean hasUuid() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPref.getString(getString(R.string.saved_uuid), "");
+        return !uuid.isEmpty();
+    }
+
+    private void generateUuid() {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String uuid = UUID.randomUUID().toString();
+        editor.putString(getString(R.string.saved_uuid), uuid);
+        editor.apply();
     }
 }
