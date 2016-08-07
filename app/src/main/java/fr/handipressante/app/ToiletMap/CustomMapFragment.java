@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,6 +36,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
 
     private boolean mAccessibilityOptionEnabled = true;
 
+    private MapView mMapView;
     private GoogleMap mMap;
     private boolean mMapReady = false;
 
@@ -45,10 +45,17 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_toiletmap, container, false);
+
+        // Gets the MapView from the XML layout and creates it
+        mMapView = (MapView) view.findViewById(R.id.mapview);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.getMapAsync(this);
+
         // Activate help menu
         setHasOptionsMenu(true);
 
-        return inflater.inflate(R.layout.fragment_toiletmap, container, false);
+        return view;
     }
 
     @Override
@@ -62,9 +69,30 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
         if (mAccessibilityOptionEnabled) {
             initAccessibilityLayout();
         }
+    }
 
-        MapFragment mapFragment = (MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     @Override
@@ -81,7 +109,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback, G
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.i(LOG_TAG, "Map ready");
         mMap = googleMap;
         mMap.setOnMapLongClickListener(this);
 

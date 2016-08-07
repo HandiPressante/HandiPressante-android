@@ -151,7 +151,7 @@
     <string name="toiletdescription_explanation">
         Vous pouvez ajouter ici toute information complémentaire à propos de ces toilettes, par exemple :\n
         - État intérieur\n
-        - Équipements (lavabo, poubelle, ...)\n
+        - Équipements (lavabo, poubelle, &#8230;)\n
         - Indications pour accéder aux toilettes
     </string>
 
@@ -181,5 +181,9 @@
     <string name="confirm_send">Confirmation de l\'envoi</string>
     <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>
     <string name="gotit">Compris</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Ouvrir le menu latéral</string>
+    <string name="navigation_drawer_close">Fermer le menu latéral</string>
 
 </resources>

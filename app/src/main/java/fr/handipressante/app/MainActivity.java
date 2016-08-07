@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private long lastPress;
     private Toast toast;
 
-
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("MainActivity", "onCreate");
@@ -125,14 +125,16 @@ public class MainActivity extends AppCompatActivity {
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            public void onDrawerOpened(View view) {
+                //super.onDrawerOpened(view);
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
             }
 
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            public void onDrawerClosed(View view) {
+                //super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu();
             }
         };
 
