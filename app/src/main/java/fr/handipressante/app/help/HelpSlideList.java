@@ -1,13 +1,11 @@
 package fr.handipressante.app.help;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
-import fr.handipressante.app.MainActivity;
 import fr.handipressante.app.R;
 
 /**
@@ -33,13 +31,6 @@ public class HelpSlideList extends AppIntro {
         // Hide Skip/Done button
         showSkipButton(false);
     }
-
-
-    private void loadMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
 
     @Override
     public void onNextPressed() {
