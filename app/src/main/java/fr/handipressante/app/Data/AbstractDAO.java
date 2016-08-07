@@ -1,4 +1,4 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

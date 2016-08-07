@@ -1,7 +1,6 @@
-package fr.handipressante.app.ToiletSheet;
+package fr.handipressante.app.show;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,7 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.handipressante.app.Data.Photo;
+import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.R;
 
 /**

@@ -1,4 +1,4 @@
-package fr.handipressante.app.Server;
+package fr.handipressante.app.server;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,8 +14,8 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.handipressante.app.Data.DataFactory;
-import fr.handipressante.app.Data.Photo;
+import fr.handipressante.app.data.DataFactory;
+import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.MyConstants;
 
 public class PhotoDownloader extends Downloader {

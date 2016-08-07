@@ -1,8 +1,7 @@
-package fr.handipressante.app.Server;
+package fr.handipressante.app.server;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Cache;
@@ -18,13 +17,10 @@ import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import fr.handipressante.app.Data.DataFactory;
-import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.data.DataFactory;
+import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.MyConstants;
 import fr.handipressante.app.R;
 

@@ -1,4 +1,4 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 import fr.handipressante.app.MyConstants;
 

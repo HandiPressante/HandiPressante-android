@@ -1,4 +1,4 @@
-package fr.handipressante.app.Server;
+package fr.handipressante.app.server;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

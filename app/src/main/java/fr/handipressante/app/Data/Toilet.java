@@ -1,11 +1,10 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

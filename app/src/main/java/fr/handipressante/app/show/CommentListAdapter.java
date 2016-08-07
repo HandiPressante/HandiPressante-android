@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletSheet;
+package fr.handipressante.app.show;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.handipressante.app.Data.Comment;
+import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.R;
 
 /**

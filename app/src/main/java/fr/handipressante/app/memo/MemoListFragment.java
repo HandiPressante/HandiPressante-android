@@ -1,4 +1,4 @@
-package fr.handipressante.app.MemoList;
+package fr.handipressante.app.memo;
 
 
 /**
@@ -30,12 +30,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.handipressante.app.Data.Memo;
-import fr.handipressante.app.Data.MemoDAO;
-import fr.handipressante.app.HelpSlides.HelpSlideMemo;
+import fr.handipressante.app.data.Memo;
+import fr.handipressante.app.data.MemoDAO;
+import fr.handipressante.app.help.HelpSlideMemo;
 import fr.handipressante.app.R;
-import fr.handipressante.app.Server.Downloader;
-import fr.handipressante.app.Server.MemoDownloader;
+import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.MemoDownloader;
 
 public class MemoListFragment extends ListFragment {
     private MemoListAdapter mAdapter;

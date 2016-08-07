@@ -1,24 +1,17 @@
-package fr.handipressante.app.ToiletList;
+package fr.handipressante.app.list;
 
 
 /**
  * Created by Tom on 21/10/2015.
  */
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -29,16 +22,12 @@ import android.widget.ListView;
 
 import org.osmdroid.util.GeoPoint;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import fr.handipressante.app.Data.NearbyToiletDAO;
-import fr.handipressante.app.Data.Toilet;
-import fr.handipressante.app.HelpSlides.HelpSlideList;
+import fr.handipressante.app.data.NearbyToiletDAO;
+import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.help.HelpSlideList;
 import fr.handipressante.app.R;
-import fr.handipressante.app.Server.Downloader;
-import fr.handipressante.app.Server.ToiletDownloader;
-import fr.handipressante.app.ToiletSheet.ToiletSheetActivity;
 
 public class ToiletListFragment extends ListFragment implements LocationListener {
     private LocationManager mLocationManager;

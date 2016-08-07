@@ -1,4 +1,4 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 /**
  * Created by Nico on 26/05/2016.
