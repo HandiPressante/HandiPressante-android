@@ -11,9 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import fr.handipressante.app.MemoList.MemoListFragment;
-import fr.handipressante.app.ToiletList.ToiletListFragment;
-import fr.handipressante.app.ToiletMap.CustomMapFragment;
+import fr.handipressante.app.memo.MemoListFragment;
+import fr.handipressante.app.list.ToiletListFragment;
+import fr.handipressante.app.map.CustomMapFragment;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

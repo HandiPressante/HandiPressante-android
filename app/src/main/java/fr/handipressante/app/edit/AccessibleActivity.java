@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletEdition;
+package fr.handipressante.app.edit;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
-import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 
 public class AccessibleActivity extends AppCompatActivity {

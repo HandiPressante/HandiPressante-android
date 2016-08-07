@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletList;
+package fr.handipressante.app.list;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
-import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 
 /**

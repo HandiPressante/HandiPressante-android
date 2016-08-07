@@ -1,11 +1,8 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
-
-import fr.handipressante.app.Data.Memo;
-import fr.handipressante.app.Data.Toilet;
 
 /**
  * Created by Nico on 23/10/2015.

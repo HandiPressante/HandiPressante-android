@@ -1,4 +1,4 @@
-package fr.handipressante.app.Server;
+package fr.handipressante.app.server;
 
 import android.content.Context;
 

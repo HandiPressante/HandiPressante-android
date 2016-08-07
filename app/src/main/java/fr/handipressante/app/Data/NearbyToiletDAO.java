@@ -1,4 +1,4 @@
-package fr.handipressante.app.Data;
+package fr.handipressante.app.data;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletEdition;
+package fr.handipressante.app.edit;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
-import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 
 /**

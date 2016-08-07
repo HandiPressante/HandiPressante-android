@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletMap;
+package fr.handipressante.app.map;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,10 +25,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.osmdroid.util.GeoPoint;
 
-import fr.handipressante.app.Data.Toilet;
-import fr.handipressante.app.HelpSlides.HelpSlideMap;
+import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.help.HelpSlideMap;
 import fr.handipressante.app.R;
-import fr.handipressante.app.ToiletEdition.AddToiletDialog;
+import fr.handipressante.app.edit.AddToiletDialog;
 
 public class CustomMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 

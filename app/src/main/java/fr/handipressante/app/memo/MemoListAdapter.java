@@ -1,4 +1,4 @@
-package fr.handipressante.app.MemoList;
+package fr.handipressante.app.memo;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.handipressante.app.Data.Memo;
+import fr.handipressante.app.data.Memo;
 import fr.handipressante.app.R;
 
 

@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletSheet;
+package fr.handipressante.app.show;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,10 +15,10 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.handipressante.app.Data.Comment;
+import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.R;
-import fr.handipressante.app.Server.CommentDownloader;
-import fr.handipressante.app.Server.Downloader;
+import fr.handipressante.app.server.CommentDownloader;
+import fr.handipressante.app.server.Downloader;
 
 public class CommentActivity extends AppCompatActivity {
     CommentListAdapter mAdapter;

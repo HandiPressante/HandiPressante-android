@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletMap;
+package fr.handipressante.app.map;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

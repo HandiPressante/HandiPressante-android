@@ -9,7 +9,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
 
-import fr.handipressante.app.HelpSlides.HelpSlideSettings;
+import fr.handipressante.app.help.HelpSlideSettings;
 
 
 /**

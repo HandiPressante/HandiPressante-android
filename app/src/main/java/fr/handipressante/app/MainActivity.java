@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import java.util.UUID;
 
-import fr.handipressante.app.MemoList.MemoListFragment;
+import fr.handipressante.app.memo.MemoListFragment;
 
 
 public class MainActivity extends AppCompatActivity {

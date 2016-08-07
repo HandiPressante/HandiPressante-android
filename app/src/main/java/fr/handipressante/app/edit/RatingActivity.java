@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletEdition;
+package fr.handipressante.app.edit;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,10 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.handipressante.app.Converters;
-import fr.handipressante.app.Data.Toilet;
+import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
-import fr.handipressante.app.Server.Downloader;
-import fr.handipressante.app.Server.ToiletDownloader;
+import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.ToiletDownloader;
 
 public class RatingActivity extends AppCompatActivity implements Downloader.Listener<JSONObject> {
     private Toilet mToilet;

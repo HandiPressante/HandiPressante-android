@@ -1,4 +1,4 @@
-package fr.handipressante.app.ToiletSheet;
+package fr.handipressante.app.show;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,23 +46,23 @@ import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
-import fr.handipressante.app.Data.Comment;
-import fr.handipressante.app.Data.Photo;
-import fr.handipressante.app.Data.PhotoDAO;
-import fr.handipressante.app.Data.Toilet;
-import fr.handipressante.app.HelpSlides.HelpSlideToiletSheet;
+import fr.handipressante.app.data.Comment;
+import fr.handipressante.app.data.Photo;
+import fr.handipressante.app.data.PhotoDAO;
+import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
-import fr.handipressante.app.Server.CommentDownloader;
-import fr.handipressante.app.Server.Downloader;
-import fr.handipressante.app.Server.MultipartRequest;
-import fr.handipressante.app.Server.PhotoDownloader;
-import fr.handipressante.app.Server.RequestManager;
-import fr.handipressante.app.Server.ToiletDownloader;
-import fr.handipressante.app.ToiletEdition.CommentEdition;
-import fr.handipressante.app.ToiletEdition.ConfirmPhotoDialogFragment;
-import fr.handipressante.app.ToiletEdition.DescriptionActivity;
-import fr.handipressante.app.ToiletEdition.NameActivity;
-import fr.handipressante.app.ToiletEdition.RatingActivity;
+import fr.handipressante.app.server.CommentDownloader;
+import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.MultipartRequest;
+import fr.handipressante.app.server.PhotoDownloader;
+import fr.handipressante.app.server.RequestManager;
+import fr.handipressante.app.server.ToiletDownloader;
+import fr.handipressante.app.edit.CommentEdition;
+import fr.handipressante.app.edit.ConfirmPhotoDialogFragment;
+import fr.handipressante.app.edit.DescriptionActivity;
+import fr.handipressante.app.edit.NameActivity;
+import fr.handipressante.app.edit.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
     private Toilet mToilet;

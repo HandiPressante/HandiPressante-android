@@ -1,6 +1,5 @@
-package fr.handipressante.app.HelpSlides;
+package fr.handipressante.app.help;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -12,14 +11,14 @@ import fr.handipressante.app.R;
 /**
  * Created by marc on 25/05/2016.
  */
-public class HelpSlideSettings extends AppIntro {
+public class HelpSlideMemo extends AppIntro {
 
     // Please DO NOT override onCreate. Use init
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Aide réglages", "Adaptez l'application à vos besoins. Ajoutez ou supprimez des boutons de navigations, filtrez les données affichées.",
-                R.drawable.tuto_settings, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Aide mémo", "Retrouvez ici des fiches d'information sur des pathologies, des guides de soin ainsi que d'autres informations médicales.",
+                R.drawable.tuto_memo, Color.parseColor("#164F86")));
         // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
         //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
         // OPTIONAL METHODS
