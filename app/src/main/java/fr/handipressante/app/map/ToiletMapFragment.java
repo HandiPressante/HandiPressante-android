@@ -30,9 +30,9 @@ import fr.handipressante.app.help.HelpSlideMap;
 import fr.handipressante.app.R;
 import fr.handipressante.app.edit.AddToiletDialog;
 
-public class CustomMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
-    private final String LOG_TAG = "HandipressanteApp";
+    private final String LOG_TAG = "ToiletMapFragment";
 
     private boolean mAccessibilityOptionEnabled = true;
 

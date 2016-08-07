@@ -5,13 +5,20 @@ package fr.handipressante.app.list;
  * Created by Tom on 21/10/2015.
  */
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -22,14 +29,21 @@ import android.widget.ListView;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.handipressante.app.data.NearbyToiletDAO;
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.help.HelpSlideList;
 import fr.handipressante.app.R;
+import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.ToiletDownloader;
+import fr.handipressante.app.show.ToiletSheetActivity;
 
 public class ToiletListFragment extends ListFragment implements LocationListener {
+
+    private final String LOG_TAG = "ToiletListFragment";
+
     private LocationManager mLocationManager;
     private String mProvider;
     private GeoPoint mCurrentGeopoint;
@@ -37,22 +51,19 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     private ToiletListAdapter mAdapter;
     private List<Toilet> mToiletCache;
 
-    SharedPreferences sharedPrefs;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_toiletlist, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("ToiletListFragment", "onActivityCreated");
+        Log.i(LOG_TAG, "onActivityCreated");
 
-        /*
         Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_scroll);
 
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
 
         if(!scroll_help) {
@@ -92,7 +103,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         if (savedInstanceState != null) {
             mCurrentGeopoint = savedInstanceState.getParcelable("current_location");
         }
-        */
     }
 
     /* Request updates at startup */
@@ -101,7 +111,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         super.onResume();
         Log.i("ToiletListFragment", "onResume");
 
-        /*
         new LoadDatabaseTask().execute();
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -127,7 +136,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-        */
     }
 
     /* Remove the locationlistener updates when Activity is paused */
@@ -136,7 +144,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         super.onPause();
         Log.i("ToiletListFragment", "onPause");
 
-        /*
         try {
             mLocationManager.removeUpdates(this);
         } catch (SecurityException e) {
@@ -150,7 +157,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             dao.addAll(mToiletCache);
             dao.close();
         }
-        */
     }
 
     @Override
@@ -176,7 +182,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     }
 
     private boolean startLocationUpdates() throws SecurityException {
-        /*
         boolean result = false;
         for (final String provider : mLocationManager.getProviders(true)) {
             // TODO : Better parameters ?
@@ -184,25 +189,20 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             result = true;
         }
         return result;
-        */
-        return false;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        /*
         Toilet t = (Toilet) getListAdapter().getItem(position);
         if (t != null) {
             Intent intent = new Intent(getActivity(), ToiletSheetActivity.class);
             intent.putExtra("toilet", t);
             startActivity(intent);
         }
-        */
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        /*
         Log.i("ToiletListFragment", "onLocationChanged");
         mCurrentGeopoint = new GeoPoint(location.getLatitude(), location.getLongitude());
         if (!mToiletCache.isEmpty()) {
@@ -217,7 +217,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
                         updateToiletList(response, false);
                     }
                 });
-                */
     }
 
     @Override
@@ -241,7 +240,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     }
 
     synchronized private void updateToiletList(List<Toilet> toiletList, boolean firstOnly) {
-        /*
         if (!firstOnly || getListAdapter() == null) {
             for (Toilet t : toiletList) {
                 t.setDistanceWith(mCurrentGeopoint);
@@ -255,16 +253,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
                 setListAdapter(mAdapter);
             }
         }
-        */
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /*
-        setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_toiletlist, container, false); }
-        */
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override

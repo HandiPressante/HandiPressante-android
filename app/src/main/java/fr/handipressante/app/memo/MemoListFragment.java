@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -58,6 +59,10 @@ public class MemoListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("MemoListFragment", "onActivityCreated");
+
+        getActivity().setTitle(R.string.menu_memos);
+        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(1).setChecked(true);
     }
 
     @Override
