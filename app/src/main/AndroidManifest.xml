@@ -88,7 +88,7 @@
             android:value="AIzaSyAqwzbVWz8gJZtCj1-VZ6d-WwrYfO8ZNNo" />
 
         <activity
-            android:name=".Main2Activity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme"></activity>
     </application>

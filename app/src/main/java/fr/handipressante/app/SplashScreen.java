@@ -61,7 +61,7 @@ public class SplashScreen extends Activity {
 
                     startActivity(new Intent(SplashScreen.this, FirstRun.class));
                 } else {
-                    startActivity(new Intent(SplashScreen.this, Main2Activity.class));
+                    startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 }
 
                 finish();
