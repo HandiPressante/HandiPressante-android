@@ -404,16 +404,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
     public void fillToiletSheet(Toilet toilet) {
         // Set icon whether adapted toilet or not
         ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
-        if (toilet.isAdapted()) {
-            handicapped.setImageResource(R.drawable.handicap_icon);
-        } else {
-            handicapped.setImageResource(R.drawable.not_handicap_icon);
-        }
+        handicapped.setImageResource(Converters.pmrFromBoolean(toilet.isAdapted()));
 
         ImageView charged= (ImageView) findViewById(R.id.charged);
-        if (toilet.isCharged()){
-            charged.setImageResource(R.drawable.ic_euro_symbol_red);
-        }
+        charged.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
