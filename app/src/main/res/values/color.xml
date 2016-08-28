@@ -4,4 +4,6 @@
     <color name="grey">#696969</color>
     <color name="dark_blue">#164F86</color>
     <color name="lighter_gray">#ddd</color>
+
+    <color name="cluster_text">#fff</color>
 </resources>

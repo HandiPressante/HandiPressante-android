@@ -1,6 +1,5 @@
 package fr.handipressante.app.edit;
 
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -14,14 +13,13 @@ import fr.handipressante.app.R;
 /**
  * Created by marc on 10/04/2016.
  */
+
 public class AddToiletDialog extends DialogFragment
 {
-    private Toilet mToilet;
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Bundle args = getArguments();
-        mToilet = args.getParcelable("toilet");
+        final Toilet toilet = args.getParcelable("toilet");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_add_toilet_confirm_message)
@@ -29,9 +27,11 @@ public class AddToiletDialog extends DialogFragment
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent(getActivity().getApplicationContext(), NameActivity.class);
-                        intent.putExtra("toilet", mToilet);
+                        intent.putExtra("toilet", toilet);
                         intent.putExtra("new", true);
-                        startActivity(intent);
+                        if (getTargetFragment() != null) {
+                            getTargetFragment().startActivityForResult(intent, getTargetRequestCode());
+                        }
                     }
                 })
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

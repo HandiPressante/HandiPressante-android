@@ -3,6 +3,9 @@ package fr.handipressante.app.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 import org.osmdroid.util.GeoPoint;
 
 import java.util.List;
@@ -10,7 +13,7 @@ import java.util.List;
 /**
  * Created by Nico on 19/10/2015.
  */
-public class Toilet implements Parcelable {
+public class Toilet implements Parcelable, ClusterItem {
     private Integer _id;
     private Boolean _adapted;
     private String _address;
@@ -255,5 +258,10 @@ public class Toilet implements Parcelable {
         double distanceKm = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
         return distanceKm * 1000;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(_coord.getLatitude(), _coord.getLongitude());
     }
 }
