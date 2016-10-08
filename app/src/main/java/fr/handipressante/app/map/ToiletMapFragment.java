@@ -507,6 +507,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
             // Draw cluster of toilets.
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            markerOptions.snippet("cluster");
         }
 
         @Override
@@ -536,6 +537,10 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
         @Override
         public View getInfoContents(Marker marker) {
+            // Do nothing if a cluster is touched
+            if (marker.getSnippet().equals("cluster"))
+                return null;
+
             Integer toiletId = Integer.valueOf(marker.getSnippet());
             if (mDownloadedToilets.containsKey(toiletId)) {
                 Toilet toilet = mDownloadedToilets.get(toiletId);
