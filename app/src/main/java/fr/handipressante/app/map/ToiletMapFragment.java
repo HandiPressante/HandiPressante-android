@@ -441,6 +441,10 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
                 double latitudeDelta = northEast.latitude - southWest.latitude;
                 double longitudeDelta = northEast.longitude - southWest.longitude;
+                // 180th meridian management
+                if (longitudeDelta < 0) {
+                    longitudeDelta += 360;
+                }
 
                 mExtNorthEast = new LatLng(
                         northEast.latitude + latitudeDelta,
@@ -463,13 +467,23 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         }
     }
 
+    private boolean isLngOutOfBox(double lngExtWest, double lngExtEast, double lng) {
+        // 180th meridian management
+        if (lngExtWest > lngExtEast) {
+            return !isLngOutOfBox(lngExtEast, lngExtWest, lng);
+        } else {
+            return lng < lngExtWest || lng > lngExtEast;
+        }
+    }
+
     private boolean isDataUpdateRequired(LatLng northEast, LatLng southWest) {
         if (mExtNorthEast == null || mExtSouthWest == null) return true;
 
         boolean outNorth = northEast.latitude > mExtNorthEast.latitude;
         boolean outSouth = southWest.latitude < mExtSouthWest.latitude;
-        boolean outEast = northEast.longitude > mExtNorthEast.longitude;
-        boolean outWest = southWest.longitude < mExtSouthWest.longitude;
+
+        boolean outEast = isLngOutOfBox(mExtSouthWest.longitude, mExtNorthEast.longitude, northEast.longitude);
+        boolean outWest = isLngOutOfBox(mExtSouthWest.longitude, mExtNorthEast.longitude, southWest.longitude);
 
         return outNorth || outSouth || outWest || outEast;
     }
