@@ -149,6 +149,8 @@
                     android:layout_below="@+id/facilitiesLayout"
                     android:layout_alignEnd="@+id/facilitiesLayout"
                     android:layout_alignRight="@+id/facilitiesLayout"
+                    android:background="@drawable/button"
+                    android:textColor="@color/lightest_gray"
                     android:text="@string/ok"/>
 
             </RelativeLayout>

@@ -47,6 +47,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/toilet_description"
                     android:layout_alignRight="@+id/toilet_description"
+                    android:background="@drawable/button"
+                    android:textColor="@color/lightest_gray"
                     android:text="@string/save"/>
 
             </RelativeLayout>
