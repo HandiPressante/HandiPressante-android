@@ -77,6 +77,7 @@
             android:name=".edit.CommentEdition"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".edit.AccessibleActivity" />
+        <activity android:name=".edit.ChargedActivity" />
         <activity
             android:name=".edit.DescriptionActivity"
             android:windowSoftInputMode="stateHidden" />

@@ -1,8 +1,8 @@
 package fr.handipressante.app.edit;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -11,36 +11,36 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import fr.handipressante.app.Converters;
-import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
+import fr.handipressante.app.data.Toilet;
 
-public class AccessibleActivity extends AppCompatActivity {
+public class ChargedActivity extends AppCompatActivity {
     private Toilet mToilet;
     private boolean mNewToilet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_toiletedition_accessible);
+        setContentView(R.layout.activity_toiletedition_charged);
 
         Intent intent = getIntent();
         mNewToilet = intent.getBooleanExtra("new", true);
         mToilet = intent.getParcelableExtra("toilet");
 
-        Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
-        final ImageView accessibleView = (ImageView) findViewById(R.id.accessibleView);
+        Switch chargedSwitch = (Switch) findViewById(R.id.chargedSwitch);
+        final ImageView chargedView = (ImageView) findViewById(R.id.chargedView);
 
-        accessibleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        chargedSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                accessibleView.setImageResource(Converters.pmrFromBoolean(isChecked));
+                chargedView.setImageResource(Converters.chargedFromBoolean(isChecked));
             }
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (!mNewToilet) {
-            accessibleSwitch.setChecked(mToilet.isAdapted());
+            chargedSwitch.setChecked(mToilet.isAdapted());
             toolbar.setTitle(getString(R.string.edittoilet_edit));
         } else {
             toolbar.setTitle(getString(R.string.edittoilet_new));
@@ -50,10 +50,10 @@ public class AccessibleActivity extends AppCompatActivity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
-                mToilet.setAdapted(accessibleSwitch.isChecked());
+                Switch chargedSwitch = (Switch) findViewById(R.id.chargedSwitch);
+                mToilet.setCharged(chargedSwitch.isChecked());
 
-                Intent intent = new Intent(getApplicationContext(), ChargedActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DescriptionActivity.class);
                 intent.putExtra("toilet", mToilet);
                 intent.putExtra("new", mNewToilet);
                 startActivityForResult(intent, 1);
