@@ -33,9 +33,9 @@ public class Toilet implements Parcelable, ClusterItem {
     public Toilet() {
         _id = 0;
         _adapted = false;
+        _charged = false;
         _address = "Undefined";
         _coord = new GeoPoint(0, 0);
-        _charged = false;
 
         _description = "";
         _rankCleanliness = -1;
@@ -43,12 +43,12 @@ public class Toilet implements Parcelable, ClusterItem {
         _rankAccessibility = -1;
     }
 
-    public Toilet(Integer id, Boolean adapted, String address, GeoPoint coord) {
+    public Toilet(Integer id, Boolean adapted, Boolean charged, String address, GeoPoint coord) {
         _id = id;
         _adapted = adapted;
+        _charged = charged;
         _address = address;
         _coord = coord;
-        _charged = false;
 
         _description = "";
         _rankCleanliness = -1;
@@ -59,9 +59,9 @@ public class Toilet implements Parcelable, ClusterItem {
     public Toilet(Parcel in) {
         _id = in.readInt();
         _adapted = in.readByte() != 0;
+        _charged = in.readByte() != 0;
         _address = in.readString();
         _coord = new GeoPoint(in.readDouble(), in.readDouble());
-        _charged = false;
 
         _description = in.readString();
         _rankCleanliness = in.readInt();
@@ -80,6 +80,7 @@ public class Toilet implements Parcelable, ClusterItem {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(_id);
         dest.writeByte((byte) (_adapted ? 1 : 0));
+        dest.writeByte((byte) (_charged ? 1 : 0));
         dest.writeString(_address);
         dest.writeDouble(_coord.getLatitude());
         dest.writeDouble(_coord.getLongitude());
@@ -108,6 +109,7 @@ public class Toilet implements Parcelable, ClusterItem {
         if (_id != t._id) return;
 
         _adapted = t._adapted;
+        _charged = t._charged;
         _address = t._address;
         _coord = t._coord;
         _description = t._description;
@@ -134,6 +136,10 @@ public class Toilet implements Parcelable, ClusterItem {
 
     public void setAdapted(Boolean adapted) {
         _adapted = adapted;
+    }
+
+    public void setCharged(Boolean charged) {
+        _charged = charged;
     }
 
     public String getAddress() {

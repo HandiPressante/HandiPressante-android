@@ -12,6 +12,7 @@ public class DataFactory {
         int t_id = jsonObject.getInt("id");
         String t_address = jsonObject.getString("lieu");
         boolean t_adapted = jsonObject.optInt("pmr", 0) == 1;
+        boolean t_charged = false;
         double t_lat = jsonObject.getDouble("lat84");
         double t_long = jsonObject.getDouble("long84");
 
@@ -24,7 +25,7 @@ public class DataFactory {
         double t_rankFacilities = jsonObject.optDouble("moyenne_equipement", -1.0);
         double t_rankAccessibility = jsonObject.optDouble("moyenne_accessibilite", -1.0);
 
-        Toilet t = new Toilet(t_id, t_adapted, t_address, new GeoPoint(t_lat, t_long));
+        Toilet t = new Toilet(t_id, t_adapted, t_charged, t_address, new GeoPoint(t_lat, t_long));
         t.setDescription(t_description);
         t.setRankCleanliness((int) Math.round(t_rankCleanliness));
         t.setRankFacilities((int) Math.round(t_rankFacilities));
