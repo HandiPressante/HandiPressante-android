@@ -12,7 +12,7 @@ public class DataFactory {
         int t_id = jsonObject.getInt("id");
         String t_address = jsonObject.getString("lieu");
         boolean t_adapted = jsonObject.optInt("pmr", 0) == 1;
-        boolean t_charged = false;
+        boolean t_charged = jsonObject.optInt("charged", 0) == 1;
         double t_lat = jsonObject.getDouble("lat84");
         double t_long = jsonObject.getDouble("long84");
 

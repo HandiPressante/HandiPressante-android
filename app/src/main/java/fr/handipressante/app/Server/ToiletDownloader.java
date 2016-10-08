@@ -137,6 +137,7 @@ public class ToiletDownloader extends Downloader {
 
             data.put("toilet_name", toilet.getAddress());
             data.put("toilet_accessible", toilet.isAdapted());
+            data.put("toilet_charged", toilet.isCharged());
             data.put("toilet_description", toilet.getDescription());
 
             data.put("toilet_latitude", toilet.getCoordinates().getLatitude());
