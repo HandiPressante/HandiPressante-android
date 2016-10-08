@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 
+import fr.handipressante.app.Converters;
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 
@@ -32,10 +33,7 @@ public class AccessibleActivity extends AppCompatActivity {
         accessibleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    accessibleView.setImageResource(R.drawable.handicap_icon);
-                else
-                    accessibleView.setImageResource(R.drawable.not_handicap_icon);
+                accessibleView.setImageResource(Converters.pmrFromBoolean(isChecked));
             }
         });
 
