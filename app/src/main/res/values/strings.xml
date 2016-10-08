@@ -150,6 +150,10 @@
         Veuillez indiquer si les toilettes sont accessibles aux personnes à mobilité réduite.
     </string>
 
+    <string name="toiletcharged_explanation">
+        Veuillez indiquer si les toilettes sont payantes.
+    </string>
+
     <string name="toiletdescription_explanation">
         Vous pouvez ajouter ici toute information complémentaire à propos de ces toilettes, par exemple :\n
         - État intérieur\n
