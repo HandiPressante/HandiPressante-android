@@ -22,6 +22,8 @@
 
     <string name="toiletlist_no_data">Il n\'y a pas de toilettes référencées à proximité.</string>
 
+    <string name="memolist_no_data">Il n\'y a pas de mémos médicaux.</string>
+
     <string name="modification">Modifier fiche</string>
     <string name="save">Enregistrer</string>
 
