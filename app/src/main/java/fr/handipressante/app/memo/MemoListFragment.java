@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,9 +17,13 @@ import android.os.PowerManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ListFragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.io.File;
@@ -43,6 +48,11 @@ public class MemoListFragment extends ListFragment {
     private ProgressDialog mMemoDownloadDialog;
 
     @Override
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_memolist, container, false);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -59,6 +69,30 @@ public class MemoListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i("MemoListFragment", "onActivityCreated");
+
+        Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_scroll);
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
+
+        if(!scroll_help) {
+            toolbarBottom.setVisibility(View.GONE);
+        }
+
+        getActivity().findViewById(R.id.upList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int offset = computeVisibleItemCount();
+                getListView().smoothScrollByOffset(-offset);
+            }
+        });
+        getActivity().findViewById(R.id.downList).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int offset = computeVisibleItemCount();
+                getListView().smoothScrollByOffset(offset);
+            }
+        });
 
         getActivity().setTitle(R.string.menu_memos);
         NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
@@ -98,6 +132,18 @@ public class MemoListFragment extends ListFragment {
                 new DownloadTask().execute(m);
             }
         }
+    }
+
+    private int computeVisibleItemCount() {
+        if (mAdapter.getCount() == 0)
+            return 0;
+
+        int listViewHeight = getListView().getHeight();
+        View listItem = mAdapter.getView(0, null, getListView());
+        listItem.measure(0, 0);
+        int childItemHeight = listItem.getMeasuredHeight() + getListView().getDividerHeight();
+
+        return listViewHeight / childItemHeight;
     }
 
     private void openFile(File file) {
