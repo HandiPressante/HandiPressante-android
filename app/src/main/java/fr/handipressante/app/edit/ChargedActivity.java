@@ -40,7 +40,7 @@ public class ChargedActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (!mNewToilet) {
-            chargedSwitch.setChecked(mToilet.isAdapted());
+            chargedSwitch.setChecked(mToilet.isCharged());
             toolbar.setTitle(getString(R.string.edittoilet_edit));
         } else {
             toolbar.setTitle(getString(R.string.edittoilet_new));
