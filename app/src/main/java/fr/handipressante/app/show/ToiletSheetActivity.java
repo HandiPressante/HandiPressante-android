@@ -19,10 +19,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -71,6 +73,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
     final int REQUEST_IMAGE_CAPTURE = 1;
     final int REQUEST_TOILET_EDIT = 2;
     final int REQUEST_ADD_COMMENT = 3;
+
+    final int MAX_COMMENTS_VISIBLE = 5;
 
     SharedPreferences sharedPrefs;
 
@@ -490,7 +494,39 @@ public class ToiletSheetActivity extends AppCompatActivity {
             findViewById(R.id.show_comments).setVisibility(View.GONE);
         } else {
             findViewById(R.id.no_comment).setVisibility(View.GONE);
-            findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
+
+            ViewGroup commentView = (ViewGroup) findViewById(R.id.comments);
+            commentView.removeAllViewsInLayout();
+
+            for (int i = 0; i < commentList.size() && i < MAX_COMMENTS_VISIBLE; ++i) {
+                Comment comment = commentList.get(i);
+
+                View row = null;
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                if (i + 1 == commentList.size()) {
+                    // No separator if last element
+                    row = inflater.inflate(R.layout.listitem_comment, commentView, false);
+                } else {
+                    row = inflater.inflate(R.layout.listitem_comment_and_separator, commentView, false);
+                }
+
+                TextView username = (TextView) row.findViewById(R.id.username);
+                TextView content = (TextView) row.findViewById(R.id.content);
+                TextView date = (TextView) row.findViewById(R.id.date);
+
+                username.setText(comment.getUsername());
+                content.setText(comment.getContent());
+                date.setText(comment.getPostdate());
+
+                commentView.addView(row);
+            }
+
+            if (commentList.size() > MAX_COMMENTS_VISIBLE) {
+                findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.show_comments).setVisibility(View.GONE);
+            }
         }
 
         /*
