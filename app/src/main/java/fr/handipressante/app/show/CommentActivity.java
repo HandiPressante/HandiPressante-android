@@ -28,7 +28,7 @@ public class CommentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
+        setContentView(R.layout.activity_toiletsheet_comment);
 
         mAdapter = new CommentListAdapter(getApplicationContext(), new ArrayList<Comment>());
 

@@ -173,6 +173,8 @@
         Veuillez attribuer une note pour chaque critère.
     </string>
 
+    <string name="more_comments">Autres commentaires</string>
+
     <string name="comment">Commentaires</string>
     <string name="improve_ergo">Améliorer l\'ergonomie</string>
     <string name="button_size">Taille des boutons</string>
