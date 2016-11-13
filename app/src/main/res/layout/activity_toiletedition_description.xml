@@ -16,7 +16,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
@@ -45,8 +45,9 @@
                     android:id="@+id/validate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/toilet_description"
-                    android:layout_alignRight="@+id/toilet_description"
+                    android:layout_below="@id/toilet_description"
+                    android:layout_alignRight="@id/toilet_description"
+                    android:layout_alignEnd="@id/toilet_description"
                     android:background="@drawable/button"
                     android:textColor="@color/lightest_gray"
                     android:text="@string/save"/>
