@@ -43,8 +43,8 @@ public class ToiletDownloader extends Downloader {
     public void requestNearbyToilets(GeoPoint ref, int mincount, int maxcount, int distanceMax,
                                      final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestNearbyToilets");
-        String url = MyConstants.API_URL + "toilettesliste/" +
-                ref.getLongitude() + "/" + ref.getLatitude() + "/" +
+        String url = MyConstants.BASE_URL + "/toilets/get-nearby/" +
+                ref.getLatitude() + "/" + ref.getLongitude() + "/" +
                 mincount + "/" + maxcount + "/" + distanceMax;
 
         requestToilets(url, listener);
@@ -60,9 +60,9 @@ public class ToiletDownloader extends Downloader {
     public void requestMapToilets(GeoPoint topLeft, GeoPoint bottomRight,
                                   final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestMapToilets");
-        String url = MyConstants.API_URL + "toilettescarte/" +
-                topLeft.getLongitude() + "/" + topLeft.getLatitude() + "/" +
-                bottomRight.getLongitude() + "/" + bottomRight.getLatitude();
+        String url = MyConstants.BASE_URL + "/toilets/get-area/" +
+                topLeft.getLatitude() + "/" + topLeft.getLongitude() + "/" +
+                bottomRight.getLatitude() + "/" + bottomRight.getLongitude();
 
         requestToilets(url, listener);
     }
@@ -73,7 +73,7 @@ public class ToiletDownloader extends Downloader {
      * @param listener Listener to receive the toilet response
      */
     public void requestToilet(int id, final Listener<List<Toilet>> listener) {
-        String url = MyConstants.API_URL + "toilet/" + id;
+        String url = MyConstants.BASE_URL + "/toilets/get-" + id;
         requestToilets(url, listener);
     }
 
@@ -149,9 +149,9 @@ public class ToiletDownloader extends Downloader {
         }
 
         if (newToilet) {
-            url = MyConstants.API_URL + "toilet-add";
+            url = MyConstants.BASE_URL + "/toilets/add";
         } else {
-            url = MyConstants.API_URL + "toilet-edit";
+            url = MyConstants.BASE_URL + "/toilets/edit";
         }
 
         postJson(url, data, listener);
@@ -178,7 +178,7 @@ public class ToiletDownloader extends Downloader {
             return;
         }
 
-        url = MyConstants.API_URL + "toilet-rate";
+        url = MyConstants.BASE_URL + "toilets/rate";
 
         postJson(url, data, listener);
     }
@@ -203,7 +203,7 @@ public class ToiletDownloader extends Downloader {
             return;
         }
 
-        url = MyConstants.API_URL + "toilet-add-comment";
+        url = MyConstants.BASE_URL + "/toilets/comments/add";
 
         postJson(url, data, listener);
     }

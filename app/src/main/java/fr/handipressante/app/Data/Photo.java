@@ -78,7 +78,7 @@ public class Photo {
     }
 
     public String getRemoteUrl() {
-        return MyConstants.BASE_URL + "images/photos/" + mToiletId + "/" + getFilename();
+        return MyConstants.PICTURES_DIR + "/" + mToiletId + "/" + getFilename();
     }
     public boolean equals(Object o) {
         if (o == this) return true;

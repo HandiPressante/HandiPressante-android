@@ -24,7 +24,7 @@ public class PhotoDownloader extends Downloader {
     }
 
     public void downloadPhotoList(Integer toiletId, final Listener<List<Photo>> listener) {
-        String url = MyConstants.API_URL + "toilet-photo-list/" + toiletId;
+        String url = MyConstants.BASE_URL + "/toilets/pictures/list-" + toiletId;
 
 
         JsonArrayRequest jsObjRequest = new JsonArrayRequest

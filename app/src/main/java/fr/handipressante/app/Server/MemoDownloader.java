@@ -24,7 +24,7 @@ public class MemoDownloader extends Downloader {
     }
 
     public void downloadMemoList(final Listener<List<Memo>> listener) {
-        String url = MyConstants.API_URL + "memos-list";
+        String url = MyConstants.BASE_URL + "/memo/list";
 
 
         JsonArrayRequest jsObjRequest = new JsonArrayRequest

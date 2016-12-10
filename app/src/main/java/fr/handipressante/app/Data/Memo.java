@@ -76,7 +76,7 @@ public class Memo {
     }
 
     public String getRemoteUrl() {
-        return MyConstants.BASE_URL + "memos/" + getFilename();
+        return MyConstants.MEMOS_DIR + "/" + getFilename();
     }
 
     /*

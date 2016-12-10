@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
+import fr.handipressante.app.MyConstants;
 import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.data.PhotoDAO;
@@ -638,7 +639,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
     private void uploadPhoto(byte[] photoData) {
         MultipartRequest.Builder builder = new MultipartRequest.Builder();
-        builder.setUrl("http://www.handipressante.fr/api.php/toilet-add-photo");
+        builder.setUrl(MyConstants.BASE_URL + "/toilets/pictures/add");
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);

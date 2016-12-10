@@ -24,7 +24,7 @@ public class CommentDownloader extends Downloader {
     }
 
     public void downloadCommentList(Integer toiletId, final Listener<List<Comment>> listener) {
-        String url = MyConstants.API_URL + "toilet-comment-list/" + toiletId;
+        String url = MyConstants.BASE_URL + "/toilets/comments/list-" + toiletId;
 
 
         JsonArrayRequest jsObjRequest = new JsonArrayRequest
