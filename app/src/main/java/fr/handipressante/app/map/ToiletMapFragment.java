@@ -558,8 +558,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
             Integer toiletId = Integer.valueOf(marker.getSnippet());
             if (mDownloadedToilets.containsKey(toiletId)) {
                 Toilet toilet = mDownloadedToilets.get(toiletId);
-                titleView.setText(toilet.getAddress());
-                rankView.setImageResource(Converters.rankFromInteger(toilet.getRankAverage()));
+                titleView.setText(toilet.getName());
+                rankView.setImageResource(Converters.resourceFromRank(toilet.getRankAverage(), toilet.getRateWeight()));
                 chargedView.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
             } else {
                 titleView.setText("Error");

@@ -16,15 +16,16 @@ import java.util.List;
 public class Toilet implements Parcelable, ClusterItem {
     private Integer _id;
     private Boolean _adapted;
-    private String _address;
+    private String _name;
     private GeoPoint _coord;
     private Boolean _charged;
 
     private String _description;
 
-    private Integer _rankCleanliness;
-    private Integer _rankFacilities;
-    private Integer _rankAccessibility;
+    private Float _rankCleanliness;
+    private Float _rankFacilities;
+    private Float _rankAccessibility;
+    private Integer _rateWeight;
 
     // Computed data members
     GeoPoint mLastRef = null;
@@ -34,39 +35,42 @@ public class Toilet implements Parcelable, ClusterItem {
         _id = 0;
         _adapted = false;
         _charged = false;
-        _address = "Undefined";
+        _name = "Undefined";
         _coord = new GeoPoint(0, 0);
 
         _description = "";
-        _rankCleanliness = -1;
-        _rankFacilities = -1;
-        _rankAccessibility = -1;
+        _rankCleanliness = 0.f;
+        _rankFacilities = 0.f;
+        _rankAccessibility = 0.f;
+        _rateWeight = 0;
     }
 
     public Toilet(Integer id, Boolean adapted, Boolean charged, String address, GeoPoint coord) {
         _id = id;
         _adapted = adapted;
         _charged = charged;
-        _address = address;
+        _name = address;
         _coord = coord;
 
         _description = "";
-        _rankCleanliness = -1;
-        _rankFacilities = -1;
-        _rankAccessibility = -1;
+        _rankCleanliness = 0.f;
+        _rankFacilities = 0.f;
+        _rankAccessibility = 0.f;
+        _rateWeight = 0;
     }
 
     public Toilet(Parcel in) {
         _id = in.readInt();
         _adapted = in.readByte() != 0;
         _charged = in.readByte() != 0;
-        _address = in.readString();
+        _name = in.readString();
         _coord = new GeoPoint(in.readDouble(), in.readDouble());
 
         _description = in.readString();
-        _rankCleanliness = in.readInt();
-        _rankFacilities = in.readInt();
-        _rankAccessibility = in.readInt();
+        _rankCleanliness = in.readFloat();
+        _rankFacilities = in.readFloat();
+        _rankAccessibility = in.readFloat();
+        _rateWeight = in.readInt();
 
         mDistance = in.readDouble();
     }
@@ -81,14 +85,15 @@ public class Toilet implements Parcelable, ClusterItem {
         dest.writeInt(_id);
         dest.writeByte((byte) (_adapted ? 1 : 0));
         dest.writeByte((byte) (_charged ? 1 : 0));
-        dest.writeString(_address);
+        dest.writeString(_name);
         dest.writeDouble(_coord.getLatitude());
         dest.writeDouble(_coord.getLongitude());
 
         dest.writeString(_description);
-        dest.writeInt(_rankCleanliness);
-        dest.writeInt(_rankFacilities);
-        dest.writeInt(_rankAccessibility);
+        dest.writeFloat(_rankCleanliness);
+        dest.writeFloat(_rankFacilities);
+        dest.writeFloat(_rankAccessibility);
+        dest.writeInt(_rateWeight);
 
         dest.writeDouble(mDistance);
     }
@@ -110,12 +115,13 @@ public class Toilet implements Parcelable, ClusterItem {
 
         _adapted = t._adapted;
         _charged = t._charged;
-        _address = t._address;
+        _name = t._name;
         _coord = t._coord;
         _description = t._description;
         _rankCleanliness = t._rankCleanliness;
         _rankFacilities = t._rankFacilities;
         _rankAccessibility = t._rankAccessibility;
+        _rateWeight = t._rateWeight;
     }
 
     public Integer getId() {
@@ -142,41 +148,48 @@ public class Toilet implements Parcelable, ClusterItem {
         _charged = charged;
     }
 
-    public String getAddress() {
-        return _address;
+    public String getName() {
+        return _name;
     }
 
-    public void setAddress(String address) {
-        _address = address;
+    public void setName(String name) {
+        _name = name;
     }
 
-    public Integer getRankAverage() {
-        float average = (_rankAccessibility + _rankCleanliness + _rankFacilities) / 3.f;
-        return Math.round(average);
+    public Float getRankAverage() {
+        return (_rankAccessibility + _rankCleanliness + _rankFacilities) / 3.f;
     }
 
-    public Integer getRankCleanliness() {
+    public Float getRankCleanliness() {
         return _rankCleanliness;
     }
 
-    public void setRankCleanliness(Integer rank) {
+    public void setRankCleanliness(Float rank) {
         _rankCleanliness = rank;
     }
 
-    public Integer getRankFacilities() {
+    public Float getRankFacilities() {
         return _rankFacilities;
     }
 
-    public void setRankFacilities(Integer rank) {
+    public void setRankFacilities(Float rank) {
         _rankFacilities = rank;
     }
 
-    public Integer getRankAccessibility() {
+    public Float getRankAccessibility() {
         return _rankAccessibility;
     }
 
-    public void setRankAccessibility(Integer rank) {
+    public void setRankAccessibility(Float rank) {
         _rankAccessibility = rank;
+    }
+
+    public Integer getRateWeight() {
+        return _rateWeight;
+    }
+
+    public void setRateWeight(Integer weight) {
+        _rateWeight = weight;
     }
 
     public String getDescription() {

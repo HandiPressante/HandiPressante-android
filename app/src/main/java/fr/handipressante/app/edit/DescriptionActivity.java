@@ -9,15 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 
-public class DescriptionActivity extends AppCompatActivity implements Downloader.Listener<JSONObject> {
+public class DescriptionActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
     private Toilet mToilet;
     private boolean mNewToilet;
     private ProgressDialog mProgressDialog;
@@ -70,23 +67,18 @@ public class DescriptionActivity extends AppCompatActivity implements Downloader
     }
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(Boolean success) {
         mProgressDialog.dismiss();
 
-        try {
-            if (response != null && response.has("success") && response.getBoolean("success")) {
-                Intent result = new Intent();
-                result.putExtra("toilet", mToilet);
+        if (success) {
+            Intent result = new Intent();
+            result.putExtra("toilet", mToilet);
 
-                setResult(0, result);
-                finish();
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            setResult(0, result);
+        } else {
+            setResult(-1, null);
         }
 
-        setResult(-1, null);
         finish();
     }
 }

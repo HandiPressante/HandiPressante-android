@@ -16,27 +16,29 @@ import java.util.List;
 public class NearbyToiletDAO extends AbstractDAO {
     public static final String TABLE_NAME = "nearby_toilets";
     public static final String FIELD_KEY = "_id";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_ADAPTED = "adapted";
     public static final String FIELD_CHARGED = "charged";
-    public static final String FIELD_ADDRESS = "address";
-    public static final String FIELD_LAT84 = "lat84";
-    public static final String FIELD_LON84 = "lon84";
-    public static final String FIELD_DESCRIPTION = "description";
+    public static final String FIELD_LATITUDE = "latitude";
+    public static final String FIELD_LONGITUDE = "longitude";
     public static final String FIELD_CLEANLINESS = "cleanliness";
     public static final String FIELD_FACILITIES = "facilities";
     public static final String FIELD_ACCESSIBILITY = "accessibility";
+    public static final String FIELD_RATE_WEIGHT = "rate_weight";
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
             FIELD_KEY + " INTEGER PRIMARY KEY, " +
+            FIELD_NAME + " TEXT, " +
+            FIELD_DESCRIPTION + " TEXT, " +
             FIELD_ADAPTED + " INTEGER, " +
             FIELD_CHARGED + " INTEGER, " +
-            FIELD_ADDRESS + " TEXT, " +
-            FIELD_LAT84 + " REAL, " +
-            FIELD_LON84 + " REAL, " +
-            FIELD_DESCRIPTION + " TEXT, " +
-            FIELD_CLEANLINESS + " INTEGER, " +
-            FIELD_FACILITIES + " INTEGER, " +
-            FIELD_ACCESSIBILITY + " INTEGER);";
+            FIELD_LATITUDE + " REAL, " +
+            FIELD_LONGITUDE + " REAL, " +
+            FIELD_CLEANLINESS + " REAL, " +
+            FIELD_FACILITIES + " REAL, " +
+            FIELD_ACCESSIBILITY + " REAL, " +
+            FIELD_RATE_WEIGHT + " INTEGER);";
 
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -47,15 +49,16 @@ public class NearbyToiletDAO extends AbstractDAO {
     public void add(Toilet t) {
         ContentValues value = new ContentValues();
         value.put(FIELD_KEY, t.getId());
+        value.put(FIELD_NAME, t.getName());
+        value.put(FIELD_DESCRIPTION, t.getDescription());
         value.put(FIELD_ADAPTED, t.isAdapted() ? 1 : 0);
         value.put(FIELD_CHARGED, t.isCharged() ? 1 : 0);
-        value.put(FIELD_ADDRESS, t.getAddress());
-        value.put(FIELD_LAT84, t.getCoordinates().getLatitude());
-        value.put(FIELD_LON84, t.getCoordinates().getLongitude());
-        value.put(FIELD_DESCRIPTION, t.getDescription());
+        value.put(FIELD_LATITUDE, t.getCoordinates().getLatitude());
+        value.put(FIELD_LONGITUDE, t.getCoordinates().getLongitude());
         value.put(FIELD_CLEANLINESS, t.getRankCleanliness());
         value.put(FIELD_FACILITIES, t.getRankFacilities());
         value.put(FIELD_ACCESSIBILITY, t.getRankAccessibility());
+        value.put(FIELD_RATE_WEIGHT, t.getRateWeight());
 
         try {
             mDatabase.insertOrThrow(TABLE_NAME, null, value);
@@ -75,22 +78,25 @@ public class NearbyToiletDAO extends AbstractDAO {
         List<Toilet> results = new ArrayList<>();
 
         Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " +
+                FIELD_NAME + ", " + FIELD_DESCRIPTION + ", " +
                 FIELD_ADAPTED + ", " + FIELD_CHARGED + ", " +
-                FIELD_ADDRESS + ", " + FIELD_LAT84 + ", " + FIELD_LON84 + ", " +
-                FIELD_DESCRIPTION + ", " + FIELD_CLEANLINESS + ", " + FIELD_FACILITIES + ", " +
-                FIELD_ACCESSIBILITY  + " FROM " + TABLE_NAME + ";", new String[] {});
+                FIELD_LATITUDE + ", " + FIELD_LONGITUDE + ", " +
+                FIELD_CLEANLINESS + ", " + FIELD_FACILITIES + ", " +
+                FIELD_ACCESSIBILITY  + ", " + FIELD_RATE_WEIGHT +
+                " FROM " + TABLE_NAME + ";", new String[] {});
 
         while (c.moveToNext()) {
             Toilet t = new Toilet();
             t.setId(c.getInt(0));
-            t.setAdapted(c.getInt(1) == 1);
-            t.setCharged(c.getInt(2) == 1);
-            t.setAddress(c.getString(3));
-            t.setCoordinates(new GeoPoint(c.getDouble(4), c.getDouble(5)));
-            t.setDescription(c.getString(6));
-            t.setRankCleanliness(c.getInt(7));
-            t.setRankFacilities(c.getInt(8));
-            t.setRankAccessibility(c.getInt(9));
+            t.setName(c.getString(1));
+            t.setDescription(c.getString(2));
+            t.setAdapted(c.getInt(3) == 1);
+            t.setCharged(c.getInt(4) == 1);
+            t.setCoordinates(new GeoPoint(c.getDouble(5), c.getDouble(6)));
+            t.setRankCleanliness(c.getFloat(7));
+            t.setRankFacilities(c.getFloat(8));
+            t.setRankAccessibility(c.getFloat(9));
+            t.setRateWeight(c.getInt(10));
             results.add(t);
         }
         c.close();

@@ -10,8 +10,8 @@ import org.osmdroid.util.GeoPoint;
 public class DataFactory {
     public Toilet createToilet(JSONObject jsonObject) throws JSONException {
         int t_id = jsonObject.getInt("id");
-        String t_address = jsonObject.getString("lieu");
-        boolean t_adapted = jsonObject.optInt("pmr", 0) == 1;
+        String t_name = jsonObject.getString("name");
+        boolean t_adapted = jsonObject.optInt("adapted", 0) == 1;
         boolean t_charged = jsonObject.optInt("charged", 0) == 1;
         double t_lat = jsonObject.getDouble("lat84");
         double t_long = jsonObject.getDouble("long84");
@@ -21,15 +21,17 @@ public class DataFactory {
             t_description = jsonObject.getString("description");
         }
 
-        double t_rankCleanliness = jsonObject.optDouble("moyenne_proprete", -1.0);
-        double t_rankFacilities = jsonObject.optDouble("moyenne_equipement", -1.0);
-        double t_rankAccessibility = jsonObject.optDouble("moyenne_accessibilite", -1.0);
+        float t_rankCleanliness = (float) jsonObject.optDouble("cleanliness_avg", 0.0);
+        float t_rankFacilities = (float) jsonObject.optDouble("facilities_avg", 0.0);
+        float t_rankAccessibility = (float) jsonObject.optDouble("accessibility_avg", 0.0);
+        int t_rateWeight = jsonObject.optInt("rate_weight", 0);
 
-        Toilet t = new Toilet(t_id, t_adapted, t_charged, t_address, new GeoPoint(t_lat, t_long));
+        Toilet t = new Toilet(t_id, t_adapted, t_charged, t_name, new GeoPoint(t_lat, t_long));
         t.setDescription(t_description);
-        t.setRankCleanliness((int) Math.round(t_rankCleanliness));
-        t.setRankFacilities((int) Math.round(t_rankFacilities));
-        t.setRankAccessibility((int) Math.round(t_rankAccessibility));
+        t.setRankCleanliness(t_rankCleanliness);
+        t.setRankFacilities(t_rankFacilities);
+        t.setRankAccessibility(t_rankAccessibility);
+        t.setRateWeight(t_rateWeight);
 
         return t;
     }

@@ -48,7 +48,7 @@ public class NameActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (!mNewToilet) {
-            toiletNameField.setText(mToilet.getAddress());
+            toiletNameField.setText(mToilet.getName());
             toolbar.setTitle(getString(R.string.edittoilet_edit));
         } else {
             toolbar.setTitle(getString(R.string.edittoilet_new));
@@ -61,7 +61,7 @@ public class NameActivity extends AppCompatActivity {
                 if (checkData()) {
                     EditText toiletNameField = (EditText) findViewById(R.id.toilet_name);
                     String toiletName = toiletNameField.getText().toString();
-                    mToilet.setAddress(toiletName);
+                    mToilet.setName(toiletName);
 
                     Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
                     intent.putExtra("toilet", mToilet);

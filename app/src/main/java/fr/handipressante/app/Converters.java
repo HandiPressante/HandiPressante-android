@@ -34,11 +34,11 @@ public class Converters {
     }
 
     /**
-     * Return rank resource corresponding to an integer rank
+     * Return rank resource corresponding to a rank
      * @param rank Toilet rank
      * @return Rank resource
      */
-    public static Integer rankFromInteger(Integer rank) {
+    public static Integer resourceFromRank(int rank) {
         switch (rank) {
             case 0:
                 return R.drawable.star_zero;
@@ -55,6 +55,38 @@ public class Converters {
             default:
                 return R.drawable.no_rate_stars;
 
+        }
+    }
+
+    /**
+     * Return rank resource corresponding to a rank
+     * @param rank Toilet rank
+     * @param rankWeight Toilet rank weight
+     * @return Rank resource
+     */
+    public static Integer resourceFromRank(Float rank, int rankWeight) {
+        if (rankWeight > 0) {
+            int roundedRank = Math.round(rank);
+
+            switch (roundedRank) {
+                case 0:
+                    return R.drawable.star_zero;
+                case 1:
+                    return R.drawable.star_one;
+                case 2:
+                    return R.drawable.star_two;
+                case 3:
+                    return R.drawable.star_three;
+                case 4:
+                    return R.drawable.star_four;
+                case 5:
+                    return R.drawable.star_five;
+                default:
+                    return R.drawable.no_rate_stars;
+
+            }
+        } else {
+            return R.drawable.no_rate_stars;
         }
     }
 

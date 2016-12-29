@@ -416,7 +416,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         // Set toilet's name
         TextView name=(TextView)findViewById(R.id.toilet_name);
-        name.setText(toilet.getAddress());
+        name.setText(toilet.getName());
 
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
@@ -465,19 +465,19 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
         // Set general rate
         ImageView global_rate = (ImageView) findViewById(R.id.global_rate);
-        global_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAverage()));
+        global_rate.setImageResource(Converters.resourceFromRank(toilet.getRankAverage(), toilet.getRateWeight()));
 
         // Set cleanliness rate
         ImageView cleanliness_rate = (ImageView) findViewById(R.id.cleanliness_rate);
-        cleanliness_rate.setImageResource(Converters.rankFromInteger(toilet.getRankCleanliness()));
+        cleanliness_rate.setImageResource(Converters.resourceFromRank(toilet.getRankCleanliness(), toilet.getRateWeight()));
 
         // Set facilities rate
         ImageView facilities_rate = (ImageView) findViewById(R.id.facilities_rate);
-        facilities_rate.setImageResource(Converters.rankFromInteger(toilet.getRankFacilities()));
+        facilities_rate.setImageResource(Converters.resourceFromRank(toilet.getRankFacilities(), toilet.getRateWeight()));
 
         // Set accessibility rate
         ImageView accessibility_rate = (ImageView) findViewById(R.id.accessibility_rate);
-        accessibility_rate.setImageResource(Converters.rankFromInteger(toilet.getRankAccessibility()));
+        accessibility_rate.setImageResource(Converters.resourceFromRank(toilet.getRankAccessibility(), toilet.getRateWeight()));
 
     }
 
@@ -673,7 +673,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                          }
 
                          if (!error) {
-                             Toast.makeText(ToiletSheetActivity.this, "Photo envoyée avec succès !", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
                              syncPhotoWithServer();
                          } else
                              Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué. (Code d'erreur : " + errorCode + ")", Toast.LENGTH_LONG).show();

@@ -15,9 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
@@ -25,7 +22,7 @@ import fr.handipressante.app.server.ToiletDownloader;
 /**
  * Created by marc on 23/05/2016.
  */
-public class CommentEdition extends AppCompatActivity implements Downloader.Listener<JSONObject> {
+public class CommentEdition extends AppCompatActivity implements Downloader.Listener<Boolean> {
     private Integer mToiletId;
     private ProgressDialog mProgressDialog;
 
@@ -152,39 +149,25 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
     }
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(Boolean success) {
         mProgressDialog.dismiss();
 
-        try {
-            if (response != null && response.has("error")) {
-                int errorCode = response.getInt("error");
-                if (errorCode == 0) {
-                    Toast.makeText(getApplicationContext(), "Commentaire ajouté !", Toast.LENGTH_SHORT).show();
+        if (success) {
+            Toast.makeText(getApplicationContext(), "Commentaire ajouté !", Toast.LENGTH_SHORT).show();
 
-                    EditText usernameField = (EditText) findViewById(R.id.username);
-                    String username = usernameField.getText().toString();
+            EditText usernameField = (EditText) findViewById(R.id.username);
+            String username = usernameField.getText().toString();
 
-                    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor e = sharedPrefs.edit();
-                    e.putString("last_username", username);
-                    e.apply();
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor e = sharedPrefs.edit();
+            e.putString("last_username", username);
+            e.apply();
 
-                    setResult(0, null);
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Impossible d'envoyer le commentaire. (Code d'erreur : " +
-                            errorCode + ").", Toast.LENGTH_LONG).show();
-                    setResult(-1, null);
-                    finish();
-                }
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            setResult(0, null);
+        } else {
+            setResult(-1, null);
         }
 
-        Toast.makeText(getApplicationContext(), "Désolé, une erreur s'est produite.", Toast.LENGTH_SHORT).show();
-        setResult(-1, null);
         finish();
     }
 }

@@ -63,8 +63,8 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
 
         final Toilet toilet = getItem(position);
         holder.pmr.setImageResource(Converters.pmrFromBoolean(toilet.isAdapted()));
-        holder.address.setText(toilet.getAddress());
-        holder.rank.setImageResource(Converters.rankFromInteger(toilet.getRankAverage()));
+        holder.address.setText(toilet.getName());
+        holder.rank.setImageResource(Converters.resourceFromRank(toilet.getRankAverage(), toilet.getRateWeight()));
         holder.distance.setText(Converters.formattedDistanceFromDouble(toilet.getDistance()));
         holder.charged.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
 

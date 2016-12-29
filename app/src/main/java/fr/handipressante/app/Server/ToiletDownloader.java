@@ -3,12 +3,12 @@ package fr.handipressante.app.server;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -78,18 +78,26 @@ public class ToiletDownloader extends Downloader {
     }
 
     private void requestToilets(String url, final Listener<List<Toilet>> listener) {
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest
-                (url, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (url, new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONArray response) {
-                        Log.i("ToiletDownloader", "Toilets arrived !");
+                    public void onResponse(JSONObject response) {
+                        JSONArray data;
+                        try {
+                            checkResponse(response);
+                            data = getData(response);
+                        } catch (ServerResponseException e) {
+                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         DataFactory facto = new DataFactory();
                         List<Toilet> toiletList = new ArrayList<>();
 
-                        for (int i = 0; i < response.length(); i++) {
+                        for (int i = 0; i < data.length(); i++) {
                             try {
-                                JSONObject jsonObject = response.optJSONObject(i);
+                                JSONObject jsonObject = data.optJSONObject(i);
                                 if (jsonObject == null) continue;
 
                                 Toilet t = facto.createToilet(jsonObject);
@@ -106,7 +114,7 @@ public class ToiletDownloader extends Downloader {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
+                        Toast.makeText(mContext, "Une erreur serveur est survenue.", Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                     }
                 });
@@ -122,7 +130,7 @@ public class ToiletDownloader extends Downloader {
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    public void postToilet(Toilet toilet, boolean newToilet, final Listener<JSONObject> listener) {
+    public void postToilet(Toilet toilet, boolean newToilet, final Listener<Boolean> listener) {
         Log.i("ToiletDownloader", "postToilet");
         String url;
         JSONObject data = new JSONObject();
@@ -135,8 +143,8 @@ public class ToiletDownloader extends Downloader {
             if (!newToilet)
                 data.put("toilet_id", toilet.getId().toString());
 
-            data.put("toilet_name", toilet.getAddress());
-            data.put("toilet_accessible", toilet.isAdapted());
+            data.put("toilet_name", toilet.getName());
+            data.put("toilet_adapted", toilet.isAdapted());
             data.put("toilet_charged", toilet.isCharged());
             data.put("toilet_description", toilet.getDescription());
 
@@ -148,16 +156,11 @@ public class ToiletDownloader extends Downloader {
             return;
         }
 
-        if (newToilet) {
-            url = MyConstants.BASE_URL + "/toilets/add";
-        } else {
-            url = MyConstants.BASE_URL + "/toilets/edit";
-        }
-
+        url = MyConstants.BASE_URL + "/toilets/save";
         postJson(url, data, listener);
     }
 
-    public void postToiletRate(Toilet toilet, int cleanliness, int facilities, int accessibility, final Listener<JSONObject> listener) {
+    public void postToiletRate(Toilet toilet, int cleanliness, int facilities, int accessibility, final Listener<Boolean> listener) {
         Log.i("ToiletDownloader", "postToiletRate");
         String url;
         JSONObject data = new JSONObject();
@@ -183,7 +186,7 @@ public class ToiletDownloader extends Downloader {
         postJson(url, data, listener);
     }
 
-    public void postToiletComment(Integer toiletId, String username, String content, final Listener<JSONObject> listener) {
+    public void postToiletComment(Integer toiletId, String username, String content, final Listener<Boolean> listener) {
         Log.i("ToiletDownloader", "postToiletComment");
         String url;
         JSONObject data = new JSONObject();
@@ -208,37 +211,27 @@ public class ToiletDownloader extends Downloader {
         postJson(url, data, listener);
     }
 
-    private void postJson(String url, JSONObject data, final Listener<JSONObject> listener) {
+    private void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
-                if (response != null) {
-                    try {
-                        if (response.has("success")) {
-                            Log.i("ToiletDownloader", "success : " + response.getBoolean("success"));
-                        }
-
-                        if (response.has("error")) {
-                            Log.i("ToiletDownloader", "error : " + response.getString("error"));
-                        }
-
-                        listener.onResponse(response);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    listener.onResponse(null);
+                try {
+                    checkResponse(response);
+                    listener.onResponse(true);
+                } catch (ServerResponseException e) {
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                    listener.onResponse(false);
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(mContext, "Une erreur serveur est survenue.", Toast.LENGTH_LONG).show();
                 error.printStackTrace();
-                listener.onResponse(null);
+                listener.onResponse(false);
             }
         });
 

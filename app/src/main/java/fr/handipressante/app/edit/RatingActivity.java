@@ -11,9 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import fr.handipressante.app.Converters;
 import fr.handipressante.app.data.Toilet;
@@ -21,7 +19,7 @@ import fr.handipressante.app.R;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 
-public class RatingActivity extends AppCompatActivity implements Downloader.Listener<JSONObject> {
+public class RatingActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
     private Toilet mToilet;
     private ProgressDialog mProgressDialog;
 
@@ -38,7 +36,7 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
         mToilet = intent.getParcelableExtra("toilet");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(mToilet.getAddress());
+        toolbar.setTitle(mToilet.getName());
 
         initSpinners();
 
@@ -72,30 +70,33 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
     }
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(Boolean success) {
         mProgressDialog.dismiss();
 
-        try {
-            if (response != null && response.has("success") && response.getBoolean("success")) {
-                if (response.has("toilet_cleanliness"))
-                    mToilet.setRankCleanliness(response.getInt("toilet_cleanliness"));
-                if (response.has("toilet_facilities"))
-                    mToilet.setRankFacilities(response.getInt("toilet_facilities"));
-                if (response.has("toilet_accessibility"))
-                    mToilet.setRankAccessibility(response.getInt("toilet_accessibility"));
+        if (success) {
+            Integer oldWeight = mToilet.getRateWeight();
+            Float oldCleanlinessAvg = mToilet.getRankCleanliness();
+            Float oldFacilitiesAvg = mToilet.getRankFacilities();
+            Float oldAccessibilityAvg = mToilet.getRankAccessibility();
 
-                Intent result = new Intent();
-                result.putExtra("toilet", mToilet);
+            Float newCleanlinessAvg = (oldCleanlinessAvg*oldWeight + mCleanliness) / (oldWeight + 1);
+            Float newFacilitiesAvg = (oldFacilitiesAvg*oldWeight + mFacilities) / (oldWeight + 1);
+            Float newAccessibilityAvg = (oldAccessibilityAvg*oldWeight + mAccessibility) / (oldWeight + 1);
 
-                setResult(0, result);
-                finish();
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            mToilet.setRankCleanliness(newCleanlinessAvg);
+            mToilet.setRankFacilities(newFacilitiesAvg);
+            mToilet.setRankAccessibility(newAccessibilityAvg);
+            mToilet.setRateWeight(oldWeight + 1);
+
+            Intent result = new Intent();
+            result.putExtra("toilet", mToilet);
+            Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
+
+            setResult(0, result);
+        } else {
+            setResult(-1, null);
         }
 
-        setResult(-1, null);
         finish();
     }
 
@@ -112,7 +113,7 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ImageView cleanlinessView = (ImageView) findViewById(R.id.cleanlinessView);
-                cleanlinessView.setImageResource(Converters.rankFromInteger(position));
+                cleanlinessView.setImageResource(Converters.resourceFromRank(position));
                 mCleanliness = position;
             }
 
@@ -128,7 +129,7 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ImageView facilitiesView = (ImageView) findViewById(R.id.facilitiesView);
-                facilitiesView.setImageResource(Converters.rankFromInteger(position));
+                facilitiesView.setImageResource(Converters.resourceFromRank(position));
                 mFacilities = position;
             }
 
@@ -144,7 +145,7 @@ public class RatingActivity extends AppCompatActivity implements Downloader.List
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ImageView placeAccessibilityView = (ImageView) findViewById(R.id.placeAccessibilityView);
-                placeAccessibilityView.setImageResource(Converters.rankFromInteger(position));
+                placeAccessibilityView.setImageResource(Converters.resourceFromRank(position));
                 mAccessibility = position;
             }
 
