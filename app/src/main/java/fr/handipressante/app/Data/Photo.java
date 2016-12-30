@@ -8,22 +8,19 @@ import fr.handipressante.app.MyConstants;
 public class Photo {
     private Integer mId;
     private Integer mToiletId;
-    private String mUserId;
     private String mFilename;
     private String mPostdate;
 
     public Photo() {
         mId = 0;
         mToiletId = 0;
-        mUserId = "uuid";
         mFilename = "Undefined";
         mPostdate = "Undefined";
     }
 
-    public Photo(Integer id, Integer toiletId, String userId, String filename, String postdate) {
+    public Photo(Integer id, Integer toiletId, String filename, String postdate) {
         mId = id;
         mToiletId = toiletId;
-        mUserId = userId;
         mFilename = filename;
         mPostdate = postdate;
     }
@@ -32,7 +29,6 @@ public class Photo {
         if (!mId.equals(p.mId)) return;
 
         mToiletId = p.mToiletId;
-        mUserId = p.mUserId;
         mFilename = p.mFilename;
         mPostdate = p.mPostdate;
     }
@@ -53,10 +49,6 @@ public class Photo {
         mToiletId = id;
     }
 
-    public String getUserId() { return mUserId; }
-
-    public void setUserId(String userId) { mUserId = userId; }
-
     public String getPostdate() { return mPostdate; }
 
     public void setPostdate(String postdate) { mPostdate = postdate; }
@@ -70,7 +62,7 @@ public class Photo {
     }
 
     public String getFolder() {
-        return "photos";
+        return "pictures";
     }
 
     public String getLocalPath() {
@@ -87,7 +79,6 @@ public class Photo {
             Photo p = (Photo) o;
             return mId.equals(p.mId) &&
                     mToiletId.equals(p.mToiletId) &&
-                    mUserId.equals(p.mUserId) &&
                     mFilename.equals(p.mFilename) &&
                     mPostdate.equals(p.mPostdate);
         }

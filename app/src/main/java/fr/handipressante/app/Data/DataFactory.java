@@ -49,11 +49,10 @@ public class DataFactory {
     public Photo createPhoto(JSONObject jsonObject) throws JSONException {
         int id = jsonObject.getInt("id");
         int toiletId = jsonObject.getInt("toilet_id");
-        String userId = jsonObject.getString("user_id");
         String filename = jsonObject.getString("filename");
         String postdate = jsonObject.getString("postdate");
 
-        return new Photo(id, toiletId, userId, filename, postdate);
+        return new Photo(id, toiletId, filename, postdate);
     }
 
     public Comment createComment(JSONObject jsonObject) throws JSONException {

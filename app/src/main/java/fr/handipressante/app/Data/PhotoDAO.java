@@ -15,14 +15,12 @@ public class PhotoDAO extends AbstractDAO {
     public static final String TABLE_NAME = "photos";
     public static final String FIELD_KEY = "_id";
     public static final String FIELD_TOILET_ID = "toilet_id";
-    public static final String FIELD_USER_ID = "user_id";
     public static final String FIELD_FILENAME = "filename";
     public static final String FIELD_POSTDATE = "postdate";
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
             FIELD_KEY + " INTEGER PRIMARY KEY, " +
             FIELD_TOILET_ID + " INTEGER, " +
-            FIELD_USER_ID + " TEXT, " +
             FIELD_FILENAME + " TEXT, " +
             FIELD_POSTDATE + " TEXT);";
 
@@ -36,7 +34,6 @@ public class PhotoDAO extends AbstractDAO {
         ContentValues value = new ContentValues();
         value.put(FIELD_KEY, p.getId());
         value.put(FIELD_TOILET_ID, p.getToiletId());
-        value.put(FIELD_USER_ID, p.getUserId());
         value.put(FIELD_FILENAME, p.getFilename());
         value.put(FIELD_POSTDATE, p.getPostdate());
 
@@ -54,7 +51,6 @@ public class PhotoDAO extends AbstractDAO {
     public void update(Photo p) {
         ContentValues value = new ContentValues();
         value.put(FIELD_TOILET_ID, p.getToiletId());
-        value.put(FIELD_USER_ID, p.getUserId());
         value.put(FIELD_FILENAME, p.getFilename());
         value.put(FIELD_POSTDATE, p.getPostdate());
 
@@ -64,7 +60,7 @@ public class PhotoDAO extends AbstractDAO {
     public List<Photo> selectAll() {
         List<Photo> results = new ArrayList<>();
 
-        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TOILET_ID+ ", " + FIELD_USER_ID + ", " +
+        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TOILET_ID + ", " +
                 FIELD_FILENAME + ", " + FIELD_POSTDATE + " FROM " + TABLE_NAME + " ORDER BY " +
                 FIELD_POSTDATE + ";", new String[] {});
 
@@ -72,9 +68,8 @@ public class PhotoDAO extends AbstractDAO {
             Photo p = new Photo();
             p.setId(c.getInt(0));
             p.setToiletId(c.getInt(1));
-            p.setUserId(c.getString(2));
-            p.setFilename(c.getString(3));
-            p.setPostdate(c.getString(4));
+            p.setFilename(c.getString(2));
+            p.setPostdate(c.getString(3));
             results.add(p);
         }
         c.close();
@@ -85,7 +80,7 @@ public class PhotoDAO extends AbstractDAO {
     public List<Photo> selectByToilet(Integer toiletId) {
         List<Photo> results = new ArrayList<>();
 
-        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TOILET_ID+ ", " + FIELD_USER_ID + ", " +
+        Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TOILET_ID + ", " +
                 FIELD_FILENAME + ", " + FIELD_POSTDATE + " FROM " + TABLE_NAME +
                 " WHERE " + FIELD_TOILET_ID + " = " + toiletId + " ORDER BY " +
                 FIELD_POSTDATE + ";", new String[] {});
@@ -94,9 +89,8 @@ public class PhotoDAO extends AbstractDAO {
             Photo p = new Photo();
             p.setId(c.getInt(0));
             p.setToiletId(c.getInt(1));
-            p.setUserId(c.getString(2));
-            p.setFilename(c.getString(3));
-            p.setPostdate(c.getString(4));
+            p.setFilename(c.getString(2));
+            p.setPostdate(c.getString(3));
             results.add(p);
         }
         c.close();
