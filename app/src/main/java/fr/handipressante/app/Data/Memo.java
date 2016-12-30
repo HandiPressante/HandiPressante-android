@@ -9,20 +9,17 @@ public class Memo {
     private Integer mId;
     private String mTitle;
     private String mFilename;
-    private String mSalt;
 
     public Memo() {
         mId = 0;
         mTitle = "Undefined";
         mFilename = "Undefined";
-        mSalt = "Undefined";
     }
 
-    public Memo(Integer id, String title, String filename, String salt) {
+    public Memo(Integer id, String title, String filename) {
         mId = id;
         mTitle = title;
         mFilename = filename;
-        mSalt = salt;
     }
 
     public void updateData(Memo m) {
@@ -30,7 +27,6 @@ public class Memo {
 
         mTitle = m.mTitle;
         mFilename = m.mFilename;
-        mSalt = m.mSalt;
     }
 
     public Integer getId() {
@@ -55,14 +51,6 @@ public class Memo {
 
     public void setFilename(String filename) {
         mFilename = filename;
-    }
-
-    public String getSalt() {
-        return mSalt;
-    }
-
-    public void setSalt(String salt) {
-        mSalt = salt;
     }
 
 
@@ -99,8 +87,7 @@ public class Memo {
             Memo m = (Memo) o;
             return mId.equals(m.mId) &&
                     mTitle.equals(m.mTitle) &&
-                    mFilename.equals(m.mFilename) &&
-                    mSalt.equals(m.mSalt);
+                    mFilename.equals(m.mFilename);
         }
 
         return false;

@@ -222,25 +222,17 @@ public class MemoListFragment extends ListFragment {
                 }
             }
 
-            // Updated and added memos
+            // Added memos
             for (Memo memo : memoList) {
-                boolean updated = false;
+                boolean isNew = true;
                 for (Memo oldMemo : oldMemoList) {
                     if (memo.getId().equals(oldMemo.getId())) {
-
-                        if (!oldMemo.getSalt().equals(memo.getSalt())) {
-                            File file = new File(getContext().getFilesDir(), oldMemo.getLocalPath());
-                            file.delete();
-                        }
-                        updated = true;
-
+                        isNew = false;
                         break;
                     }
                 }
 
-                if (updated) {
-                    dao.update(memo);
-                } else {
+                if (isNew) {
                     dao.add(memo);
                 }
             }
@@ -265,6 +257,7 @@ public class MemoListFragment extends ListFragment {
             try {
                 mMemo = m[0];
                 URL url = new URL(mMemo.getRemoteUrl());
+                Log.i("MemoListFragment", mMemo.getRemoteUrl());
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 

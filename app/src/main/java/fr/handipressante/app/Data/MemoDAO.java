@@ -16,13 +16,11 @@ public class MemoDAO extends AbstractDAO {
     public static final String FIELD_KEY = "_id";
     public static final String FIELD_TITLE = "title";
     public static final String FIELD_FILENAME = "filename";
-    public static final String FIELD_SALT = "salt";
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" +
             FIELD_KEY + " INTEGER PRIMARY KEY, " +
             FIELD_TITLE + " TEXT, " +
-            FIELD_FILENAME + " TEXT, " +
-            FIELD_SALT + " TEXT);";
+            FIELD_FILENAME + " TEXT);";
 
     public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
@@ -35,7 +33,6 @@ public class MemoDAO extends AbstractDAO {
         value.put(FIELD_KEY, m.getId());
         value.put(FIELD_TITLE, m.getTitle());
         value.put(FIELD_FILENAME, m.getFilename());
-        value.put(FIELD_SALT, m.getSalt());
 
         try {
             mDatabase.insertOrThrow(TABLE_NAME, null, value);
@@ -52,7 +49,6 @@ public class MemoDAO extends AbstractDAO {
         ContentValues value = new ContentValues();
         value.put(FIELD_TITLE, m.getTitle());
         value.put(FIELD_FILENAME, m.getFilename());
-        value.put(FIELD_SALT, m.getSalt());
 
         mDatabase.update(TABLE_NAME, value, FIELD_KEY + " = ?", new String[]{String.valueOf(m.getId())});
     }
@@ -61,7 +57,7 @@ public class MemoDAO extends AbstractDAO {
         List<Memo> results = new ArrayList<>();
 
         Cursor c = mDatabase.rawQuery("SELECT " + FIELD_KEY + ", " + FIELD_TITLE + ", " +
-                FIELD_FILENAME + ", " + FIELD_SALT + " FROM " + TABLE_NAME + " ORDER BY " +
+                FIELD_FILENAME + " FROM " + TABLE_NAME + " ORDER BY " +
                 FIELD_TITLE + ";", new String[] {});
 
         while (c.moveToNext()) {
@@ -69,7 +65,6 @@ public class MemoDAO extends AbstractDAO {
             m.setId(c.getInt(0));
             m.setTitle(c.getString(1));
             m.setFilename(c.getString(2));
-            m.setSalt(c.getString(3));
             results.add(m);
         }
         c.close();
