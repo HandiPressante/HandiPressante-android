@@ -138,7 +138,7 @@ public class ToiletDownloader extends Downloader {
         try {
             SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
-            data.put("uuid", uuid);
+            data.put("user_id", uuid);
 
             if (!newToilet)
                 data.put("toilet_id", toilet.getId().toString());
@@ -169,7 +169,7 @@ public class ToiletDownloader extends Downloader {
             SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
 
-            data.put("uuid", uuid);
+            data.put("user_id", uuid);
             data.put("toilet_id", toilet.getId().toString());
 
             data.put("toilet_cleanliness", cleanliness);
@@ -195,7 +195,7 @@ public class ToiletDownloader extends Downloader {
             SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
 
-            data.put("uuid", uuid);
+            data.put("user_id", uuid);
             data.put("toilet_id", toiletId.toString());
 
             data.put("username", username);
