@@ -2,14 +2,17 @@ package fr.handipressante.app.server;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +30,25 @@ public class CommentDownloader extends Downloader {
         String url = MyConstants.BASE_URL + "/toilets/comments/list-" + toiletId;
 
 
-        JsonArrayRequest jsObjRequest = new JsonArrayRequest
-                (url, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (url, new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        Log.i("PhotoDownloader", "Comments arrived !");
+                    public void onResponse(JSONObject response) {
+                        JSONArray data;
+                        try {
+                            checkResponse(response);
+                            data = getData(response);
+                        } catch (ServerResponseException e) {
+                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         DataFactory facto = new DataFactory();
                         List<Comment> commentList = new ArrayList<>();
 
-                        for (int i = 0; i < response.length(); i++) {
+                        for (int i = 0; i < data.length(); i++) {
                             try {
-                                Comment c = facto.createComment(response.getJSONObject(i));
+                                Comment c = facto.createComment(data.getJSONObject(i));
                                 if (c != null) {
                                     commentList.add(c);
                                 }
@@ -52,7 +63,7 @@ public class CommentDownloader extends Downloader {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
+                        Toast.makeText(mContext, "Une erreur serveur est survenue.", Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                     }
                 });

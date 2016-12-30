@@ -57,11 +57,11 @@ public class DataFactory {
     }
 
     public Comment createComment(JSONObject jsonObject) throws JSONException {
-        Comment comment = new Comment();
-        comment.setUsername(jsonObject.getString("username"));
-        comment.setContent(jsonObject.getString("content"));
-        comment.setPostdate(jsonObject.getString("postdate"));
+        Integer id = jsonObject.getInt("id");
+        String username = jsonObject.getString("username");
+        String content = jsonObject.getString("content");
+        String postdate = jsonObject.getString("postdate");
 
-        return comment;
+        return new Comment(id, username, content, postdate);
     }
 }
