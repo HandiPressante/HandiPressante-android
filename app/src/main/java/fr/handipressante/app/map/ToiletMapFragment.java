@@ -36,8 +36,6 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-import org.osmdroid.util.GeoPoint;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -227,8 +225,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
                 zoomMax.show(getFragmentManager(), "zoomMax");
             } else {
                 Toilet toilet = new Toilet();
-                GeoPoint geoPoint = new GeoPoint(latLng.latitude, latLng.longitude);
-                toilet.setCoordinates(geoPoint);
+                toilet.setPosition(latLng);
 
                 AddToiletDialog addToiletDialog = new AddToiletDialog();
                 Bundle args = new Bundle();
@@ -454,8 +451,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
                         southWest.latitude - latitudeDelta,
                         southWest.longitude - longitudeDelta);
 
-                GeoPoint topLeft = new GeoPoint(mExtNorthEast.latitude, mExtSouthWest.longitude);
-                GeoPoint bottomRight = new GeoPoint(mExtSouthWest.latitude, mExtNorthEast.longitude);
+                LatLng topLeft = new LatLng(mExtNorthEast.latitude, mExtSouthWest.longitude);
+                LatLng bottomRight = new LatLng(mExtSouthWest.latitude, mExtNorthEast.longitude);
                 new ToiletDownloader(getContext()).requestMapToilets(topLeft, bottomRight,
                         new Downloader.Listener<List<Toilet>>() {
                             @Override

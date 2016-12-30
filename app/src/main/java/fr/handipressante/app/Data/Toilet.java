@@ -6,8 +6,6 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import org.osmdroid.util.GeoPoint;
-
 import java.util.List;
 
 /**
@@ -17,7 +15,7 @@ public class Toilet implements Parcelable, ClusterItem {
     private Integer _id;
     private Boolean _adapted;
     private String _name;
-    private GeoPoint _coord;
+    private LatLng _position;
     private Boolean _charged;
 
     private String _description;
@@ -28,7 +26,7 @@ public class Toilet implements Parcelable, ClusterItem {
     private Integer _rateWeight;
 
     // Computed data members
-    GeoPoint mLastRef = null;
+    LatLng mLastRef = null;
     double mDistance = -1;
 
     public Toilet() {
@@ -36,7 +34,7 @@ public class Toilet implements Parcelable, ClusterItem {
         _adapted = false;
         _charged = false;
         _name = "Undefined";
-        _coord = new GeoPoint(0, 0);
+        _position = new LatLng(0, 0);
 
         _description = "";
         _rankCleanliness = 0.f;
@@ -45,12 +43,12 @@ public class Toilet implements Parcelable, ClusterItem {
         _rateWeight = 0;
     }
 
-    public Toilet(Integer id, Boolean adapted, Boolean charged, String address, GeoPoint coord) {
+    public Toilet(Integer id, Boolean adapted, Boolean charged, String address, LatLng position) {
         _id = id;
         _adapted = adapted;
         _charged = charged;
         _name = address;
-        _coord = coord;
+        _position = position;
 
         _description = "";
         _rankCleanliness = 0.f;
@@ -64,7 +62,7 @@ public class Toilet implements Parcelable, ClusterItem {
         _adapted = in.readByte() != 0;
         _charged = in.readByte() != 0;
         _name = in.readString();
-        _coord = new GeoPoint(in.readDouble(), in.readDouble());
+        _position = new LatLng(in.readDouble(), in.readDouble());
 
         _description = in.readString();
         _rankCleanliness = in.readFloat();
@@ -86,8 +84,8 @@ public class Toilet implements Parcelable, ClusterItem {
         dest.writeByte((byte) (_adapted ? 1 : 0));
         dest.writeByte((byte) (_charged ? 1 : 0));
         dest.writeString(_name);
-        dest.writeDouble(_coord.getLatitude());
-        dest.writeDouble(_coord.getLongitude());
+        dest.writeDouble(_position.latitude);
+        dest.writeDouble(_position.longitude);
 
         dest.writeString(_description);
         dest.writeFloat(_rankCleanliness);
@@ -116,7 +114,7 @@ public class Toilet implements Parcelable, ClusterItem {
         _adapted = t._adapted;
         _charged = t._charged;
         _name = t._name;
-        _coord = t._coord;
+        _position = t._position;
         _description = t._description;
         _rankCleanliness = t._rankCleanliness;
         _rankFacilities = t._rankFacilities;
@@ -205,18 +203,19 @@ public class Toilet implements Parcelable, ClusterItem {
         return "NoName";
     }
 
-    public GeoPoint getCoordinates() {
-        return _coord;
+    @Override
+    public LatLng getPosition() {
+        return _position;
     }
 
-    public void setCoordinates(GeoPoint coord) {
-        _coord = coord;
+    public void setPosition(LatLng position) {
+        _position = position;
     }
 
-    public void setDistanceWith(GeoPoint ref) {
+    public void setDistanceWith(LatLng ref) {
         if (mLastRef != ref) {
-            mDistance = distanceWGS84(_coord.getLatitude(), _coord.getLongitude(),
-                    ref.getLatitude(), ref.getLongitude());
+            mDistance = distanceWGS84(_position.latitude, _position.longitude,
+                    ref.latitude, ref.longitude);
             mLastRef = ref;
         }
     }
@@ -277,10 +276,5 @@ public class Toilet implements Parcelable, ClusterItem {
         double distanceKm = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
         return distanceKm * 1000;
-    }
-
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(_coord.getLatitude(), _coord.getLongitude());
     }
 }

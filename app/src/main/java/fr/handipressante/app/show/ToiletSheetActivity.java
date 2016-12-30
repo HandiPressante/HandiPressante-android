@@ -36,10 +36,10 @@ import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.util.GeoPoint;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -142,8 +142,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        GeoPoint geo = mToilet.getCoordinates();
-        final Uri mUri = Uri.parse("geo:" + geo.getLatitude() + "," + geo.getLongitude() + "?q=" + geo.getLatitude() + "," + geo.getLongitude());
+        LatLng toiletPosition = mToilet.getPosition();
+        final Uri mUri = Uri.parse("geo:" + toiletPosition.latitude + "," + toiletPosition.longitude + "?q=" + toiletPosition.latitude + "," + toiletPosition.longitude);
         //Listener that opens Maps when you click on Itinerary button
         findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
             @Override

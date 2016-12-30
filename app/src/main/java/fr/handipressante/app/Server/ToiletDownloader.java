@@ -10,11 +10,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.util.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +40,11 @@ public class ToiletDownloader extends Downloader {
      * @param distanceMax Max searching distance (in meters)
      * @param listener Listener to receive the toilet list response
      */
-    public void requestNearbyToilets(GeoPoint ref, int mincount, int maxcount, int distanceMax,
+    public void requestNearbyToilets(LatLng ref, int mincount, int maxcount, int distanceMax,
                                      final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestNearbyToilets");
         String url = MyConstants.BASE_URL + "/toilets/get-nearby/" +
-                ref.getLatitude() + "/" + ref.getLongitude() + "/" +
+                ref.latitude + "/" + ref.longitude + "/" +
                 mincount + "/" + maxcount + "/" + distanceMax;
 
         requestToilets(url, listener);
@@ -57,12 +57,12 @@ public class ToiletDownloader extends Downloader {
      * @param bottomRight Bottom right corner coordinates
      * @param listener Listener to receive the toilet list response
      */
-    public void requestMapToilets(GeoPoint topLeft, GeoPoint bottomRight,
+    public void requestMapToilets(LatLng topLeft, LatLng bottomRight,
                                   final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestMapToilets");
         String url = MyConstants.BASE_URL + "/toilets/get-area/" +
-                topLeft.getLatitude() + "/" + topLeft.getLongitude() + "/" +
-                bottomRight.getLatitude() + "/" + bottomRight.getLongitude();
+                topLeft.latitude + "/" + topLeft.longitude + "/" +
+                bottomRight.latitude + "/" + bottomRight.longitude;
 
         requestToilets(url, listener);
     }
@@ -148,8 +148,8 @@ public class ToiletDownloader extends Downloader {
             data.put("toilet_charged", toilet.isCharged());
             data.put("toilet_description", toilet.getDescription());
 
-            data.put("toilet_latitude", toilet.getCoordinates().getLatitude());
-            data.put("toilet_longitude", toilet.getCoordinates().getLongitude());
+            data.put("toilet_latitude", toilet.getPosition().latitude);
+            data.put("toilet_longitude", toilet.getPosition().longitude);
         } catch (JSONException e) {
             e.printStackTrace();
             listener.onResponse(null);

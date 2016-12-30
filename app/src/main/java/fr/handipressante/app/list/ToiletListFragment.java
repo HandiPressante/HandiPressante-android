@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import org.osmdroid.util.GeoPoint;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
 
     private LocationManager mLocationManager;
     private String mProvider;
-    private GeoPoint mCurrentGeopoint;
+    private LatLng mCurrentLatLng;
 
     private ToiletListAdapter mAdapter;
     private List<Toilet> mToiletCache;
@@ -101,7 +101,7 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         //        Toast.LENGTH_SHORT).show();
 
         if (savedInstanceState != null) {
-            mCurrentGeopoint = savedInstanceState.getParcelable("current_location");
+            mCurrentLatLng = savedInstanceState.getParcelable("current_location");
         }
     }
 
@@ -163,8 +163,8 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     public void onSaveInstanceState (Bundle outState){
         super.onSaveInstanceState(outState);
 
-        if (mCurrentGeopoint != null)
-            outState.putParcelable("current_location", mCurrentGeopoint);
+        if (mCurrentLatLng != null)
+            outState.putParcelable("current_location", mCurrentLatLng);
 
         Log.i("ToiletListFragment", "Instance state saved");
     }
@@ -204,13 +204,13 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public void onLocationChanged(Location location) {
         Log.i("ToiletListFragment", "onLocationChanged");
-        mCurrentGeopoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+        mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (!mToiletCache.isEmpty()) {
             updateToiletList(mToiletCache, false);
         }
 
         ToiletDownloader downloader = new ToiletDownloader(getContext());
-        downloader.requestNearbyToilets(new GeoPoint(location.getLatitude(), location.getLongitude()),
+        downloader.requestNearbyToilets(new LatLng(location.getLatitude(), location.getLongitude()),
                 5, 20, 2000, new Downloader.Listener<List<Toilet>>() {
                     @Override
                     public void onResponse(List<Toilet> response) {
@@ -242,14 +242,14 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     synchronized private void updateToiletList(List<Toilet> toiletList, boolean firstOnly) {
         if (!firstOnly || getListAdapter() == null) {
             for (Toilet t : toiletList) {
-                t.setDistanceWith(mCurrentGeopoint);
+                t.setDistanceWith(mCurrentLatLng);
             }
             Toilet.sortListByDistance(toiletList);
 
             mAdapter.swapItems(toiletList);
             mToiletCache = toiletList;
 
-            if (mCurrentGeopoint != null) {
+            if (mCurrentLatLng != null) {
                 setListAdapter(mAdapter);
             }
         }

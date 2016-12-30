@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
-import org.osmdroid.util.GeoPoint;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,8 @@ public class NearbyToiletDAO extends AbstractDAO {
         value.put(FIELD_DESCRIPTION, t.getDescription());
         value.put(FIELD_ADAPTED, t.isAdapted() ? 1 : 0);
         value.put(FIELD_CHARGED, t.isCharged() ? 1 : 0);
-        value.put(FIELD_LATITUDE, t.getCoordinates().getLatitude());
-        value.put(FIELD_LONGITUDE, t.getCoordinates().getLongitude());
+        value.put(FIELD_LATITUDE, t.getPosition().latitude);
+        value.put(FIELD_LONGITUDE, t.getPosition().longitude);
         value.put(FIELD_CLEANLINESS, t.getRankCleanliness());
         value.put(FIELD_FACILITIES, t.getRankFacilities());
         value.put(FIELD_ACCESSIBILITY, t.getRankAccessibility());
@@ -92,7 +92,7 @@ public class NearbyToiletDAO extends AbstractDAO {
             t.setDescription(c.getString(2));
             t.setAdapted(c.getInt(3) == 1);
             t.setCharged(c.getInt(4) == 1);
-            t.setCoordinates(new GeoPoint(c.getDouble(5), c.getDouble(6)));
+            t.setPosition(new LatLng(c.getDouble(5), c.getDouble(6)));
             t.setRankCleanliness(c.getFloat(7));
             t.setRankFacilities(c.getFloat(8));
             t.setRankAccessibility(c.getFloat(9));

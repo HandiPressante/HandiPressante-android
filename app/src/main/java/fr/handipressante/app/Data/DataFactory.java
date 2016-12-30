@@ -1,8 +1,9 @@
 package fr.handipressante.app.data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.osmdroid.util.GeoPoint;
 
 /**
  * Created by Nico on 23/10/2015.
@@ -26,7 +27,7 @@ public class DataFactory {
         float t_rankAccessibility = (float) jsonObject.optDouble("accessibility_avg", 0.0);
         int t_rateWeight = jsonObject.optInt("rate_weight", 0);
 
-        Toilet t = new Toilet(t_id, t_adapted, t_charged, t_name, new GeoPoint(t_lat, t_long));
+        Toilet t = new Toilet(t_id, t_adapted, t_charged, t_name, new LatLng(t_lat, t_long));
         t.setDescription(t_description);
         t.setRankCleanliness(t_rankCleanliness);
         t.setRankFacilities(t_rankFacilities);
