@@ -181,7 +181,7 @@ public class ToiletDownloader extends Downloader {
             return;
         }
 
-        url = MyConstants.BASE_URL + "toilets/rate";
+        url = MyConstants.BASE_URL + "/toilets/rate";
 
         postJson(url, data, listener);
     }
