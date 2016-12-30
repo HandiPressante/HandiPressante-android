@@ -153,7 +153,7 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
         mProgressDialog.dismiss();
 
         if (success) {
-            Toast.makeText(getApplicationContext(), "Commentaire ajouté !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
 
             EditText usernameField = (EditText) findViewById(R.id.username);
             String username = usernameField.getText().toString();

@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
@@ -73,6 +74,7 @@ public class DescriptionActivity extends AppCompatActivity implements Downloader
         if (success) {
             Intent result = new Intent();
             result.putExtra("toilet", mToilet);
+            Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
 
             setResult(0, result);
         } else {

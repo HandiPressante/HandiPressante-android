@@ -42,6 +42,8 @@
 
     <string name="help">Aide</string>
 
+    <string name="thanks_for_contributing">Merci de votre contribution !</string>
+    
     <string name="button_size_value">Cliquer pour accéder aux modifications</string>
     <string name="pmr_value">Cliquer pour filtrer ou non les toilettes accessibles</string>
     <string name="money_value">Cliquer pour filtrer ou non les toilettes payantes</string>
