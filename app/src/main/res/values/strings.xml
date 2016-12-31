@@ -55,13 +55,13 @@
         <item> Autre</item>
     </string-array>
 
-    <string-array name="array_settings_pmr_values">
+    <string-array name="array_settings_accessibility_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
 
-    <string-array name="array_settings_money_values">
+    <string-array name="array_settings_fee_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -77,15 +77,15 @@
         <item> Grand</item>
     </string-array>
 
-    <string-array name="array_settings_pmr">
-        <item> Handicapé</item>
-        <item> Tout utilisateur</item>
+    <string-array name="array_settings_accessibility">
+        <item> Adaptées à la mobilité réduite</item>
+        <item> Non adaptées</item>
         <item> Les deux </item>
     </string-array>
 
-    <string-array name="array_settings_money">
-        <item>Gratuit</item>
-        <item>Payant</item>
+    <string-array name="array_settings_charged">
+        <item>Gratuites</item>
+        <item>Payantes</item>
         <item>Les deux</item>
     </string-array>
 

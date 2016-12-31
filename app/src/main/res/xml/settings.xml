@@ -40,18 +40,18 @@
         android:title="Filtres"
         android:key="filters">
         <ListPreference
-            android:key="pmr_filter"
+            android:key="accessibility_filter"
             android:dialogTitle="Choisir la catégorie"
-            android:entries="@array/array_settings_pmr"
-            android:entryValues="@array/array_settings_pmr_values"
+            android:entries="@array/array_settings_accessibility"
+            android:entryValues="@array/array_settings_accessibility_values"
             android:title="Choix type de toilettes"
             android:summary="@string/pmr_value"
             android:defaultValue="2" />
         <ListPreference
-            android:key="money_filter"
+            android:key="fee_filter"
             android:dialogTitle="Choisir la catégorie"
-            android:entries="@array/array_settings_money"
-            android:entryValues="@array/array_settings_money_values"
+            android:entries="@array/array_settings_charged"
+            android:entryValues="@array/array_settings_fee_values"
             android:title="Toilettes payantes"
             android:summary="@string/money_value"
             android:defaultValue="2" />

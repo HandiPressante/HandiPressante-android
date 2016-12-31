@@ -2,6 +2,7 @@ package fr.handipressante.app.server;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -43,9 +44,16 @@ public class ToiletDownloader extends Downloader {
     public void requestNearbyToilets(LatLng ref, int mincount, int maxcount, int distanceMax,
                                      final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestNearbyToilets");
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+        int accessibilityFilter = Integer.valueOf(sharedPrefs.getString("accessibility_filter", "2"));
+        int feeFilter = Integer.valueOf(sharedPrefs.getString("fee_filter", "2"));
+
         String url = MyConstants.BASE_URL + "/toilets/get-nearby/" +
                 ref.latitude + "/" + ref.longitude + "/" +
-                mincount + "/" + maxcount + "/" + distanceMax;
+                mincount + "/" + maxcount + "/" + distanceMax + "/" +
+                accessibilityFilter + "/" + feeFilter;
+
 
         requestToilets(url, listener);
     }
@@ -60,9 +68,15 @@ public class ToiletDownloader extends Downloader {
     public void requestMapToilets(LatLng topLeft, LatLng bottomRight,
                                   final Listener<List<Toilet>> listener) {
         Log.i("ToiletDownloader", "requestMapToilets");
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
+        int accessibilityFilter = sharedPrefs.getInt("accessibility_filter", 2);
+        int feeFilter = sharedPrefs.getInt("fee_filter", 2);
+
         String url = MyConstants.BASE_URL + "/toilets/get-area/" +
                 topLeft.latitude + "/" + topLeft.longitude + "/" +
-                bottomRight.latitude + "/" + bottomRight.longitude;
+                bottomRight.latitude + "/" + bottomRight.longitude + "/" +
+                accessibilityFilter + "/" + feeFilter;
 
         requestToilets(url, listener);
     }
