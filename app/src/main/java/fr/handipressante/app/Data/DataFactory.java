@@ -14,8 +14,8 @@ public class DataFactory {
         String t_name = jsonObject.getString("name");
         boolean t_adapted = jsonObject.optInt("adapted", 0) == 1;
         boolean t_charged = jsonObject.optInt("charged", 0) == 1;
-        double t_lat = jsonObject.getDouble("lat84");
-        double t_long = jsonObject.getDouble("long84");
+        double t_lat = jsonObject.getDouble("latitude");
+        double t_long = jsonObject.getDouble("longitude");
 
         String t_description = "";
         if (!jsonObject.isNull("description")) {
