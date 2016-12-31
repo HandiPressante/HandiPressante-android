@@ -116,7 +116,7 @@ public class MultipartRequest extends Request<NetworkResponse> {
 
         public void addFilePart(String parameterName, byte[] fileData, String fileName) throws IOException {
             mDos.writeBytes(twoHyphens + boundary + lineEnd);
-            mDos.writeBytes("Content-Disposition: form-data; name=\"photo\"; filename=\""
+            mDos.writeBytes("Content-Disposition: form-data; name=\"" + parameterName + "\"; filename=\""
                     + fileName + "\"" + lineEnd);
             mDos.writeBytes(lineEnd);
 
