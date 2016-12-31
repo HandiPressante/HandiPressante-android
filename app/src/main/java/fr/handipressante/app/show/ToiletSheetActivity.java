@@ -483,8 +483,10 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void enableEdition() {
+        findViewById(R.id.alert_toilet).setEnabled(true);
         findViewById(R.id.edit_toilet).setEnabled(true);
         findViewById(R.id.photo_button).setEnabled(true);
+        findViewById(R.id.alert_picture).setEnabled(true);
         findViewById(R.id.edit_description).setEnabled(true);
         findViewById(R.id.edit_rate).setEnabled(true);
         findViewById(R.id.add_comment).setEnabled(true);

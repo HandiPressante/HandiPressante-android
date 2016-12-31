@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_enabled="false"
-        android:drawable="@drawable/edit_rate_disabled" />
+        android:drawable="@drawable/alert_disabled" />
 
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/edit_rate_pressed" />
+        android:drawable="@drawable/alert_pressed" />
 
-    <item android:drawable="@drawable/edit_rate_default" />
+    <item android:drawable="@drawable/alert_default" />
 </selector>
