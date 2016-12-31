@@ -60,6 +60,7 @@ import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.MultipartRequest;
 import fr.handipressante.app.server.PhotoDownloader;
 import fr.handipressante.app.server.RequestManager;
+import fr.handipressante.app.server.ServerResponseException;
 import fr.handipressante.app.server.ToiletDownloader;
 import fr.handipressante.app.edit.CommentEdition;
 import fr.handipressante.app.edit.ConfirmPhotoDialogFragment;
@@ -645,9 +646,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
 
-            builder.addTextPart("uuid", uuid);
+            builder.addTextPart("user_id", uuid);
             builder.addTextPart("toilet_id", mToilet.getId().toString());
-            builder.addFilePart("photo", photoData, "photo.jpg");
+            builder.addFilePart("picture", photoData, "picture.jpg");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -659,30 +660,26 @@ public class ToiletSheetActivity extends AppCompatActivity {
                          mPhotoUploadDialog.dismiss();
 
                          String strJsonResponse = new String(response.data);
-                         boolean error = true;
-                         int errorCode = -1;
 
                          try {
                              JSONObject jsonResponse = new JSONObject(strJsonResponse);
-                             if (jsonResponse.has("error")) {
-                                errorCode = jsonResponse.getInt("error");
-                                if (errorCode == 0) error = false;
-                             }
+                             checkResponse(jsonResponse);
+                         } catch (ServerResponseException e) {
+                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                             return;
                          } catch (JSONException e) {
                              e.printStackTrace();
                          }
 
-                         if (!error) {
-                             Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
-                             syncPhotoWithServer();
-                         } else
-                             Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué. (Code d'erreur : " + errorCode + ")", Toast.LENGTH_LONG).show();
+                         Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
+                         syncPhotoWithServer();
                      }
                  },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         mPhotoUploadDialog.dismiss();
+                        error.printStackTrace();
                         Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -696,6 +693,25 @@ public class ToiletSheetActivity extends AppCompatActivity {
         }
 
         RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void checkResponse(JSONObject response) throws ServerResponseException {
+        int version = response.optInt("version");
+        if (!response.has("version")) {
+            throw new ServerResponseException();
+        }
+
+        if (version > MyConstants.API_VERSION) {
+            throw new ServerResponseException("Veuillez mette HandiPressante à jour.");
+        }
+        try {
+            if (!response.getBoolean("success")) {
+                String error = response.getString("errorText");
+                throw new ServerResponseException(error);
+            }
+        } catch (JSONException e) {
+            throw new ServerResponseException();
+        }
     }
 
     private ProgressDialog mPhotoUploadDialog;
