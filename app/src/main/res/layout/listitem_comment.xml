@@ -30,13 +30,13 @@
         android:layout_below="@id/content" />
 
     <Button
-        android:id="@+id/alert_comment"
+        android:id="@+id/report_comment"
         android:enabled="true"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/alert_button"
+        android:background="@drawable/report_button"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
         android:layout_alignParentEnd="true"

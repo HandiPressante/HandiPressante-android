@@ -19,7 +19,7 @@ import java.util.List;
 
 import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.R;
-import fr.handipressante.app.edit.ConfirmAlertCommentDialogFragment;
+import fr.handipressante.app.edit.ConfirmReportCommentDialogFragment;
 import fr.handipressante.app.server.CommentDownloader;
 import fr.handipressante.app.server.Downloader;
 
@@ -77,15 +77,15 @@ public class CommentActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(List<Comment> response) {
                     mAdapter.swapItems(response);
-                    mAdapter.setAlertButtonListener(new CommentListAdapter.AlertButtonListener() {
+                    mAdapter.setReportButtonListener(new CommentListAdapter.ReportButtonListener() {
                         @Override
                         public void onClick(final Integer commentId) {
-                            ConfirmAlertCommentDialogFragment dialogFragment = new ConfirmAlertCommentDialogFragment();
-                            dialogFragment.setListener(new ConfirmAlertCommentDialogFragment.ConfirmAlertCommentDialogListener() {
+                            ConfirmReportCommentDialogFragment dialogFragment = new ConfirmReportCommentDialogFragment();
+                            dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
                                 @Override
                                 public void onDialogPositiveClick(DialogFragment dialog) {
                                     Toast.makeText(getApplicationContext(), "Comment " + commentId, Toast.LENGTH_LONG).show();
-                                    // todo : send alert to server
+                                    // todo : send report to server
                                 }
 
                                 @Override
@@ -93,7 +93,7 @@ public class CommentActivity extends AppCompatActivity {
 
                                 }
                             });
-                            dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
+                            dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
                         }
                     });
                 }

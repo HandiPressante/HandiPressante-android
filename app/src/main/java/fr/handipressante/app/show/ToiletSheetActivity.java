@@ -54,8 +54,8 @@ import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.data.PhotoDAO;
 import fr.handipressante.app.data.Toilet;
-import fr.handipressante.app.edit.ConfirmAlertCommentDialogFragment;
-import fr.handipressante.app.edit.ConfirmAlertPhotoDialogFragment;
+import fr.handipressante.app.edit.ConfirmReportCommentDialogFragment;
+import fr.handipressante.app.edit.ConfirmReportPhotoDialogFragment;
 import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.CommentDownloader;
@@ -194,12 +194,12 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.alert_picture).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.report_picture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ConfirmAlertPhotoDialogFragment dialogFragment = new ConfirmAlertPhotoDialogFragment();
-                dialogFragment.setListener(new ConfirmAlertPhotoDialogFragment.ConfirmAlertPhotoDialogListener() {
+                ConfirmReportPhotoDialogFragment dialogFragment = new ConfirmReportPhotoDialogFragment();
+                dialogFragment.setListener(new ConfirmReportPhotoDialogFragment.ConfirmReportPhotoDialogListener() {
                     @Override
                     public void onDialogPositiveClick(DialogFragment dialog) {
                         if (mPhotoAdapter != null) {
@@ -210,7 +210,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                             if (pictureIndex < pictures.size()) {
                                 final Photo picture = pictures.get(pictureIndex);
                                 Toast.makeText(getApplicationContext(), "Picture " + picture.getId() + " : " + picture.getFilename(), Toast.LENGTH_LONG).show();
-                                // todo : send alert to server
+                                // todo : send report to server
                             }
 
                         }
@@ -221,7 +221,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
                     }
                 });
-                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
+                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
             }
         });
 
@@ -524,7 +524,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         findViewById(R.id.add_comment).setEnabled(true);
 
         if (mPhotoAdapter != null && !mPhotoAdapter.getPhotoList().isEmpty()) {
-            findViewById(R.id.alert_picture).setEnabled(true);
+            findViewById(R.id.report_picture).setEnabled(true);
         }
     }
 
@@ -554,22 +554,22 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 TextView username = (TextView) row.findViewById(R.id.username);
                 TextView content = (TextView) row.findViewById(R.id.content);
                 TextView date = (TextView) row.findViewById(R.id.date);
-                Button alert = (Button) row.findViewById(R.id.alert_comment);
+                Button report = (Button) row.findViewById(R.id.report_comment);
 
                 username.setText(comment.getUsername());
                 content.setText(comment.getContent());
                 date.setText(comment.getPostdate());
 
-                alert.setOnClickListener(new View.OnClickListener() {
+                report.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        ConfirmAlertCommentDialogFragment dialogFragment = new ConfirmAlertCommentDialogFragment();
-                        dialogFragment.setListener(new ConfirmAlertCommentDialogFragment.ConfirmAlertCommentDialogListener() {
+                        ConfirmReportCommentDialogFragment dialogFragment = new ConfirmReportCommentDialogFragment();
+                        dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
                             @Override
                             public void onDialogPositiveClick(DialogFragment dialog) {
                                 Toast.makeText(getApplicationContext(), "Comment " + comment.getId() + " : " + comment.getContent(), Toast.LENGTH_LONG).show();
-                                // todo : send alert to server
+                                // todo : send report to server
                             }
 
                             @Override
@@ -577,7 +577,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
                             }
                         });
-                        dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
+                        dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
                     }
                 });
 

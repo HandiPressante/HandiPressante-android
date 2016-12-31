@@ -21,20 +21,20 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         TextView username;
         TextView content;
         TextView date;
-        Button alert;
+        Button report;
     }
 
-    public interface AlertButtonListener {
+    public interface ReportButtonListener {
         void onClick(final Integer commentId);
     }
-    private AlertButtonListener mAlertButtonListener;
+    private ReportButtonListener mReportButtonListener;
 
     public CommentListAdapter(Context context, List<Comment> comments) {
         super(context, -1, comments);
     }
 
-    public void setAlertButtonListener(AlertButtonListener listener) {
-        mAlertButtonListener = listener;
+    public void setReportButtonListener(ReportButtonListener listener) {
+        mReportButtonListener = listener;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder.username = (TextView) row.findViewById(R.id.username);
             holder.content = (TextView) row.findViewById(R.id.content);
             holder.date = (TextView) row.findViewById(R.id.date);
-            holder.alert = (Button) row.findViewById(R.id.alert_comment);
+            holder.report = (Button) row.findViewById(R.id.report_comment);
 
             row.setTag(holder);
         } else {
@@ -61,11 +61,11 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         holder.username.setText(comment.getUsername());
         holder.content.setText(comment.getContent());
         holder.date.setText(comment.getPostdate());
-        holder.alert.setOnClickListener(new View.OnClickListener() {
+        holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mAlertButtonListener != null) {
-                    mAlertButtonListener.onClick(comment.getId());
+                if (mReportButtonListener != null) {
+                    mReportButtonListener.onClick(comment.getId());
                 }
             }
         });

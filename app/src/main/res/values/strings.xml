@@ -192,9 +192,9 @@
 
     <string name="confirm_send">Confirmation de l\'envoi</string>
     <string name="confirm_photo_add">La photo que vous allez prendre sera publiée sur la fiche d\'information.</string>
-    <string name="confirm_alert">Signalement de contenu inapproprié</string>
-    <string name="confirm_photo_alert">Vous trouvez cette photo inconvenante et/ou inutile ?</string>
-    <string name="confirm_comment_alert">Vous trouvez ce commentaire inconvenant et/ou inutile ?</string>
+    <string name="confirm_report">Signalement de contenu inapproprié</string>
+    <string name="confirm_photo_report">Vous trouvez cette photo inconvenante et/ou inutile ?</string>
+    <string name="confirm_comment_report">Vous trouvez ce commentaire inconvenant et/ou inutile ?</string>
     <string name="gotit">Compris</string>
     <string name="title_activity_main2">Main2Activity</string>
 

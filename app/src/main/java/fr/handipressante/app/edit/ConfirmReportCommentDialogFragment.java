@@ -8,35 +8,35 @@ import android.support.v7.app.AlertDialog;
 
 import fr.handipressante.app.R;
 
-public class ConfirmAlertPhotoDialogFragment extends DialogFragment {
-    public interface ConfirmAlertPhotoDialogListener {
+public class ConfirmReportCommentDialogFragment extends DialogFragment {
+    public interface ConfirmReportCommentDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
-    private ConfirmAlertPhotoDialogListener mListener;
+    private ConfirmReportCommentDialogListener mListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.confirm_photo_alert)
+        builder.setMessage(R.string.confirm_comment_report)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onDialogPositiveClick(ConfirmAlertPhotoDialogFragment.this);
+                        mListener.onDialogPositiveClick(ConfirmReportCommentDialogFragment.this);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.onDialogNegativeClick(ConfirmAlertPhotoDialogFragment.this);
+                        mListener.onDialogNegativeClick(ConfirmReportCommentDialogFragment.this);
                     }
                 });
 
         return builder.create();
     }
 
-    public void setListener(ConfirmAlertPhotoDialogListener listener) {
+    public void setListener(ConfirmReportCommentDialogListener listener) {
         mListener = listener;
     }
 }
