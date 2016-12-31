@@ -56,6 +56,10 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="18sp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="55dp"
+                android:layout_marginEnd="55dp"
                 android:layout_toRightOf="@id/handicapped"
                 android:layout_toEndOf="@id/handicapped"
                 android:layout_alignParentTop="true" />
