@@ -21,10 +21,20 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         TextView username;
         TextView content;
         TextView date;
+        Button alert;
     }
+
+    public interface AlertButtonListener {
+        void onClick(final Integer commentId);
+    }
+    private AlertButtonListener mAlertButtonListener;
 
     public CommentListAdapter(Context context, List<Comment> comments) {
         super(context, -1, comments);
+    }
+
+    public void setAlertButtonListener(AlertButtonListener listener) {
+        mAlertButtonListener = listener;
     }
 
     @Override
@@ -40,6 +50,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
             holder.username = (TextView) row.findViewById(R.id.username);
             holder.content = (TextView) row.findViewById(R.id.content);
             holder.date = (TextView) row.findViewById(R.id.date);
+            holder.alert = (Button) row.findViewById(R.id.alert_comment);
 
             row.setTag(holder);
         } else {
@@ -50,6 +61,14 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         holder.username.setText(comment.getUsername());
         holder.content.setText(comment.getContent());
         holder.date.setText(comment.getPostdate());
+        holder.alert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mAlertButtonListener != null) {
+                    mAlertButtonListener.onClick(comment.getId());
+                }
+            }
+        });
 
         return row;
     }

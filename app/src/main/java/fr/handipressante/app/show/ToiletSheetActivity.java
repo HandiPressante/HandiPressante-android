@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -53,6 +54,7 @@ import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.data.PhotoDAO;
 import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.edit.ConfirmAlertCommentDialogFragment;
 import fr.handipressante.app.edit.ConfirmAlertPhotoDialogFragment;
 import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
@@ -537,9 +539,9 @@ public class ToiletSheetActivity extends AppCompatActivity {
             commentView.removeAllViewsInLayout();
 
             for (int i = 0; i < commentList.size() && i < MAX_COMMENTS_VISIBLE; ++i) {
-                Comment comment = commentList.get(i);
+                final Comment comment = commentList.get(i);
 
-                View row = null;
+                View row;
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 if (i + 1 == commentList.size()) {
@@ -552,10 +554,32 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 TextView username = (TextView) row.findViewById(R.id.username);
                 TextView content = (TextView) row.findViewById(R.id.content);
                 TextView date = (TextView) row.findViewById(R.id.date);
+                Button alert = (Button) row.findViewById(R.id.alert_comment);
 
                 username.setText(comment.getUsername());
                 content.setText(comment.getContent());
                 date.setText(comment.getPostdate());
+
+                alert.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        ConfirmAlertCommentDialogFragment dialogFragment = new ConfirmAlertCommentDialogFragment();
+                        dialogFragment.setListener(new ConfirmAlertCommentDialogFragment.ConfirmAlertCommentDialogListener() {
+                            @Override
+                            public void onDialogPositiveClick(DialogFragment dialog) {
+                                Toast.makeText(getApplicationContext(), "Comment " + comment.getId() + " : " + comment.getContent(), Toast.LENGTH_LONG).show();
+                                // todo : send alert to server
+                            }
+
+                            @Override
+                            public void onDialogNegativeClick(DialogFragment dialog) {
+
+                            }
+                        });
+                        dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
+                    }
+                });
 
                 commentView.addView(row);
             }

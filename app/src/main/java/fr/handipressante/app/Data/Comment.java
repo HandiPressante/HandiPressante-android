@@ -23,6 +23,14 @@ public class Comment {
         mPostdate = postdate;
     }
 
+    public Integer getId() {
+        return mId;
+    }
+
+    public void setId(Integer id) {
+        mId = id;
+    }
+
     public String getUsername() {
         return mUsername;
     }

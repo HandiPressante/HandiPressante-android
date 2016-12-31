@@ -3,6 +3,7 @@ package fr.handipressante.app.show;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,12 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.R;
+import fr.handipressante.app.edit.ConfirmAlertCommentDialogFragment;
 import fr.handipressante.app.server.CommentDownloader;
 import fr.handipressante.app.server.Downloader;
 
@@ -74,6 +77,25 @@ public class CommentActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(List<Comment> response) {
                     mAdapter.swapItems(response);
+                    mAdapter.setAlertButtonListener(new CommentListAdapter.AlertButtonListener() {
+                        @Override
+                        public void onClick(final Integer commentId) {
+                            ConfirmAlertCommentDialogFragment dialogFragment = new ConfirmAlertCommentDialogFragment();
+                            dialogFragment.setListener(new ConfirmAlertCommentDialogFragment.ConfirmAlertCommentDialogListener() {
+                                @Override
+                                public void onDialogPositiveClick(DialogFragment dialog) {
+                                    Toast.makeText(getApplicationContext(), "Comment " + commentId, Toast.LENGTH_LONG).show();
+                                    // todo : send alert to server
+                                }
+
+                                @Override
+                                public void onDialogNegativeClick(DialogFragment dialog) {
+
+                                }
+                            });
+                            dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
+                        }
+                    });
                 }
             });
         } else {
