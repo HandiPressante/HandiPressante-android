@@ -53,6 +53,7 @@ import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.data.PhotoDAO;
 import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.edit.ConfirmAlertPhotoDialogFragment;
 import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.CommentDownloader;
@@ -188,6 +189,37 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 intent.putExtra("toilet", mToilet);
                 intent.putExtra("new", false);
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        findViewById(R.id.alert_picture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ConfirmAlertPhotoDialogFragment dialogFragment = new ConfirmAlertPhotoDialogFragment();
+                dialogFragment.setListener(new ConfirmAlertPhotoDialogFragment.ConfirmAlertPhotoDialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        if (mPhotoAdapter != null) {
+                            ViewPager picturesViewer = (ViewPager) findViewById(R.id.viewpager);
+                            int pictureIndex = picturesViewer.getCurrentItem();
+                            final List<Photo> pictures = mPhotoAdapter.getPhotoList();
+
+                            if (pictureIndex < pictures.size()) {
+                                final Photo picture = pictures.get(pictureIndex);
+                                Toast.makeText(getApplicationContext(), "Picture " + picture.getId() + " : " + picture.getFilename(), Toast.LENGTH_LONG).show();
+                                // todo : send alert to server
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+
+                    }
+                });
+                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_alert));
             }
         });
 
@@ -483,13 +515,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void enableEdition() {
-        findViewById(R.id.alert_toilet).setEnabled(true);
         findViewById(R.id.edit_toilet).setEnabled(true);
         findViewById(R.id.photo_button).setEnabled(true);
-        findViewById(R.id.alert_picture).setEnabled(true);
         findViewById(R.id.edit_description).setEnabled(true);
         findViewById(R.id.edit_rate).setEnabled(true);
         findViewById(R.id.add_comment).setEnabled(true);
+
+        if (mPhotoAdapter != null && !mPhotoAdapter.getPhotoList().isEmpty()) {
+            findViewById(R.id.alert_picture).setEnabled(true);
+        }
     }
 
     private void updateCommentList(List<Comment> commentList) {

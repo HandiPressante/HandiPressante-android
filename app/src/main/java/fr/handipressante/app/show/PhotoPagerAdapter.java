@@ -41,6 +41,10 @@ public class PhotoPagerAdapter extends PagerAdapter {
         mContext = context;
     }
 
+    public List<Photo> getPhotoList() {
+        return mPhotoList;
+    }
+
     public void swapItems(ViewGroup collection, List<Photo> photoList) {
         if (mPhotoList.isEmpty() && !photoList.isEmpty()) {
             ImageView imageView = (ImageView) collection.findViewWithTag(0);

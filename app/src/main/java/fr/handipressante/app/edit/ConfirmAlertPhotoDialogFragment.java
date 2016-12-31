@@ -9,18 +9,18 @@ import android.support.v7.app.AlertDialog;
 import fr.handipressante.app.R;
 
 public class ConfirmAlertPhotoDialogFragment extends DialogFragment {
-    public interface ConfirmPhotoDialogListener {
+    public interface ConfirmAlertPhotoDialogListener {
         void onDialogPositiveClick(DialogFragment dialog);
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
-    private ConfirmPhotoDialogListener mListener;
+    private ConfirmAlertPhotoDialogListener mListener;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.confirm_photo_add)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.confirm_photo_alert)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mListener.onDialogPositiveClick(ConfirmAlertPhotoDialogFragment.this);
@@ -36,7 +36,7 @@ public class ConfirmAlertPhotoDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void setListener(ConfirmPhotoDialogListener listener) {
+    public void setListener(ConfirmAlertPhotoDialogListener listener) {
         mListener = listener;
     }
 }
