@@ -1,6 +1,7 @@
 package fr.handipressante.app.server;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.handipressante.app.R;
 import fr.handipressante.app.data.DataFactory;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.MyConstants;
@@ -27,8 +29,10 @@ public class PhotoDownloader extends Downloader {
     }
 
     public void downloadPhotoList(Integer toiletId, final Listener<List<Photo>> listener) {
-        String url = MyConstants.BASE_URL + "/toilets/pictures/list-" + toiletId;
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
 
+        String url = MyConstants.BASE_URL + "/toilets/pictures/list-" + toiletId + "/" + uuid;
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (url, new Response.Listener<JSONObject>() {
@@ -77,5 +81,26 @@ public class PhotoDownloader extends Downloader {
         }
 
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
+    }
+
+    public void postPictureReport(Integer pictureId, final Listener<Boolean> listener) {
+        String url;
+        JSONObject data = new JSONObject();
+
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+            data.put("user_id", uuid);
+            data.put("picture_id", pictureId.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(null);
+            return;
+        }
+
+        url = MyConstants.BASE_URL + "/toilets/pictures/report";
+
+        postJson(url, data, listener);
     }
 }

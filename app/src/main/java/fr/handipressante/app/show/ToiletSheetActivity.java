@@ -122,7 +122,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         new LoadDatabaseTask().execute();
         // onPostExecute : data are loaded from the server
 
-        syncCommentWithServer();
+        syncCommentsWithServer();
     }
 
     @Override
@@ -209,8 +209,16 @@ public class ToiletSheetActivity extends AppCompatActivity {
 
                             if (pictureIndex < pictures.size()) {
                                 final Photo picture = pictures.get(pictureIndex);
-                                Toast.makeText(getApplicationContext(), "Picture " + picture.getId() + " : " + picture.getFilename(), Toast.LENGTH_LONG).show();
-                                // todo : send report to server
+
+                                new PhotoDownloader(getApplicationContext()).postPictureReport(picture.getId(), new Downloader.Listener<Boolean>() {
+                                    @Override
+                                    public void onResponse(Boolean response) {
+                                        if (response) {
+                                            Toast.makeText(getApplicationContext(), R.string.report_success, Toast.LENGTH_LONG).show();
+                                            syncPhotoWithServer();
+                                        }
+                                    }
+                                });
                             }
 
                         }
@@ -398,7 +406,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 fillToiletSheet(mToilet);
             }
         } else if (requestCode == REQUEST_ADD_COMMENT && resultCode == 0) {
-            syncCommentWithServer();
+            syncCommentsWithServer();
         }
     }
 
@@ -568,8 +576,15 @@ public class ToiletSheetActivity extends AppCompatActivity {
                         dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
                             @Override
                             public void onDialogPositiveClick(DialogFragment dialog) {
-                                Toast.makeText(getApplicationContext(), "Comment " + comment.getId() + " : " + comment.getContent(), Toast.LENGTH_LONG).show();
-                                // todo : send report to server
+                                new CommentDownloader(getApplicationContext()).postCommentReport(comment.getId(), new Downloader.Listener<Boolean>() {
+                                    @Override
+                                    public void onResponse(Boolean response) {
+                                        if (response) {
+                                            Toast.makeText(getApplicationContext(), R.string.report_success, Toast.LENGTH_LONG).show();
+                                            syncCommentsWithServer();
+                                        }
+                                    }
+                                });
                             }
 
                             @Override
@@ -620,7 +635,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         */
     }
 
-    private void syncCommentWithServer() {
+    private void syncCommentsWithServer() {
         CommentDownloader commentDownloader = new CommentDownloader(getApplicationContext());
         commentDownloader.downloadCommentList(mToilet.getId(), new Downloader.Listener<List<Comment>>() {
             @Override

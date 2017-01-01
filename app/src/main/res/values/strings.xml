@@ -195,6 +195,7 @@
     <string name="confirm_report">Signalement de contenu inapproprié</string>
     <string name="confirm_photo_report">Vous trouvez cette photo inconvenante et/ou inutile ?</string>
     <string name="confirm_comment_report">Vous trouvez ce commentaire inconvenant et/ou inutile ?</string>
+    <string name="report_success">Votre signalement a bien été pris en compte.</string>
     <string name="gotit">Compris</string>
     <string name="title_activity_main2">Main2Activity</string>
 

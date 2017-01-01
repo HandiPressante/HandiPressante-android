@@ -29,7 +29,10 @@ public class CommentDownloader extends Downloader {
     }
 
     public void downloadCommentList(Integer toiletId, final Listener<List<Comment>> listener) {
-        String url = MyConstants.BASE_URL + "/toilets/comments/list-" + toiletId;
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+        String url = MyConstants.BASE_URL + "/toilets/comments/list-" + toiletId + "/" + uuid;
 
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -106,4 +109,24 @@ public class CommentDownloader extends Downloader {
         postJson(url, data, listener);
     }
 
+    public void postCommentReport(Integer commentId, final Listener<Boolean> listener) {
+        String url;
+        JSONObject data = new JSONObject();
+
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+            data.put("user_id", uuid);
+            data.put("comment_id", commentId.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(null);
+            return;
+        }
+
+        url = MyConstants.BASE_URL + "/toilets/comments/report";
+
+        postJson(url, data, listener);
+    }
 }

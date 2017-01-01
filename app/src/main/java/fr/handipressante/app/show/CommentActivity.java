@@ -72,35 +72,50 @@ public class CommentActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mToiletId = intent.getIntExtra("toiletId", 0);
         if (mToiletId > 0) {
-            CommentDownloader downloader = new CommentDownloader(getApplicationContext());
-            downloader.downloadCommentList(mToiletId, new Downloader.Listener<List<Comment>>() {
-                @Override
-                public void onResponse(List<Comment> response) {
-                    mAdapter.swapItems(response);
-                    mAdapter.setReportButtonListener(new CommentListAdapter.ReportButtonListener() {
-                        @Override
-                        public void onClick(final Integer commentId) {
-                            ConfirmReportCommentDialogFragment dialogFragment = new ConfirmReportCommentDialogFragment();
-                            dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
-                                @Override
-                                public void onDialogPositiveClick(DialogFragment dialog) {
-                                    Toast.makeText(getApplicationContext(), "Comment " + commentId, Toast.LENGTH_LONG).show();
-                                    // todo : send report to server
-                                }
-
-                                @Override
-                                public void onDialogNegativeClick(DialogFragment dialog) {
-
-                                }
-                            });
-                            dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
-                        }
-                    });
-                }
-            });
+            syncCommentsWithServer();
         } else {
             finish();
         }
+    }
+
+    private void syncCommentsWithServer() {
+        CommentDownloader downloader = new CommentDownloader(getApplicationContext());
+        downloader.downloadCommentList(mToiletId, new Downloader.Listener<List<Comment>>() {
+            @Override
+            public void onResponse(List<Comment> response) {
+                updateComments(response);
+            }
+        });
+    }
+
+    private void updateComments(List<Comment> comments) {
+        mAdapter.swapItems(comments);
+        mAdapter.setReportButtonListener(new CommentListAdapter.ReportButtonListener() {
+            @Override
+            public void onClick(final Integer commentId) {
+                ConfirmReportCommentDialogFragment dialogFragment = new ConfirmReportCommentDialogFragment();
+                dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        new CommentDownloader(getApplicationContext()).postCommentReport(commentId, new Downloader.Listener<Boolean>() {
+                            @Override
+                            public void onResponse(Boolean response) {
+                                if (response) {
+                                    Toast.makeText(getApplicationContext(), R.string.report_success, Toast.LENGTH_LONG).show();
+                                    syncCommentsWithServer();
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+
+                    }
+                });
+                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
+            }
+        });
     }
 
     private int computeVisibleItemCount() {
