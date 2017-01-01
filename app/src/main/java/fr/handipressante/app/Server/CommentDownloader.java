@@ -1,6 +1,7 @@
 package fr.handipressante.app.server;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.handipressante.app.R;
 import fr.handipressante.app.data.DataFactory;
 import fr.handipressante.app.data.Comment;
 import fr.handipressante.app.MyConstants;
@@ -78,4 +80,30 @@ public class CommentDownloader extends Downloader {
 
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
+
+    public void postToiletComment(Integer toiletId, String username, String content, final Listener<Boolean> listener) {
+        Log.i("ToiletDownloader", "postToiletComment");
+        String url;
+        JSONObject data = new JSONObject();
+
+        try {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(mContext.getString(R.string.saved_uuid), "no-uuid");
+
+            data.put("user_id", uuid);
+            data.put("toilet_id", toiletId.toString());
+
+            data.put("username", username);
+            data.put("content", content);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            listener.onResponse(null);
+            return;
+        }
+
+        url = MyConstants.BASE_URL + "/toilets/comments/add";
+
+        postJson(url, data, listener);
+    }
+
 }

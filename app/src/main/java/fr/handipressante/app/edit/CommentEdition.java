@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import fr.handipressante.app.R;
+import fr.handipressante.app.server.CommentDownloader;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 
@@ -85,7 +86,7 @@ public class CommentEdition extends AppCompatActivity implements Downloader.List
         String username = usernameField.getText().toString();
         String comment = commentField.getText().toString();
 
-        new ToiletDownloader(this).postToiletComment(mToiletId, username, comment, this);
+        new CommentDownloader(this).postToiletComment(mToiletId, username, comment, this);
     }
 
     private boolean checkData() {

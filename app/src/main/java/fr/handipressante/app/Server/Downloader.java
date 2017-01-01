@@ -2,6 +2,13 @@ package fr.handipressante.app.server;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Cache;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +36,41 @@ public class Downloader {
         }
 
         return data;
+    }
+
+    protected void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            checkResponse(response);
+                            listener.onResponse(true);
+                        } catch (ServerResponseException e) {
+                            Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                            listener.onResponse(false);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(mContext, "Une erreur serveur est survenue.", Toast.LENGTH_LONG).show();
+                error.printStackTrace();
+                listener.onResponse(false);
+            }
+        });
+
+        String key = jsonObjectRequest.getCacheKey();
+        Cache cache = RequestManager.getInstance(mContext).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
+            }
+        }
+
+        RequestManager.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
     }
 
     protected void checkResponse(JSONObject response) throws ServerResponseException {
