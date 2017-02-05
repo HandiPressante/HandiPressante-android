@@ -17,7 +17,7 @@ public class HelpSlideList extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Liste de toilettes", "Les toilettes disponibles classées du plus proche au plus éloigné. Cliquez sur l'une d'entre elle pour accéder à la fiche d'informations.", R.drawable.tuto_list, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Liste des toilettes", "Les toilettes à proximité sont classées des plus proches au plus éloignées. Cliquez sur ces toilettes pour accéder à la fiche d'informations. Cette fiche permet de démarrer un itinéraire rapidement.", R.drawable.help_list, Color.parseColor("#164F86")));
         // OPTIONAL METHODS
 
         // Override bar/separator color

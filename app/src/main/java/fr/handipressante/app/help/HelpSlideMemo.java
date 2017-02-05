@@ -17,8 +17,8 @@ public class HelpSlideMemo extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Aide mémo", "Retrouvez ici des fiches d'information sur des pathologies, des guides de soin ainsi que d'autres informations médicales.",
-                R.drawable.tuto_memo, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Mémos médicaux", "Retrouvez ici des fiches d'informations sur des pathologies, des guides de soin ainsi que d'autres informations médicales.",
+                R.drawable.help_memos, Color.parseColor("#164F86")));
         // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
         //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
         // OPTIONAL METHODS

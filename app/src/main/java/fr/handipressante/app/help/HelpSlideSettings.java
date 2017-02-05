@@ -17,8 +17,8 @@ public class HelpSlideSettings extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Aide réglages", "Adaptez l'application à vos besoins. Ajoutez ou supprimez des boutons de navigations, filtrez les données affichées.",
-                R.drawable.tuto_settings, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Paramètres", "Adaptez l'application à vos besoins. Ajoutez ou supprimez des boutons de navigations, filtrez les données affichées.",
+                R.drawable.help_settings, Color.parseColor("#164F86")));
         // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
         //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
         // OPTIONAL METHODS

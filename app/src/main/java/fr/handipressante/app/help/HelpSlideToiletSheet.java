@@ -17,8 +17,8 @@ public class HelpSlideToiletSheet extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Fiche d'information des toilettes", "Cliquez sur les icônes pour modifier les différents éléments de la fiche ou pour les noter.",
-                R.drawable.tuto_sheet,Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Fiche d'information des toilettes", "Cliquez sur les icônes pour modifier les différents éléments de la fiche ou pour noter les toilettes.",
+                R.drawable.help_sheet,Color.parseColor("#164F86")));
         // OPTIONAL METHODS
 
         // Override bar/separator color

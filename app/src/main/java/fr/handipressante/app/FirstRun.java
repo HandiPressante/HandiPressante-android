@@ -22,11 +22,11 @@ public class FirstRun extends AppIntro {
 
         // Instead of fragments, you can also use our default slide
         // Just set a title, description, background and image. AppIntro will do the rest
-        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées du plus proche au plus éloigné.", R.drawable.tuto_list, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Navigation sur carte", "Les toilettes recensées sont affichées à l'écran. Elles indiquent celles qui sont marquées comme accessibles ou non.", R.drawable.tuto_map, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "Il suffit de cliquer sur une toilette pour ouvrir la fiche correspondante", R.drawable.tuto_sheet, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "Quand la fiche est ouverte, cliquer sur \"modifier fiche\" ", R.drawable.tuto_name, Color.parseColor("#164F86")));
-        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'appliation à votre besoin. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.tuto_slider, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Bienvenue dans l'application HandiPressante", "Vous trouverez ici les toilettes disponibles classées des plus proches au plus éloignées.", R.drawable.help_list, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Navigation sur la carte", "En zoomant sur la carte, vous pourrez voir apparaître les toilettes recensées dans la zone géographique.", R.drawable.help_map, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Fiche d'informations des toilettes", "En cliquant sur des toilettes dans la liste ou sur la carte, une fiche d'informations s'ouvre. Cette fiche permet de démarrer un itinéraire rapidement.", R.drawable.help_sheet, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Ajout d'informations ou de commentaires", "HandiPressante est une application collaborative. Vous pouvez participer en cliquant sur \"Éditer\" lorsque vous êtes dans une fiche d'informations.", R.drawable.help_description, Color.parseColor("#164F86")));
+        addSlide(AppIntroFragment.newInstance("Un menu latéral d'accès aux réglages et mémos", "Les réglages vous permettent d'adapter l'application à vos besoins. Les mémos apportent des informations médicales proposées par des médecins", R.drawable.help_menu, Color.parseColor("#164F86")));
 
         // OPTIONAL METHODS
 

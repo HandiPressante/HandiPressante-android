@@ -66,6 +66,9 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
 
+        // Activate help menu
+        setHasOptionsMenu(true);
+
         if(!scroll_help) {
             toolbarBottom.setVisibility(View.GONE);
         }
