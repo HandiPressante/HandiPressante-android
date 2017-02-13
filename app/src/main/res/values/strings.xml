@@ -8,6 +8,7 @@
     <string name="menu_toilets">Toilettes</string>
     <string name="menu_memos">Mémos</string>
     <string name="menu_settings">Paramètres</string>
+    <string name="menu_about">À propos</string>
 
     <string name="tab_list_title">Liste</string>
     <string name="tab_map_title">Carte</string>
@@ -43,7 +44,7 @@
     <string name="help">Aide</string>
 
     <string name="thanks_for_contributing">Merci de votre contribution !</string>
-    
+
     <string name="button_size_value">Cliquer pour accéder aux modifications</string>
     <string name="pmr_value">Cliquer pour filtrer ou non les toilettes accessibles</string>
     <string name="money_value">Cliquer pour filtrer ou non les toilettes payantes</string>
@@ -201,5 +202,12 @@
 
     <string name="navigation_drawer_open">Ouvrir le menu latéral</string>
     <string name="navigation_drawer_close">Fermer le menu latéral</string>
+
+    <string name="about_version_label">Version :</string>
+    <string name="about_version">1.0.0</string>
+
+    <string name="about_authors_label">Auteurs :</string>
+    <string name="about_authors">- Olivier De Jonckère\n- Marc-Antoine Gautier\n- Tom Giraudet\n- Juliette Gonzalez\n- Yvonnig Jan\n- Nicolas Le Borgne</string>
+    <string name="about_powered_by">Propulsé par :</string>
 
 </resources>

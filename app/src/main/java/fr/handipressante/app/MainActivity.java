@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
             openFragment(new MemoListFragment());
         } else if (id == R.id.nav_settings) {
             openFragment(new SettingsFragment());
+        } else if (id == R.id.nav_about) {
+            openFragment(new AboutFragment());
         } else {
             commit = false;
         }
