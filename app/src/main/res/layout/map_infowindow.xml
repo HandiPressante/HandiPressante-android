@@ -3,21 +3,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView android:id="@+id/charged"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/euro_red"
-        android:padding="2dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
-
     <TextView android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/charged"
-        android:layout_toEndOf="@id/charged"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:padding="2dp" />
 
     <ImageView android:id="@+id/rank"
@@ -27,6 +18,15 @@
         android:layout_below="@id/title"
         android:layout_alignLeft="@id/title"
         android:layout_alignStart="@id/title"
+        android:padding="2dp" />
+
+    <ImageView android:id="@+id/charged"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/euro_red"
+        android:layout_below="@id/title"
+        android:layout_alignRight="@id/title"
+        android:layout_alignEnd="@id/title"
         android:padding="2dp" />
 
 </RelativeLayout>
