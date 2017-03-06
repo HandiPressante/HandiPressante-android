@@ -186,7 +186,7 @@
     <string name="phone_settings">Paramètres téléphone</string>
 
     <string name="is_there_logo">Le logo est-il présent?</string>
-    <string name="powered_by">Propulsé par: INSA Rennes</string>
+    <string name="powered_by">Propulsé par :</string>
     <string name="comment_edition">Votre commentaire ici</string>
     <string name="comment_explanation">Veuillez rédiger votre commentaire concernant ces toilettes puis valider en cliquant sur OK.</string>
     <string name="username">Nom d\'utilisateur</string>

@@ -15,10 +15,34 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/powered_by"
-        android:id="@+id/textView2"
+        android:id="@+id/powered_by_label"
         android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/powered_by_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/logo_insa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_insa" />
+
+        <ImageView
+            android:id="@+id/logo_rbpc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_rbpc"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
