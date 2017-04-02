@@ -25,8 +25,9 @@
         android:layout_height="24dp"
         android:src="@drawable/euro_red"
         android:layout_below="@id/title"
-        android:layout_alignRight="@id/title"
-        android:layout_alignEnd="@id/title"
+        android:layout_toRightOf="@id/rank"
+        android:layout_toEndOf="@id/rank"
         android:padding="2dp" />
+
 
 </RelativeLayout>
