@@ -49,7 +49,7 @@ import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 import fr.handipressante.app.show.ToiletSheetActivity;
 
-public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener, ClusterManager.OnClusterItemInfoWindowClickListener<Toilet> {
+public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener, ClusterManager.OnClusterItemClickListener<Toilet>, ClusterManager.OnClusterItemInfoWindowClickListener<Toilet> {
 
     private final String LOG_TAG = "ToiletMapFragment";
 
@@ -68,6 +68,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
     private LatLng mExtNorthEast;
     private LatLng mExtSouthWest;
 
+
+    private Toilet lastMarkerClicked = null;
     private ClusterManager<Toilet> mClusterManager;
     private Map<Integer, Toilet> mDownloadedToilets = new HashMap<>();
 
@@ -161,6 +163,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         mMap = googleMap;
         mClusterManager = new ClusterManager<>(getContext(), mMap);
         mClusterManager.setRenderer(new ToiletRenderer(getContext(), mMap, mClusterManager));
+        mMap.setOnMarkerClickListener(mClusterManager);
+        mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnCameraChangeListener(this);
@@ -208,11 +212,27 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public void onClusterItemInfoWindowClick(Toilet toilet) {
+    private void openToiletSheet(Toilet toilet) {
         Intent intent = new Intent(getContext(), ToiletSheetActivity.class);
         intent.putExtra("toilet", toilet);
         getContext().startActivity(intent);
+    }
+
+    @Override
+    public boolean onClusterItemClick(Toilet toilet) {
+        if (lastMarkerClicked == toilet) {
+            lastMarkerClicked = null;
+            openToiletSheet(toilet);
+            return true;
+        } else {
+            lastMarkerClicked = toilet;
+            return false;
+        }
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Toilet toilet) {
+        openToiletSheet(toilet);
     }
 
     @Override
