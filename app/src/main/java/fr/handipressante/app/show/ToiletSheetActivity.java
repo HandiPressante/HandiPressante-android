@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -143,24 +144,36 @@ public class ToiletSheetActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    private void gotoToiletPosition() {
+        LatLng toiletPosition = mToilet.getPosition();
+        final Uri mUri = Uri.parse("geo:" + toiletPosition.latitude + "," + toiletPosition.longitude + "?q=" + toiletPosition.latitude + "," + toiletPosition.longitude);
+
+        //intent to start a new activity
+        Intent intent = new Intent(Intent.ACTION_VIEW, mUri);
+        intent.setData(mUri);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
-        LatLng toiletPosition = mToilet.getPosition();
-        final Uri mUri = Uri.parse("geo:" + toiletPosition.latitude + "," + toiletPosition.longitude + "?q=" + toiletPosition.latitude + "," + toiletPosition.longitude);
         //Listener that opens Maps when you click on Itinerary button
         findViewById(R.id.map_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                gotoToiletPosition();
+            }
+        });
 
-                Uri geoLocation = mUri;
-
-                //intent to start a new activity
-                Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
-                intent.setData(geoLocation);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
+        // "Go to" action
+        RelativeLayout presentationBlock = (RelativeLayout) findViewById(R.id.presentation_block);
+        presentationBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoToiletPosition();
             }
         });
 
