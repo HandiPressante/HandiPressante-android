@@ -1,91 +1,43 @@
 package fr.handipressante.app.show;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.os.Bundle;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
-import com.android.volley.Cache;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
-import fr.handipressante.app.MyConstants;
-import fr.handipressante.app.data.Comment;
-import fr.handipressante.app.data.Photo;
-import fr.handipressante.app.data.PhotoDAO;
 import fr.handipressante.app.data.Toilet;
-import fr.handipressante.app.edit.ConfirmReportCommentDialogFragment;
-import fr.handipressante.app.edit.ConfirmReportPhotoDialogFragment;
 import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
-import fr.handipressante.app.server.CommentDownloader;
 import fr.handipressante.app.server.Downloader;
-import fr.handipressante.app.server.MultipartRequest;
-import fr.handipressante.app.server.PhotoDownloader;
-import fr.handipressante.app.server.RequestManager;
-import fr.handipressante.app.server.ServerResponseException;
 import fr.handipressante.app.server.ToiletDownloader;
 import fr.handipressante.app.edit.CommentEdition;
-import fr.handipressante.app.edit.ConfirmPhotoDialogFragment;
-import fr.handipressante.app.edit.DescriptionActivity;
-import fr.handipressante.app.edit.NameActivity;
 import fr.handipressante.app.edit.RatingActivity;
 
 public class ToiletSheetActivity extends AppCompatActivity {
+
+    private final String LOG_TAG = "ToiletSheetActivity";
+
     private Toilet mToilet;
-    private PhotoPagerAdapter mPhotoAdapter;
 
-    final int REQUEST_IMAGE_CAPTURE = 1;
-    final int REQUEST_TOILET_EDIT = 2;
-    final int REQUEST_ADD_COMMENT = 3;
-
-    final int MAX_COMMENTS_VISIBLE = 5;
-
-    SharedPreferences sharedPrefs;
-
-    private String mCurrentPhotoPath;
-    private boolean mReturningPhoto = false;
+    final int REQUEST_TOILET_EDIT = 1;
+    final int REQUEST_ADD_COMMENT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +49,8 @@ public class ToiletSheetActivity extends AppCompatActivity {
         mToilet = intent.getParcelableExtra("toilet");
 
         initToolbar();
-        initScrollToolbar();
 
         fillToiletSheet(mToilet);
-
 
         ToiletDownloader downloader = new ToiletDownloader(this);
         downloader.requestToilet(mToilet.getId(), new Downloader.Listener<List<Toilet>>() {
@@ -113,17 +63,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 }
             }
         });
-
-        mPhotoAdapter = new PhotoPagerAdapter(getApplicationContext());
-
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-        if (viewPager != null)
-            viewPager.setAdapter(mPhotoAdapter);
-
-        new LoadDatabaseTask().execute();
-        // onPostExecute : data are loaded from the server
-
-        syncCommentsWithServer();
     }
 
     @Override
@@ -177,82 +116,13 @@ public class ToiletSheetActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.photo_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.more_infos).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ConfirmPhotoDialogFragment dialogFragment = new ConfirmPhotoDialogFragment();
-                dialogFragment.setListener(new ConfirmPhotoDialogFragment.ConfirmPhotoDialogListener() {
-                    @Override
-                    public void onDialogPositiveClick(DialogFragment dialog) {
-                        dispatchTakePictureIntent();
-                    }
-
-                    @Override
-                    public void onDialogNegativeClick(DialogFragment dialog) {
-
-                    }
-                });
-                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_send));
-            }
-        });
-
-        findViewById(R.id.edit_toilet).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NameActivity.class);
+                Log.i(LOG_TAG, "more infos clicked");
+                Intent intent = new Intent(getApplicationContext(), MoreInfosActivity.class);
                 intent.putExtra("toilet", mToilet);
-                intent.putExtra("new", false);
-                startActivityForResult(intent, REQUEST_TOILET_EDIT);
-            }
-        });
-
-        findViewById(R.id.report_picture).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ConfirmReportPhotoDialogFragment dialogFragment = new ConfirmReportPhotoDialogFragment();
-                dialogFragment.setListener(new ConfirmReportPhotoDialogFragment.ConfirmReportPhotoDialogListener() {
-                    @Override
-                    public void onDialogPositiveClick(DialogFragment dialog) {
-                        if (mPhotoAdapter != null) {
-                            ViewPager picturesViewer = (ViewPager) findViewById(R.id.viewpager);
-                            int pictureIndex = picturesViewer.getCurrentItem();
-                            final List<Photo> pictures = mPhotoAdapter.getPhotoList();
-
-                            if (pictureIndex < pictures.size()) {
-                                final Photo picture = pictures.get(pictureIndex);
-
-                                new PhotoDownloader(getApplicationContext()).postPictureReport(picture.getId(), new Downloader.Listener<Boolean>() {
-                                    @Override
-                                    public void onResponse(Boolean response) {
-                                        if (response) {
-                                            Toast.makeText(getApplicationContext(), R.string.report_success, Toast.LENGTH_LONG).show();
-                                            syncPhotoWithServer();
-                                        }
-                                    }
-                                });
-                            }
-
-                        }
-                    }
-
-                    @Override
-                    public void onDialogNegativeClick(DialogFragment dialog) {
-
-                    }
-                });
-                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
-            }
-        });
-
-        findViewById(R.id.edit_description).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), DescriptionActivity.class);
-                intent.putExtra("toilet", mToilet);
-                intent.putExtra("new", false);
-                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+                startActivity(intent);
             }
         });
 
@@ -264,29 +134,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_TOILET_EDIT);
             }
         });
-
-        findViewById(R.id.show_comments).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-                intent.putExtra("toiletId", mToilet.getId());
-                startActivity(intent);
-            }
-        });
-
-        /*
-        findViewById(R.id.delete_comment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ConfirmDeleteComment deleteDialog = new ConfirmDeleteComment();
-                Bundle args = new Bundle();
-                args.putParcelable("toilet", mToilet);
-                deleteDialog.setArguments(args);
-
-                deleteDialog.show(getSupportFragmentManager(),"test");
-            }
-        });
-        */
 
         findViewById(R.id.add_comment).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,126 +157,23 @@ public class ToiletSheetActivity extends AppCompatActivity {
         toolbar.setTitle("Retour");
     }
 
-    private void initScrollToolbar() {
-        Toolbar toolbarBottom = (Toolbar) findViewById(R.id.scroll_toolbar);
-
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
-
-        if(!scroll_help && toolbarBottom != null) {
-            toolbarBottom.setVisibility(View.GONE);
-            return;
-        }
-
-        ImageButton up = (ImageButton) findViewById(R.id.upList);
-        if (up != null) {
-            up.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-                    if (scrollView != null) {
-                        int scrollViewHeight = scrollView.getHeight();
-                        int dy = scrollViewHeight / 2;
-                        scrollView.smoothScrollBy(0, -dy);
-                    }
-                }
-            });
-        }
-
-        ImageButton down = (ImageButton) findViewById(R.id.downList);
-        if (down != null) {
-            down.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
-                    if (scrollView != null) {
-                        int scrollViewHeight = scrollView.getHeight();
-                        int dy = scrollViewHeight / 2;
-                        scrollView.smoothScrollBy(0, dy);
-                    }
-                }
-            });
-        }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp;
-
-        File storageDir;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            // TODO : using this dir (not visible from gallery) is better, but managing is then needed
-            // storageDir = getExternalCacheDir();
-            storageDir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
-        } else {
-            storageDir = getFilesDir();
-        }
-
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        mCurrentPhotoPath = image.getAbsolutePath();
-
-        return image;
-    }
-
-    private void dispatchTakePictureIntent() {
-        // Checking camera availability
-        if (!getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            Toast.makeText(getApplicationContext(),
-                    "Désolé ! Votre appareil ne gère pas de caméra.",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile));
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-            mReturningPhoto = true;
-
-        } else if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
+        if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
             if (toilet != null) {
                 mToilet = toilet;
                 fillToiletSheet(mToilet);
             }
         } else if (requestCode == REQUEST_ADD_COMMENT && resultCode == 0) {
-            syncCommentsWithServer();
+            // nothing to do ?
         }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (mReturningPhoto) {
-            mReturningPhoto = false;
-            new CompressAndUploadPhotoTask().execute();
-        }
     }
 
     @Override
@@ -474,6 +218,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
         TextView name=(TextView)findViewById(R.id.toilet_name);
         name.setText(toilet.getName());
 
+        /*
         // Set toilet's description (wiki)
         TextView description=(TextView)findViewById(R.id.toilet_description);
         if(toilet.getDescription().isEmpty()){
@@ -517,7 +262,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             public void onClick(View v) {
                 viewPager.setCurrentItem(getItem(+1), true);
             }
-        });
+        });*/
 
         // Set general rate
         ImageView global_rate = (ImageView) findViewById(R.id.global_rate);
@@ -538,438 +283,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     private void enableEdition() {
-        findViewById(R.id.edit_toilet).setEnabled(true);
-        findViewById(R.id.photo_button).setEnabled(true);
-        findViewById(R.id.edit_description).setEnabled(true);
         findViewById(R.id.edit_rate).setEnabled(true);
         findViewById(R.id.add_comment).setEnabled(true);
-
-        if (mPhotoAdapter != null && !mPhotoAdapter.getPhotoList().isEmpty()) {
-            findViewById(R.id.report_picture).setEnabled(true);
-        }
-    }
-
-    private void updateCommentList(List<Comment> commentList) {
-        if (commentList.size() == 0) {
-            findViewById(R.id.no_comment).setVisibility(View.VISIBLE);
-            findViewById(R.id.show_comments).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.no_comment).setVisibility(View.GONE);
-
-            ViewGroup commentView = (ViewGroup) findViewById(R.id.comments);
-            commentView.removeAllViewsInLayout();
-
-            for (int i = 0; i < commentList.size() && i < MAX_COMMENTS_VISIBLE; ++i) {
-                final Comment comment = commentList.get(i);
-
-                View row;
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                if (i + 1 == commentList.size()) {
-                    // No separator if last element
-                    row = inflater.inflate(R.layout.listitem_comment, commentView, false);
-                } else {
-                    row = inflater.inflate(R.layout.listitem_comment_and_separator, commentView, false);
-                }
-
-                TextView username = (TextView) row.findViewById(R.id.username);
-                TextView content = (TextView) row.findViewById(R.id.content);
-                TextView date = (TextView) row.findViewById(R.id.date);
-                Button report = (Button) row.findViewById(R.id.report_comment);
-
-                username.setText(comment.getUsername());
-                content.setText(comment.getContent());
-                date.setText(comment.getPostdate());
-
-                report.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        ConfirmReportCommentDialogFragment dialogFragment = new ConfirmReportCommentDialogFragment();
-                        dialogFragment.setListener(new ConfirmReportCommentDialogFragment.ConfirmReportCommentDialogListener() {
-                            @Override
-                            public void onDialogPositiveClick(DialogFragment dialog) {
-                                new CommentDownloader(getApplicationContext()).postCommentReport(comment.getId(), new Downloader.Listener<Boolean>() {
-                                    @Override
-                                    public void onResponse(Boolean response) {
-                                        if (response) {
-                                            Toast.makeText(getApplicationContext(), R.string.report_success, Toast.LENGTH_LONG).show();
-                                            syncCommentsWithServer();
-                                        }
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onDialogNegativeClick(DialogFragment dialog) {
-
-                            }
-                        });
-                        dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_report));
-                    }
-                });
-
-                commentView.addView(row);
-            }
-
-            if (commentList.size() > MAX_COMMENTS_VISIBLE) {
-                findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
-            } else {
-                findViewById(R.id.show_comments).setVisibility(View.GONE);
-            }
-        }
-
-        /*
-        findViewById(R.id.no_comment).setVisibility(View.GONE);
-        int count = commentList.size();
-        for (int i = 0; i < 3; ++i) {
-            if (i < count) {
-                Comment c = commentList.get(i);
-                View row = findViewById(kCommentViews[i]);
-
-                TextView username = (TextView) row.findViewById(R.id.username);
-                TextView content = (TextView) row.findViewById(R.id.content);
-                TextView date = (TextView) row.findViewById(R.id.date);
-
-                username.setText(c.getUsername());
-                content.setText(c.getContent());
-                date.setText(c.getContent());
-
-                row.setVisibility(View.VISIBLE);
-            } else {
-                View row = findViewById(kCommentViews[i]);
-                row.setVisibility(View.GONE);
-            }
-        }
-
-        if (commentList.size() > 3) {
-            findViewById(R.id.show_comments).setVisibility(View.VISIBLE);
-        }
-        */
-    }
-
-    private void syncCommentsWithServer() {
-        CommentDownloader commentDownloader = new CommentDownloader(getApplicationContext());
-        commentDownloader.downloadCommentList(mToilet.getId(), new Downloader.Listener<List<Comment>>() {
-            @Override
-            public void onResponse(List<Comment> response) {
-                updateCommentList(response);
-            }
-        });
-    }
-
-    /*
-    public void addComment(Toilet toilet){
-        LinearLayout container = (LinearLayout) findViewById(R.id.comments_layout);
-        boolean comment = true;
-
-        if (comment) {
-            // Create LinearLayout
-            LinearLayout comment_layout = new LinearLayout(this);
-            comment_layout.setOrientation(LinearLayout.VERTICAL);
-            container.addView(comment_layout);
-
-
-            // Create TextView for name
-            TextView name = new TextView(this);
-            name.setText("Marie Babel");
-            name.setTypeface(null, Typeface.BOLD);
-            comment_layout.addView(name);
-
-
-            // Create TextView for comment text
-            TextView comment_text = new TextView(this);
-            comment_text.setText("Les toilettes sont bien équipées mais la poubelle a disparu oO");
-            comment_layout.addView(comment_text);
-
-
-            // Create TextView for comment text
-            TextView comment_date = new TextView(this);
-            comment_date.setTypeface(null, Typeface.ITALIC);
-            comment_date.setText("17/12/15");
-            comment_layout.addView(comment_date);
-
-            // Create View for line separator
-            View separator = new View(this);
-            separator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 2));
-            separator.setBackgroundColor(Color.parseColor("#dfdfdf"));
-            comment_layout.addView(separator);
-
-        }else{
-            // Create LinearLayout
-            LinearLayout comment_layout = new LinearLayout(this);
-            comment_layout.setOrientation(LinearLayout.VERTICAL);
-            container.addView(comment_layout);
-
-
-            // Create TextView for name
-            TextView no_comment = new TextView(this);
-            no_comment.setText(R.string.still_no_comment);
-            no_comment.setTypeface(null, Typeface.ITALIC);
-            comment_layout.addView(no_comment);
-        }
-    }
-
-    public void deleteComment(Toilet toilet){
-        ImageButton deleteButton = (ImageButton)findViewById(R.id.delete_comment);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Bouton pour supprimer un commentaire", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-    */
-
-    /**
-     * Helper functions
-     */
-
-    private void uploadPhoto(byte[] photoData) {
-        MultipartRequest.Builder builder = new MultipartRequest.Builder();
-        builder.setUrl(MyConstants.BASE_URL + "/toilets/pictures/add");
-
-        try {
-            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-            String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
-
-            builder.addTextPart("user_id", uuid);
-            builder.addTextPart("toilet_id", mToilet.getId().toString());
-            builder.addFilePart("picture", photoData, "picture.jpg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        MultipartRequest request = builder.build(
-                new Response.Listener<NetworkResponse>() {
-                     @Override
-                     public void onResponse(NetworkResponse response) {
-                         mPhotoUploadDialog.dismiss();
-
-                         String strJsonResponse = new String(response.data);
-
-                         try {
-                             JSONObject jsonResponse = new JSONObject(strJsonResponse);
-                             checkResponse(jsonResponse);
-                         } catch (ServerResponseException e) {
-                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                             return;
-                         } catch (JSONException e) {
-                             e.printStackTrace();
-                         }
-
-                         Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
-                         syncPhotoWithServer();
-                     }
-                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mPhotoUploadDialog.dismiss();
-                        error.printStackTrace();
-                        Toast.makeText(ToiletSheetActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        String key = request.getCacheKey();
-        Cache cache = RequestManager.getInstance(getApplicationContext()).getRequestQueue().getCache();
-        if (cache != null) {
-            if (cache.get(key) != null) {
-                cache.remove(key);
-            }
-        }
-
-        RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
-    }
-
-    private void checkResponse(JSONObject response) throws ServerResponseException {
-        int version = response.optInt("version");
-        if (!response.has("version")) {
-            throw new ServerResponseException();
-        }
-
-        if (version > MyConstants.API_VERSION) {
-            throw new ServerResponseException("Veuillez mette HandiPressante à jour.");
-        }
-        try {
-            if (!response.getBoolean("success")) {
-                String error = response.getString("errorText");
-                throw new ServerResponseException(error);
-            }
-        } catch (JSONException e) {
-            throw new ServerResponseException();
-        }
-    }
-
-    private ProgressDialog mPhotoUploadDialog;
-    private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, byte[]> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mPhotoUploadDialog = new ProgressDialog(ToiletSheetActivity.this);
-            mPhotoUploadDialog.setTitle("Veuillez patienter");
-            mPhotoUploadDialog.setMessage("Compression en cours ...");
-            mPhotoUploadDialog.setIndeterminate(true);
-            mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mPhotoUploadDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            if (progress.length != 1) return;
-            mPhotoUploadDialog.setProgress(progress[0]);
-        }
-
-        @Override
-        protected byte[] doInBackground(Void... params) {
-            return compressFile();
-        }
-
-        private byte[] compressFile() {
-            // First decode with inJustDecodeBounds=true to check dimensions
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(mCurrentPhotoPath, options);
-
-            // Calculate inSampleSize
-
-            if (options.outHeight >= options.outWidth) {
-                options.inSampleSize = calculateInSampleSize(options, 720, 1280);
-            } else {
-                options.inSampleSize = calculateInSampleSize(options, 1280, 720);
-            }
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
-
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
-
-            return byteArrayOutputStream.toByteArray();
-        }
-
-        @Override
-        protected void onPostExecute(byte[] result) {
-            mPhotoUploadDialog.dismiss();
-
-            mPhotoUploadDialog.setMessage("Envoi en cours ...");
-            mPhotoUploadDialog.show();
-
-            uploadPhoto(result);
-        }
-
-        private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-            // Raw height and width of image
-            final int height = options.outHeight;
-            final int width = options.outWidth;
-            int inSampleSize = 1;
-
-            if (height > reqHeight || width > reqWidth) {
-
-                final int halfHeight = height / 2;
-                final int halfWidth = width / 2;
-
-                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-                // height and width larger than the requested height and width.
-                while ((halfHeight / inSampleSize) > reqHeight
-                        && (halfWidth / inSampleSize) > reqWidth) {
-                    inSampleSize *= 2;
-                }
-            }
-
-            return inSampleSize;
-        }
-    }
-
-
-    private class LoadDatabaseTask extends AsyncTask<Void, Void, List<Photo>> {
-        @Override
-        protected List<Photo> doInBackground(Void... params) {
-            PhotoDAO dao = new PhotoDAO(ToiletSheetActivity.this);
-            dao.open();
-            List<Photo> result = dao.selectByToilet(mToilet.getId());
-            dao.close();
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(List<Photo> photoList) {
-            if (!photoList.isEmpty()) {
-
-                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-                if (viewPager != null)
-                    mPhotoAdapter.swapItems(viewPager, photoList);
-            }
-
-            syncPhotoWithServer();
-        }
-    }
-
-    private void syncPhotoWithServer() {
-        new PhotoDownloader(getApplicationContext()).downloadPhotoList(mToilet.getId(), new Downloader.Listener<List<Photo>>() {
-            @Override
-            public void onResponse(List<Photo> response) {
-                new UpdatePhotoListTask().execute(response);
-
-                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-                if (viewPager != null)
-                    mPhotoAdapter.swapItems(viewPager, response);
-            }
-        });
-    }
-
-    private class UpdatePhotoListTask extends AsyncTask<List<Photo>, Void, Void> {
-        @Override
-        protected Void doInBackground(List<Photo>... params) {
-            if (params.length != 1) return null;
-
-            List<Photo> photoList = params[0];
-            if (photoList == null) return null;
-
-            PhotoDAO dao = new PhotoDAO(ToiletSheetActivity.this);
-            dao.open();
-            List<Photo> oldPhotoList = dao.selectByToilet(mToilet.getId());
-
-            // Removed photos
-            for (Photo oldPhoto : oldPhotoList) {
-                boolean removed = true;
-                for (Photo photo : photoList) {
-                    if (photo.getId().equals(oldPhoto.getId())) {
-                        removed = false;
-                        break;
-                    }
-                }
-
-                if (removed) {
-                    File file = new File(getFilesDir(), oldPhoto.getLocalPath());
-                    file.delete();
-                    dao.remove(oldPhoto.getId());
-                }
-            }
-
-            // Added photos
-            for (Photo photo : photoList) {
-                boolean updated = false;
-                for (Photo oldPhoto : oldPhotoList) {
-                    if (photo.getId().equals(oldPhoto.getId())) {
-                        updated = true;
-                        break;
-                    }
-                }
-
-                if (updated) {
-                    dao.update(photo);
-                } else {
-                    dao.add(photo);
-                }
-            }
-
-            dao.close();
-            return null;
-        }
     }
 }
