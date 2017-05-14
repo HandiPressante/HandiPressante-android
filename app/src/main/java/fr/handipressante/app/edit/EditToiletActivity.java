@@ -2,11 +2,16 @@ package fr.handipressante.app.edit;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,10 +25,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
@@ -42,8 +51,11 @@ public class EditToiletActivity extends AppCompatActivity {
     private Toilet mToilet;
     private PhotoPagerAdapter mPhotoAdapter;
 
+    private String mCurrentPhotoPath;
+    private boolean mReturningPhoto = false;
+
     final int REQUEST_TOILET_EDIT = 1;
-    final int REQUEST_ADD_COMMENT = 2;
+    final int REQUEST_IMAGE_CAPTURE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +72,7 @@ public class EditToiletActivity extends AppCompatActivity {
         initScrollToolbar();
 
         fillToiletSheet(mToilet);
+        initEditActions();
 
         mPhotoAdapter = new PhotoPagerAdapter(getApplicationContext());
 
@@ -152,7 +165,63 @@ public class EditToiletActivity extends AppCompatActivity {
         editName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NameActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
 
+        Button editAdapted = (Button) findViewById(R.id.edit_adapted);
+        editAdapted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        Button editCharged = (Button) findViewById(R.id.edit_charged);
+        editCharged.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ChargedActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
+            }
+        });
+
+        Button addPicture = (Button) findViewById(R.id.add_picture);
+        addPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ConfirmPhotoDialogFragment dialogFragment = new ConfirmPhotoDialogFragment();
+                dialogFragment.setListener(new ConfirmPhotoDialogFragment.ConfirmPhotoDialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        dispatchTakePictureIntent();
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+
+                    }
+                });
+                dialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.confirm_send));
+            }
+        });
+
+        Button editDescription = (Button) findViewById(R.id.edit_description);
+        editDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DescriptionActivity.class);
+                intent.putExtra("toilet", mToilet);
+                intent.putExtra("new", false);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
             }
         });
     }
@@ -244,6 +313,60 @@ public class EditToiletActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(getItem(+1), true);
             }
         });
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+
+        File storageDir;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // TODO : using this dir (not visible from gallery) is better, but managing is then needed
+            // storageDir = getExternalCacheDir();
+            storageDir = getExternalFilesDir(Environment.DIRECTORY_DCIM);
+        } else {
+            storageDir = getFilesDir();
+        }
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        // Checking camera availability
+        if (!getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Toast.makeText(getApplicationContext(),
+                    "Désolé ! Votre appareil ne gère pas de caméra.",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
     }
 
 
