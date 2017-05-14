@@ -217,5 +217,9 @@
     <string name="about_authors_label">Auteurs :</string>
     <string name="about_authors">- Olivier De Jonckère\n- Marc-Antoine Gautier\n- Tom Giraudet\n- Juliette Gonzalez\n- Yvonnig Jan\n- Nicolas Le Borgne</string>
     <string name="about_powered_by">Propulsé par :</string>
+    <string name="place_name">Nom du lieu</string>
+    <string name="accessibility">Accessibilité</string>
+    <string name="edit">Modifier</string>
+    <string name="add_picture">Ajouter une photo</string>
 
 </resources>

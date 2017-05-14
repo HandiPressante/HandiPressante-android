@@ -1,0 +1,279 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar_sheet" />
+
+    <include layout="@layout/toolbar_scroll"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/scroll_toolbar"
+        android:layout_alignParentBottom="true" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_sheet"
+        android:layout_above="@id/scroll_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:background="#eaeaea"
+            android:orientation="vertical"
+            tools:context=".edit.EditToiletActivity" >
+
+            <!-- Toilet name block-->
+            <LinearLayout
+                android:id="@+id/name_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:background="@drawable/background_shadow"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:textColor="@android:color/white"
+                    android:background="#C82408"
+                    android:text="@string/place_name"
+                    android:id="@+id/name_title"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/toilet_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="18sp"
+                    android:layout_gravity="center_horizontal" />
+
+                <Button
+                    android:id="@+id/edit_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button"
+                    android:textColor="@color/lightest_gray"
+                    android:text="@string/edit"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <!-- Toilet accessibility block-->
+            <LinearLayout
+                android:id="@+id/accessibility_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:background="@drawable/background_shadow"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="2dp"
+                    android:textColor="@android:color/white"
+                    android:background="#C82408"
+                    android:text="@string/accessibility"
+                    android:id="@+id/accessibility_title"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_horizontal" >
+
+                    <ImageView
+                        android:id="@+id/adapted"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginEnd="30dp" />
+
+                    <Button
+                        android:id="@+id/edit_adapted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/button"
+                        android:textColor="@color/lightest_gray"
+                        android:text="@string/edit"
+                        android:layout_gravity="center_horizontal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_horizontal" >
+
+                    <ImageView
+                        android:enabled="false"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginEnd="30dp"
+                        android:id="@+id/charged" />
+
+                    <Button
+                        android:id="@+id/edit_charged"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/button"
+                        android:textColor="@color/lightest_gray"
+                        android:text="@string/edit"
+                        android:layout_gravity="end" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Toilet pictures block-->
+            <RelativeLayout
+                android:id="@+id/pics_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_shadow"
+                android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@android:color/white"
+                    android:background="#C82408"
+                    android:text="@string/gallery"
+                    android:id="@+id/photo_title"
+                    android:gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp" />
+
+                <android.support.v4.view.ViewPager
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/viewpager"
+                    android:layout_width="wrap_content"
+                    android:layout_height="230dp"
+                    android:layout_below="@id/photo_title"
+                    android:layout_marginTop="10dp" />
+
+                <ImageView
+                    android:id="@+id/previous"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_action_back"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/viewpager"
+                    android:layout_marginBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/next"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_action_next"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/viewpager"
+                    android:layout_marginBottom="10dp" />
+
+                <Button
+                    android:id="@+id/add_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/previous"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button"
+                    android:textColor="@color/lightest_gray"
+                    android:text="@string/add_picture" />
+
+            </RelativeLayout>
+
+
+
+            <!-- Toilet description block-->
+
+            <LinearLayout
+                android:id="@+id/description_block"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingBottom="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:background="@drawable/background_shadow" >
+
+                <TextView
+                    android:id="@+id/description_title"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@android:color/white"
+                    android:background="#C82408"
+                    android:text="@string/description"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/toilet_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingStart="@dimen/activity_horizontal_margin"
+                    android:paddingRight="@dimen/activity_horizontal_margin"
+                    android:paddingEnd="@dimen/activity_horizontal_margin"
+                    android:fontFamily="sans-serif-medium"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/edit_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button"
+                    android:textColor="@color/lightest_gray"
+                    android:text="@string/edit"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".show.ToiletSheetActivity" />
         <activity android:name=".show.MoreInfosActivity" />
+        <activity android:name=".edit.EditToiletActivity" />
         <activity android:name=".help.HelpSlideList" />
         <activity android:name=".help.HelpSlideToiletSheet" />
         <activity android:name=".help.HelpSlideMap" />

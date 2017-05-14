@@ -23,6 +23,7 @@ import java.util.List;
 
 import fr.handipressante.app.Converters;
 import fr.handipressante.app.data.Toilet;
+import fr.handipressante.app.edit.EditToiletActivity;
 import fr.handipressante.app.help.HelpSlideToiletSheet;
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.Downloader;
@@ -119,8 +120,16 @@ public class ToiletSheetActivity extends AppCompatActivity {
         findViewById(R.id.more_infos).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(LOG_TAG, "more infos clicked");
                 Intent intent = new Intent(getApplicationContext(), MoreInfosActivity.class);
+                intent.putExtra("toilet", mToilet);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.edit_sheet).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), EditToiletActivity.class);
                 intent.putExtra("toilet", mToilet);
                 startActivity(intent);
             }
@@ -285,5 +294,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
     private void enableEdition() {
         findViewById(R.id.edit_rate).setEnabled(true);
         findViewById(R.id.add_comment).setEnabled(true);
+        findViewById(R.id.edit_sheet).setEnabled(true);
     }
 }
