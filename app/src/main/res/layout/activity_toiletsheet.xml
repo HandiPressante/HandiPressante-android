@@ -282,7 +282,7 @@
                     android:background="@drawable/button"
                     android:textColor="@color/lightest_gray"
                     android:text="@string/edit_sheet"
-                    android:enabled="false"/>
+                    android:enabled="true"/>
 
             </TableRow>
 
