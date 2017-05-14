@@ -1,7 +1,5 @@
 package fr.handipressante.app.edit;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,18 +12,12 @@ import fr.handipressante.app.Converters;
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
 
-public class AccessibleActivity extends AppCompatActivity {
-    private Toilet mToilet;
-    private boolean mNewToilet;
+public class AccessibleActivity extends AbstractFieldEditActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toiletedition_accessible);
-
-        Intent intent = getIntent();
-        mNewToilet = intent.getBooleanExtra("new", true);
-        mToilet = intent.getParcelableExtra("toilet");
 
         Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
         final ImageView accessibleView = (ImageView) findViewById(R.id.accessibleView);
@@ -39,8 +31,7 @@ public class AccessibleActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        if (!mNewToilet) {
-            accessibleSwitch.setChecked(mToilet.isAdapted());
+        if (!isNewToilet()) {
             toolbar.setTitle(getString(R.string.edittoilet_edit));
         } else {
             toolbar.setTitle(getString(R.string.edittoilet_new));
@@ -50,22 +41,40 @@ public class AccessibleActivity extends AppCompatActivity {
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
-                mToilet.setAdapted(accessibleSwitch.isChecked());
-
-                Intent intent = new Intent(getApplicationContext(), ChargedActivity.class);
-                intent.putExtra("toilet", mToilet);
-                intent.putExtra("new", mNewToilet);
-                startActivityForResult(intent, 1);
+                validate();
             }
         });
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void fillExistingData(final Toilet toilet) {
+        Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
+        accessibleSwitch.setChecked(toilet.isAdapted());
+    }
 
-        setResult(resultCode, data);
-        finish();
+    @Override
+    protected boolean checkData() {
+        return true;
+    }
+
+    @Override
+    protected void saveData(Toilet toilet) {
+        Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
+        toilet.setAdapted(accessibleSwitch.isChecked());
+    }
+
+    @Override
+    protected Class<?> nextEditActivity() {
+        return ChargedActivity.class;
+    }
+
+    @Override
+    protected void save() {
+        Switch accessibleSwitch = (Switch) findViewById(R.id.accessibleSwitch);
+        accessibleSwitch.setEnabled(false);
+        Button validate = (Button) findViewById(R.id.validate);
+        validate.setEnabled(false);
+
+        super.save();
     }
 }
