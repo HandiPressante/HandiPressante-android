@@ -1,5 +1,6 @@
 package fr.handipressante.app.edit;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,13 +11,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.R;
+import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.ToiletDownloader;
 
-public class NameActivity extends AppCompatActivity {
+public class NameActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
     private Toilet mToilet;
     private boolean mNewToilet;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +68,14 @@ public class NameActivity extends AppCompatActivity {
                     String toiletName = toiletNameField.getText().toString();
                     mToilet.setName(toiletName);
 
-                    Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
-                    intent.putExtra("toilet", mToilet);
-                    intent.putExtra("new", mNewToilet);
-                    startActivityForResult(intent, 1);
+                    if (mNewToilet) {
+                        Intent intent = new Intent(getApplicationContext(), AccessibleActivity.class);
+                        intent.putExtra("toilet", mToilet);
+                        intent.putExtra("new", mNewToilet);
+                        startActivityForResult(intent, 1);
+                    } else {
+                        save();
+                    }
                 }
             }
         });
@@ -100,6 +109,38 @@ public class NameActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         setResult(resultCode, data);
+        finish();
+    }
+
+    private void save() {
+        EditText toiletNameField = (EditText) findViewById(R.id.toilet_name);
+        toiletNameField.setEnabled(false);
+        Button validate = (Button) findViewById(R.id.validate);
+        validate.setEnabled(false);
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("Veuillez patienter");
+        mProgressDialog.setMessage("Enregistrement en cours ...");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.show();
+
+        new ToiletDownloader(this).postToilet(mToilet, mNewToilet, this);
+    }
+
+    @Override
+    public void onResponse(Boolean success) {
+        mProgressDialog.dismiss();
+
+        if (success) {
+            Intent result = new Intent();
+            result.putExtra("toilet", mToilet);
+            Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
+
+            setResult(0, result);
+        } else {
+            setResult(-1, null);
+        }
+
         finish();
     }
 }
