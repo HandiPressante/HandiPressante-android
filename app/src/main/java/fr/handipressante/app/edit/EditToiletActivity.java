@@ -63,10 +63,8 @@ public class EditToiletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edittoilet);
 
         // get info from parent view
-        //Intent intent = getIntent();
-        //mToilet = intent.getParcelableExtra("toilet");
-
-        mToilet = new Toilet(1, true, false, "Toilettes déconnectées", new LatLng(42, 100));
+        Intent intent = getIntent();
+        mToilet = intent.getParcelableExtra("toilet");
 
         initToolbar();
         initScrollToolbar();
