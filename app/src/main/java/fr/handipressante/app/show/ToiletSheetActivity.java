@@ -225,52 +225,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
         TextView name=(TextView)findViewById(R.id.toilet_name);
         name.setText(toilet.getName());
 
-        /*
-        // Set toilet's description (wiki)
-        TextView description=(TextView)findViewById(R.id.toilet_description);
-        if(toilet.getDescription().isEmpty()){
-            description.setText(R.string.still_no_description);
-            description.setTypeface(null, Typeface.ITALIC);
-        }else{
-            description.setText(toilet.getDescription());
-        }
-
-
-        //Set pictures
-        //Previous arrow
-        ImageView previous= (ImageView) findViewById(R.id.previous);
-        //previous.setImageResource(R.drawable.precedent);
-
-        //next arrow
-        ImageView next= (ImageView) findViewById(R.id.next);
-        //next.setImageResource(R.drawable.suivant);
-        //picture slider
-        //listPics.add((ImageView)findViewById(R.id.picture_block1));
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
-
-
-        //changes the visible photo in the carousel to the previous one
-        previous.setOnClickListener(new View.OnClickListener() {
-            private int getItem(int i) {
-                return viewPager.getCurrentItem() + i;
-            }
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(getItem(-1), true);
-            }
-        });
-
-        //changes the visible photo in the carousel to the next one
-        next.setOnClickListener(new View.OnClickListener() {
-            private int getItem(int i) {
-                return viewPager.getCurrentItem() + i;
-            }
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(getItem(+1), true);
-            }
-        });*/
-
         // Set general rate
         ImageView global_rate = (ImageView) findViewById(R.id.global_rate);
         global_rate.setImageResource(Converters.resourceFromRank(toilet.getRankAverage(), toilet.getRateWeight()));
