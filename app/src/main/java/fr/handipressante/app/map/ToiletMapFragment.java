@@ -68,9 +68,12 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
     private LatLng mExtNorthEast;
     private LatLng mExtSouthWest;
 
+    final int REQUEST_TOILET_SHEET = 2;
+
 
     private Toilet lastMarkerClicked = null;
     private ClusterManager<Toilet> mClusterManager;
+    private ToiletRenderer mToiletRenderer;
     private Map<Integer, Toilet> mDownloadedToilets = new HashMap<>();
 
     @Override
@@ -162,7 +165,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mClusterManager = new ClusterManager<>(getContext(), mMap);
-        mClusterManager.setRenderer(new ToiletRenderer(getContext(), mMap, mClusterManager));
+        mToiletRenderer = new ToiletRenderer(getContext(), mMap, mClusterManager);
+        mClusterManager.setRenderer(mToiletRenderer);
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
@@ -208,6 +212,16 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
                 fab.setImageResource(R.drawable.ic_action_new);
                 fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 22, 79, 134)));
             }
+        } else if (requestCode == REQUEST_TOILET_SHEET && resultCode == 0 && data != null) {
+            Toilet toilet = data.getParcelableExtra("toilet");
+            if (toilet != null) {
+                Toilet currentToilet = mDownloadedToilets.get(toilet.getId());
+                if (currentToilet != null) {
+                    currentToilet.updateData(toilet);
+                    mToiletRenderer.getMarker(currentToilet).hideInfoWindow();
+                    mClusterManager.cluster();
+                }
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -216,7 +230,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
     private void openToiletSheet(Toilet toilet) {
         Intent intent = new Intent(getContext(), ToiletSheetActivity.class);
         intent.putExtra("toilet", toilet);
-        getContext().startActivity(intent);
+        startActivityForResult(intent, REQUEST_TOILET_SHEET);
     }
 
     @Override
