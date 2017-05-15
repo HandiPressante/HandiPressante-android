@@ -175,8 +175,6 @@ public class ToiletSheetActivity extends AppCompatActivity {
                 mToilet = toilet;
                 fillToiletSheet(mToilet);
             }
-        } else if (requestCode == REQUEST_ADD_COMMENT && resultCode == 0) {
-            // nothing to do ?
         }
     }
 
