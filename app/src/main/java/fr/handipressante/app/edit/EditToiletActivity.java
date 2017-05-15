@@ -1,8 +1,12 @@
 package fr.handipressante.app.edit;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -27,8 +31,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -36,12 +49,16 @@ import java.util.Date;
 import java.util.List;
 
 import fr.handipressante.app.Converters;
+import fr.handipressante.app.MyConstants;
 import fr.handipressante.app.R;
 import fr.handipressante.app.data.Photo;
 import fr.handipressante.app.data.PhotoDAO;
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.server.Downloader;
+import fr.handipressante.app.server.MultipartRequest;
 import fr.handipressante.app.server.PhotoDownloader;
+import fr.handipressante.app.server.RequestManager;
+import fr.handipressante.app.server.ServerResponseException;
 import fr.handipressante.app.show.PhotoPagerAdapter;
 
 public class EditToiletActivity extends AppCompatActivity {
@@ -74,7 +91,7 @@ public class EditToiletActivity extends AppCompatActivity {
 
         mPhotoAdapter = new PhotoPagerAdapter(getApplicationContext());
 
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null)
             viewPager.setAdapter(mPhotoAdapter);
 
@@ -104,8 +121,32 @@ public class EditToiletActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TOILET_EDIT && resultCode == 0 && data != null) {
+            Toilet toilet = data.getParcelableExtra("toilet");
+            if (toilet != null) {
+                mToilet = toilet;
+                fillToiletSheet(mToilet);
+            }
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+
+            mReturningPhoto = true;
+
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (mReturningPhoto) {
+            mReturningPhoto = false;
+            new CompressAndUploadPhotoTask().execute();
+        }
+    }
+
     private void initToolbar() {
-        Toolbar toolbar =   (Toolbar) findViewById(R.id.toolbar_sheet);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sheet);
         setSupportActionBar(toolbar);
 
         toolbar.setTitleTextColor(Color.WHITE);
@@ -122,7 +163,7 @@ public class EditToiletActivity extends AppCompatActivity {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean scroll_help = sharedPrefs.getBoolean("scroll_help", false);
 
-        if(!scroll_help && toolbarBottom != null) {
+        if (!scroll_help && toolbarBottom != null) {
             toolbarBottom.setVisibility(View.GONE);
             return;
         }
@@ -225,11 +266,6 @@ public class EditToiletActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -256,9 +292,14 @@ public class EditToiletActivity extends AppCompatActivity {
     }
 
     public void fillToiletSheet(Toilet toilet) {
+        // Update return data
+        Intent result = new Intent();
+        result.putExtra("toilet", mToilet);
+        setResult(0, result);
+
 
         // Set toilet's name
-        TextView name = (TextView)findViewById(R.id.toilet_name);
+        TextView name = (TextView) findViewById(R.id.toilet_name);
         name.setText(toilet.getName());
 
         // Set icon whether adapted toilet or not
@@ -269,11 +310,11 @@ public class EditToiletActivity extends AppCompatActivity {
         charged.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
 
         // Set toilet's description
-        TextView description = (TextView)findViewById(R.id.toilet_description);
-        if(toilet.getDescription().isEmpty()){
+        TextView description = (TextView) findViewById(R.id.toilet_description);
+        if (toilet.getDescription().isEmpty()) {
             description.setText(R.string.still_no_description);
             description.setTypeface(null, Typeface.ITALIC);
-        }else{
+        } else {
             description.setText(toilet.getDescription());
         }
 
@@ -287,7 +328,7 @@ public class EditToiletActivity extends AppCompatActivity {
         //next.setImageResource(R.drawable.suivant);
         //picture slider
         //listPics.add((ImageView)findViewById(R.id.picture_block1));
-        final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
 
         //changes the visible photo in the carousel to the previous one
@@ -295,6 +336,7 @@ public class EditToiletActivity extends AppCompatActivity {
             private int getItem(int i) {
                 return viewPager.getCurrentItem() + i;
             }
+
             @Override
             public void onClick(View v) {
                 viewPager.setCurrentItem(getItem(-1), true);
@@ -306,6 +348,7 @@ public class EditToiletActivity extends AppCompatActivity {
             private int getItem(int i) {
                 return viewPager.getCurrentItem() + i;
             }
+
             @Override
             public void onClick(View v) {
                 viewPager.setCurrentItem(getItem(+1), true);
@@ -367,6 +410,11 @@ public class EditToiletActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 
     private class LoadDatabaseTask extends AsyncTask<Void, Void, List<Photo>> {
         @Override
@@ -383,7 +431,7 @@ public class EditToiletActivity extends AppCompatActivity {
         protected void onPostExecute(List<Photo> photoList) {
             if (!photoList.isEmpty()) {
 
-                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+                final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
                 if (viewPager != null)
                     mPhotoAdapter.swapItems(viewPager, photoList);
             }
@@ -398,7 +446,7 @@ public class EditToiletActivity extends AppCompatActivity {
             public void onResponse(List<Photo> response) {
                 new UpdatePhotoListTask().execute(response);
 
-                final ViewPager viewPager = (ViewPager)findViewById(R.id.viewpager);
+                final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
                 if (viewPager != null)
                     mPhotoAdapter.swapItems(viewPager, response);
             }
@@ -453,6 +501,164 @@ public class EditToiletActivity extends AppCompatActivity {
 
             dao.close();
             return null;
+        }
+    }
+
+    private void uploadPhoto(byte[] photoData) {
+        MultipartRequest.Builder builder = new MultipartRequest.Builder();
+        builder.setUrl(MyConstants.BASE_URL + "/toilets/pictures/add");
+
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
+
+            builder.addTextPart("user_id", uuid);
+            builder.addTextPart("toilet_id", mToilet.getId().toString());
+            builder.addFilePart("picture", photoData, "picture.jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MultipartRequest request = builder.build(
+                new Response.Listener<NetworkResponse>() {
+                    @Override
+                    public void onResponse(NetworkResponse response) {
+                        mPhotoUploadDialog.dismiss();
+
+                        String strJsonResponse = new String(response.data);
+
+                        try {
+                            JSONObject jsonResponse = new JSONObject(strJsonResponse);
+                            checkResponse(jsonResponse);
+                        } catch (ServerResponseException e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            return;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();
+                        syncPhotoWithServer();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mPhotoUploadDialog.dismiss();
+                        error.printStackTrace();
+                        Toast.makeText(EditToiletActivity.this, "L'envoi a échoué.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        String key = request.getCacheKey();
+        Cache cache = RequestManager.getInstance(getApplicationContext()).getRequestQueue().getCache();
+        if (cache != null) {
+            if (cache.get(key) != null) {
+                cache.remove(key);
+            }
+        }
+
+        RequestManager.getInstance(getApplicationContext()).addToRequestQueue(request);
+    }
+
+    private void checkResponse(JSONObject response) throws ServerResponseException {
+        int version = response.optInt("version");
+        if (!response.has("version")) {
+            throw new ServerResponseException();
+        }
+
+        if (version > MyConstants.API_VERSION) {
+            throw new ServerResponseException("Veuillez mette HandiPressante à jour.");
+        }
+        try {
+            if (!response.getBoolean("success")) {
+                String error = response.getString("errorText");
+                throw new ServerResponseException(error);
+            }
+        } catch (JSONException e) {
+            throw new ServerResponseException();
+        }
+    }
+
+    private ProgressDialog mPhotoUploadDialog;
+    private class CompressAndUploadPhotoTask extends AsyncTask<Void, Integer, byte[]> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mPhotoUploadDialog = new ProgressDialog(EditToiletActivity.this);
+            mPhotoUploadDialog.setTitle("Veuillez patienter");
+            mPhotoUploadDialog.setMessage("Compression en cours ...");
+            mPhotoUploadDialog.setIndeterminate(true);
+            mPhotoUploadDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mPhotoUploadDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            if (progress.length != 1) return;
+            mPhotoUploadDialog.setProgress(progress[0]);
+        }
+
+        @Override
+        protected byte[] doInBackground(Void... params) {
+            return compressFile();
+        }
+
+        private byte[] compressFile() {
+            // First decode with inJustDecodeBounds=true to check dimensions
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(mCurrentPhotoPath, options);
+
+            // Calculate inSampleSize
+
+            if (options.outHeight >= options.outWidth) {
+                options.inSampleSize = calculateInSampleSize(options, 720, 1280);
+            } else {
+                options.inSampleSize = calculateInSampleSize(options, 1280, 720);
+            }
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+
+            return byteArrayOutputStream.toByteArray();
+        }
+
+        @Override
+        protected void onPostExecute(byte[] result) {
+            mPhotoUploadDialog.dismiss();
+
+            mPhotoUploadDialog.setMessage("Envoi en cours ...");
+            mPhotoUploadDialog.show();
+
+            uploadPhoto(result);
+        }
+
+        private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+            // Raw height and width of image
+            final int height = options.outHeight;
+            final int width = options.outWidth;
+            int inSampleSize = 1;
+
+            if (height > reqHeight || width > reqWidth) {
+
+                final int halfHeight = height / 2;
+                final int halfWidth = width / 2;
+
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((halfHeight / inSampleSize) > reqHeight
+                        && (halfWidth / inSampleSize) > reqWidth) {
+                    inSampleSize *= 2;
+                }
+            }
+
+            return inSampleSize;
         }
     }
 }
