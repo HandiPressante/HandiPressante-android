@@ -49,7 +49,7 @@ import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 import fr.handipressante.app.show.ToiletSheetActivity;
 
-public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener, ClusterManager.OnClusterItemClickListener<Toilet>, ClusterManager.OnClusterItemInfoWindowClickListener<Toilet> {
+public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraChangeListener, ClusterManager.OnClusterItemClickListener<Toilet>, ClusterManager.OnClusterItemInfoWindowClickListener<Toilet>, GoogleMap.OnMapClickListener {
 
     private final String LOG_TAG = "ToiletMapFragment";
 
@@ -166,6 +166,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
         mMap.setOnCameraChangeListener(this);
         mMap.setOnInfoWindowClickListener(mClusterManager);
@@ -232,6 +233,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
     @Override
     public void onClusterItemInfoWindowClick(Toilet toilet) {
+        lastMarkerClicked = null;
         openToiletSheet(toilet);
     }
 
@@ -503,6 +505,11 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         boolean outWest = isLngOutOfBox(mExtSouthWest.longitude, mExtNorthEast.longitude, southWest.longitude);
 
         return outNorth || outSouth || outWest || outEast;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        lastMarkerClicked = null;
     }
 
     private class ToiletRenderer extends DefaultClusterRenderer<Toilet> {
