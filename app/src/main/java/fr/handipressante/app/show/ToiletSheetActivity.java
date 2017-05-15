@@ -131,7 +131,7 @@ public class ToiletSheetActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EditToiletActivity.class);
                 intent.putExtra("toilet", mToilet);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_TOILET_EDIT);
             }
         });
 
@@ -214,6 +214,12 @@ public class ToiletSheetActivity extends AppCompatActivity {
     }
 
     public void fillToiletSheet(Toilet toilet) {
+        // Update return data
+        Intent result = new Intent();
+        result.putExtra("toilet", mToilet);
+        setResult(0, result);
+
+
         // Set icon whether adapted toilet or not
         ImageView handicapped= (ImageView) findViewById(R.id.handicapped);
         handicapped.setImageResource(Converters.pmrFromBoolean(toilet.isAdapted()));
