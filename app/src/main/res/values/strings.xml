@@ -221,5 +221,6 @@
     <string name="accessibility">Accessibilité</string>
     <string name="edit">Modifier</string>
     <string name="add_picture">Ajouter une photo</string>
+    <string name="add">Ajouter</string>
 
 </resources>

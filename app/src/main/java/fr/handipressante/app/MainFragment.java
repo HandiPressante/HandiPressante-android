@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i("MainFragment", "onCreate");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,6 +47,13 @@ public class MainFragment extends Fragment {
                 ToiletMapFragment.class, null);
 
         return mTabHost;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_toilets, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private View getTabIndicator(Context context, int title) {
