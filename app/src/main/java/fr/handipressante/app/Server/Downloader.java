@@ -23,6 +23,11 @@ public class Downloader {
     public interface Listener<T> {
         void onResponse(T response);
     }
+
+    public interface Listener2<T, U> {
+        void onResponse(T data1, U data2);
+    }
+
     protected Context mContext;
 
     public Downloader(Context context) {
@@ -38,7 +43,7 @@ public class Downloader {
         return data;
     }
 
-    protected void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
+    protected void postJson(String url, JSONObject data, final Listener2<Boolean, JSONObject> listener) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, data,
                 new Response.Listener<JSONObject>() {
 
@@ -46,10 +51,18 @@ public class Downloader {
                     public void onResponse(JSONObject response) {
                         try {
                             checkResponse(response);
-                            listener.onResponse(true);
+
+                            JSONObject data;
+                            try {
+                                data = response.getJSONObject("data");
+                            } catch (JSONException e) {
+                                data = null;
+                            }
+
+                            listener.onResponse(true, data);
                         } catch (ServerResponseException e) {
                             Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                            listener.onResponse(false);
+                            listener.onResponse(false, null);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -58,7 +71,7 @@ public class Downloader {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(mContext, "Une erreur serveur est survenue.", Toast.LENGTH_LONG).show();
                 error.printStackTrace();
-                listener.onResponse(false);
+                listener.onResponse(false, null);
             }
         });
 
@@ -71,6 +84,15 @@ public class Downloader {
         }
 
         RequestManager.getInstance(mContext).addToRequestQueue(jsonObjectRequest);
+    }
+
+    protected void postJson(String url, JSONObject data, final Listener<Boolean> listener) {
+        postJson(url, data, new Listener2<Boolean, JSONObject>() {
+            @Override
+            public void onResponse(Boolean data1, JSONObject data2) {
+                listener.onResponse(data1);
+            }
+        });
     }
 
     protected void checkResponse(JSONObject response) throws ServerResponseException {

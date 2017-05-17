@@ -4,15 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.EditText;
+import android.util.Log;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import fr.handipressante.app.R;
 import fr.handipressante.app.data.Toilet;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.ToiletDownloader;
 
-public abstract class AbstractFieldEditActivity extends AppCompatActivity implements Downloader.Listener<Boolean> {
+public abstract class AbstractFieldEditActivity extends AppCompatActivity implements Downloader.Listener2<Boolean, JSONObject> {
+
+    private final String LOG_TAG = "AbstractFieldEdit";
+
     private Toilet mToilet;
     private boolean mNewToilet;
     private ProgressDialog mProgressDialog;
@@ -81,10 +87,18 @@ public abstract class AbstractFieldEditActivity extends AppCompatActivity implem
     }
 
     @Override
-    public void onResponse(Boolean success) {
+    public void onResponse(Boolean success, JSONObject data) {
         mProgressDialog.dismiss();
 
         if (success) {
+            if (data != null) {
+                try {
+                    mToilet.setId(data.getInt("toilet_id"));
+                } catch (JSONException e) {
+                    Log.e(LOG_TAG, "Invalid data in toilet save response.");
+                }
+            }
+
             Intent result = new Intent();
             result.putExtra("toilet", mToilet);
             Toast.makeText(getApplicationContext(), R.string.thanks_for_contributing, Toast.LENGTH_LONG).show();

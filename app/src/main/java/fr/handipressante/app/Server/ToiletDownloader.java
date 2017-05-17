@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -144,7 +143,7 @@ public class ToiletDownloader extends Downloader {
         RequestManager.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
-    public void postToilet(Toilet toilet, boolean newToilet, final Listener<Boolean> listener) {
+    public void postToilet(Toilet toilet, boolean newToilet, final Listener2<Boolean, JSONObject> listener) {
         Log.i("ToiletDownloader", "postToilet");
         String url;
         JSONObject data = new JSONObject();
@@ -166,7 +165,7 @@ public class ToiletDownloader extends Downloader {
             data.put("toilet_longitude", toilet.getPosition().longitude);
         } catch (JSONException e) {
             e.printStackTrace();
-            listener.onResponse(null);
+            listener.onResponse(false, null);
             return;
         }
 
