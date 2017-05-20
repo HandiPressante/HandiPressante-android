@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
     private final float MIN_ZOOM_TO_ADD_TOILET = 19.0f;
     private boolean mAddToiletEnabled = false;
+    private boolean mToiletCreationReady = false;
+    private boolean mToiletCreationRequested = false;
     final int REQUEST_ADD_TOILET = 1;
 
     private final float MIN_ZOOM_TO_SHOW_TOILET = 11.0f;
@@ -98,7 +101,6 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         mAccessibilityOptionEnabled = sharedPrefs.getBoolean("scroll_help", false);
 
-        initAddToiletButton();
         if (mAccessibilityOptionEnabled) {
             initAccessibilityLayout();
         }
@@ -125,6 +127,7 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        mToiletCreationReady = true;
     }
 
     @Override
@@ -132,6 +135,12 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         saveCameraPosition();
 
         super.onPause();
+
+        if (mAddToiletEnabled) {
+            mAddToiletEnabled = false;
+            getActivity().supportInvalidateOptionsMenu();
+        }
+        mToiletCreationReady = false;
         mMapView.onPause();
     }
 
@@ -195,6 +204,11 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
         mClusterManager.addItems(mDownloadedToilets.values());
         mClusterManager.cluster();
+
+        if (mToiletCreationRequested) {
+            mToiletCreationRequested = false;
+            onToiletCreationRequested();
+        }
     }
 
     @Override
@@ -207,10 +221,8 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
                 mClusterManager.cluster();
 
                 // Reset "add toilet button" state
-                final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
                 mAddToiletEnabled = false;
-                fab.setImageResource(R.drawable.ic_action_new);
-                fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 22, 79, 134)));
+                getActivity().supportInvalidateOptionsMenu();
             }
         } else if (requestCode == REQUEST_TOILET_SHEET && resultCode == 0 && data != null) {
             Toilet toilet = data.getParcelableExtra("toilet");
@@ -274,29 +286,28 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
         }
     }
 
-    private void initAddToiletButton() {
-        final FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!mMapReady) return;
+    public boolean isToiletAddEnabled() {
+        return mAddToiletEnabled;
+    }
 
-                if (!mAddToiletEnabled) {
-                    AddWithLongPressDialog canAddToiletDialog = new AddWithLongPressDialog();
-                    canAddToiletDialog.show(getFragmentManager(),"canAddToilet");
+    public void onToiletCreationRequested() {
+        if (!mToiletCreationReady) {
+            mToiletCreationRequested = true;
+            return;
+        }
 
-                    mAddToiletEnabled = true;
+        if (!mMapReady) return;
 
-                    fab.setImageResource(R.drawable.ic_action_cancel);
-                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 211, 47, 47)));
-                } else {
-                    mAddToiletEnabled = false;
-                    fab.setImageResource(R.drawable.ic_action_new);
-                    //color in blue
-                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 22, 79, 134)));
-                }
-            }
-        });
+        AddWithLongPressDialog canAddToiletDialog = new AddWithLongPressDialog();
+        canAddToiletDialog.show(getFragmentManager(),"canAddToilet");
+
+        mAddToiletEnabled = true;
+        getActivity().supportInvalidateOptionsMenu();
+    }
+
+    public void onToiletCreationCanceled() {
+        mAddToiletEnabled = false;
+        getActivity().supportInvalidateOptionsMenu();
     }
 
     private void initAccessibilityLayout() {
