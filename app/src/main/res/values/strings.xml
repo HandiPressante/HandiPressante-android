@@ -9,7 +9,7 @@
     <string name="drawer_close">Fermer le menu</string>
 
     <string name="menu_toilets">Toilettes</string>
-    <string name="menu_memos">Mémos</string>
+    <string name="menu_memos">Infos santé</string>
     <string name="menu_settings">Paramètres</string>
     <string name="menu_about">À propos</string>
 
@@ -26,7 +26,7 @@
 
     <string name="toiletlist_no_data">Il n\'y a pas de toilettes référencées à proximité.</string>
 
-    <string name="memolist_no_data">Il n\'y a pas de mémos médicaux.</string>
+    <string name="memolist_no_data">Il n\'y a pas d\'info santé disponible.</string>
 
     <string name="modification">Modifier fiche</string>
     <string name="save">Enregistrer</string>
