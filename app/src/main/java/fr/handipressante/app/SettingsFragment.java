@@ -8,9 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.view.MenuItem;
-
-import fr.handipressante.app.help.HelpSlideSettings;
+import android.view.Menu;
 
 
 /**
@@ -43,15 +41,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
             });
         }
-
-        getPreferenceManager().findPreference("tuto").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), FirstRun.class);
-                startActivity(intent);
-                return false;
-            }
-        });
 
         getPreferenceManager().findPreference("font_size").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -92,16 +81,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Intent intentHelp = new Intent(getContext(), HelpSlideSettings.class);
-                startActivity(intentHelp);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.help).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
-
 }
 
 

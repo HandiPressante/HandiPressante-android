@@ -10,4 +10,6 @@
 
     <dimen name="custom_cluster_icon">80dp</dimen>
     <dimen name="custom_cluster_padding">2dp</dimen>
+
+    <dimen name="helpSlideBottomBarHeight">64dp</dimen>
 </resources>

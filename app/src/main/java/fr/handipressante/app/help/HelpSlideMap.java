@@ -17,15 +17,11 @@ public class HelpSlideMap extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Géolocalisation des toilettes", "Naviguez sur la carte pour trouver les toilettes à l'endroit que vous souhaitez. Appuyez sur le bouton + pour ajouter des toilettes sur la carte, qui seront visibles par les autres utilisateurs.",
-                R.drawable.help_map, Color.parseColor("#164F86")));
-       // addSlide(AppIntroFragment.newInstance("Ajout de toilettes", "Ensuite, appuyez longtemps sur la zone où vous souhaitez ajouter des toilettes et suivez ce qui est affiché à l'écran.",
-       //         R.drawable.tuto_add_from_map, Color.parseColor("#164F86")));
-        // OPTIONAL METHODS
+        addSlide(HelpSlideFragment.newInstance(R.drawable.help_toilet_map_1));
+        addSlide(HelpSlideFragment.newInstance(R.drawable.help_toilet_map_2));
 
         // Override bar/separator color
         setBarColor(Color.parseColor("#D32F2F"));
-        setSeparatorColor(Color.parseColor("#164F86"));
         setDoneText("Ok");
 
         // SHOW or HIDE the statusbar

@@ -21,7 +21,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -38,7 +38,6 @@ import java.util.List;
 
 import fr.handipressante.app.data.Memo;
 import fr.handipressante.app.data.MemoDAO;
-import fr.handipressante.app.help.HelpSlideMemo;
 import fr.handipressante.app.R;
 import fr.handipressante.app.server.Downloader;
 import fr.handipressante.app.server.MemoDownloader;
@@ -109,6 +108,12 @@ public class MemoListFragment extends ListFragment {
     public void onPause() {
         super.onPause();
         Log.i("MemoListFragment", "onPause");
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.help).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -352,17 +357,6 @@ public class MemoListFragment extends ListFragment {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                Intent intentHelp = new Intent(getContext(), HelpSlideMemo.class);
-                startActivity(intentHelp);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
 

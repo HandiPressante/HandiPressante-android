@@ -17,12 +17,11 @@ public class HelpSlideList extends AppIntro {
     @Override
     public void init(Bundle savedInstanceState) {
 
-        addSlide(AppIntroFragment.newInstance("Liste des toilettes", "Les toilettes à proximité sont classées des plus proches au plus éloignées. Cliquez sur ces toilettes pour accéder à la fiche d'informations. Cette fiche permet de démarrer un itinéraire rapidement.", R.drawable.help_list, Color.parseColor("#164F86")));
-        // OPTIONAL METHODS
+        addSlide(HelpSlideFragment.newInstance(R.drawable.help_toilet_list_1));
+        addSlide(HelpSlideFragment.newInstance(R.drawable.help_toilet_list_2));
 
         // Override bar/separator color
         setBarColor(Color.parseColor("#D32F2F"));
-        setSeparatorColor(Color.parseColor("#164F86"));
         setDoneText("Ok");
 
         // SHOW or HIDE the statusbar
