@@ -223,4 +223,6 @@
     <string name="add_picture">Ajouter une photo</string>
     <string name="add">Ajouter</string>
 
+    <string name="eula"><a href="http://www.handipressante.fr/cgu.html">Condition Générales d\'Utilisation</a></string>
+
 </resources>

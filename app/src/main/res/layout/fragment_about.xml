@@ -69,6 +69,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/logos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/powered_by_label"
@@ -92,6 +93,17 @@
             android:layout_marginLeft="20dp" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/eula"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/logos"
+        android:layout_centerHorizontal="true"
+        android:text="@string/eula"
+        android:autoLink="web"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
