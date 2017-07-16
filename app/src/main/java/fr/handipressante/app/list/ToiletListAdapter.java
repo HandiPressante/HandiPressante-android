@@ -67,6 +67,10 @@ public class ToiletListAdapter extends ArrayAdapter<Toilet> {
         holder.rank.setImageResource(Converters.resourceFromRank(toilet.getRankAverage(), toilet.getRateWeight()));
         holder.distance.setText(Converters.formattedDistanceFromDouble(toilet.getDistance()));
         holder.charged.setImageResource(Converters.chargedFromBoolean(toilet.isCharged()));
+        if (toilet.isCharged())
+            holder.charged.setVisibility(View.VISIBLE);
+        else
+            holder.charged.setVisibility(View.INVISIBLE);
 
         return row;
     }
