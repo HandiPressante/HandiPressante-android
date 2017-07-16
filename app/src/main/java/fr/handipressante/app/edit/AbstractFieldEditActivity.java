@@ -95,7 +95,7 @@ public abstract class AbstractFieldEditActivity extends AppCompatActivity implem
                 try {
                     mToilet.setId(data.getInt("toilet_id"));
                 } catch (JSONException e) {
-                    Log.e(LOG_TAG, "Invalid data in toilet save response.");
+                    //Log.e(LOG_TAG, "Invalid data in toilet save response.");
                 }
             }
 

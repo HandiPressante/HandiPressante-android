@@ -481,8 +481,6 @@ public class ToiletMapFragment extends Fragment implements OnMapReadyCallback, G
 
             if (isDataUpdateRequired(northEast, southWest))
             {
-                Log.i(LOG_TAG, "Data Update Required");
-
                 double latitudeDelta = northEast.latitude - southWest.latitude;
                 double longitudeDelta = northEast.longitude - southWest.longitude;
                 // 180th meridian management

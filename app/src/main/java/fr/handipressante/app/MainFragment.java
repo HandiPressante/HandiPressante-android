@@ -28,14 +28,12 @@ public class MainFragment extends Fragment {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        Log.i("MainFragment", "onCreate");
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("MainFragment", "onCreateView");
 
         getActivity().setTitle(R.string.menu_toilets);
         NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);

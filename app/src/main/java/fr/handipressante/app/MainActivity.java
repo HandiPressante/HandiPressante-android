@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String uuid = sharedPreferences.getString(getString(R.string.saved_uuid), "no-uuid");
-        Log.i(LOG_TAG, "UUID : " + uuid);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()

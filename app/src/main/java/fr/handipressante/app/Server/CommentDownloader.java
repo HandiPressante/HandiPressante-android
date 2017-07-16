@@ -85,7 +85,6 @@ public class CommentDownloader extends Downloader {
     }
 
     public void postToiletComment(Integer toiletId, String username, String content, final Listener<Boolean> listener) {
-        Log.i("ToiletDownloader", "postToiletComment");
         String url;
         JSONObject data = new JSONObject();
 

@@ -59,7 +59,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(LOG_TAG, "onActivityCreated");
 
         Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_scroll);
 
@@ -99,7 +98,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
         // default
         Criteria criteria = new Criteria();
         mProvider = mLocationManager.getBestProvider(criteria, true);
-        Log.i("ToiletListFragment", "Provider selected : " + mProvider);
         //Toast.makeText(getContext(), "Provider selected : " + mProvider,
         //        Toast.LENGTH_SHORT).show();
 
@@ -112,7 +110,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("ToiletListFragment", "onResume");
 
         new LoadDatabaseTask().execute();
 
@@ -131,7 +128,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
             //Toast.makeText(getContext(), "Location not available",
             //        Toast.LENGTH_SHORT).show();
             mLocationManager.requestSingleUpdate(mProvider, this, null);
-            Log.i("ToiletListFragment", "requestSingleUpdate");
         }
 
         try {
@@ -145,7 +141,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("ToiletListFragment", "onPause");
 
         try {
             mLocationManager.removeUpdates(this);
@@ -168,8 +163,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
 
         if (mCurrentLatLng != null)
             outState.putParcelable("current_location", mCurrentLatLng);
-
-        Log.i("ToiletListFragment", "Instance state saved");
     }
 
     private int computeVisibleItemCount() {
@@ -206,7 +199,6 @@ public class ToiletListFragment extends ListFragment implements LocationListener
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i("ToiletListFragment", "onLocationChanged");
         mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (!mToiletCache.isEmpty()) {
             updateToiletList(mToiletCache, false);

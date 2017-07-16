@@ -55,7 +55,6 @@ public class MemoListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.i("MemoListFragment", "onCreate");
 
         mAdapter = new MemoListAdapter(getContext().getApplicationContext(), new ArrayList<Memo>());
         // We don't set listAdapter here, because we want the loading animation
@@ -67,7 +66,6 @@ public class MemoListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("MemoListFragment", "onActivityCreated");
 
         Toolbar toolbarBottom = (Toolbar) getActivity().findViewById(R.id.toolbar_scroll);
 
@@ -101,13 +99,11 @@ public class MemoListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("MemoListFragment", "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i("MemoListFragment", "onPause");
     }
 
     @Override
@@ -160,7 +156,7 @@ public class MemoListFragment extends ListFragment {
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Log.e("MemoListFragment", "PDF Activity Not Found Exception");
+            //Log.e("MemoListFragment", "PDF Activity Not Found Exception");
         }
     }
 
@@ -262,7 +258,6 @@ public class MemoListFragment extends ListFragment {
             try {
                 mMemo = m[0];
                 URL url = new URL(mMemo.getRemoteUrl());
-                Log.i("MemoListFragment", mMemo.getRemoteUrl());
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
@@ -344,7 +339,7 @@ public class MemoListFragment extends ListFragment {
         protected void onPostExecute(String result) {
             mWakeLock.release();
             if (result != null) {
-                Log.e("MemoManager", "Download error: " + result);
+                //Log.e("MemoManager", "Download error: " + result);
                 //Toast.makeText(getContext(), "Download error: " + result, Toast.LENGTH_LONG).show();
                 mMemoDownloadDialog.dismiss();
             }

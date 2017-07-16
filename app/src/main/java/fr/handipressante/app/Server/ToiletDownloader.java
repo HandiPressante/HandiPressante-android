@@ -42,7 +42,6 @@ public class ToiletDownloader extends Downloader {
      */
     public void requestNearbyToilets(LatLng ref, int mincount, int maxcount, int distanceMax,
                                      final Listener<List<Toilet>> listener) {
-        Log.i("ToiletDownloader", "requestNearbyToilets");
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
         int accessibilityFilter = Integer.valueOf(sharedPrefs.getString("accessibility_filter", "2"));
@@ -66,8 +65,6 @@ public class ToiletDownloader extends Downloader {
      */
     public void requestMapToilets(LatLng topLeft, LatLng bottomRight,
                                   final Listener<List<Toilet>> listener) {
-        Log.i("ToiletDownloader", "requestMapToilets");
-
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(mContext.getApplicationContext());
         int accessibilityFilter = Integer.valueOf(sharedPrefs.getString("accessibility_filter", "2"));
         int feeFilter = Integer.valueOf(sharedPrefs.getString("fee_filter", "2"));
@@ -144,7 +141,6 @@ public class ToiletDownloader extends Downloader {
     }
 
     public void postToilet(Toilet toilet, boolean newToilet, final Listener2<Boolean, JSONObject> listener) {
-        Log.i("ToiletDownloader", "postToilet");
         String url;
         JSONObject data = new JSONObject();
 
@@ -174,7 +170,6 @@ public class ToiletDownloader extends Downloader {
     }
 
     public void postToiletRate(Toilet toilet, int cleanliness, int facilities, int accessibility, final Listener<Boolean> listener) {
-        Log.i("ToiletDownloader", "postToiletRate");
         String url;
         JSONObject data = new JSONObject();
 

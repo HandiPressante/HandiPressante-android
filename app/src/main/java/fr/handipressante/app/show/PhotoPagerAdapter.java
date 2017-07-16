@@ -237,7 +237,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         protected void onPostExecute(String result) {
             mWakeLock.release();
             if (result != null) {
-                Log.e("PhotoPageAdapter", "Download error: " + result);
+                //Log.e("PhotoPageAdapter", "Download error: " + result);
             }
             else {
                 File file = photoFile(mPhoto);
